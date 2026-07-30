@@ -65,8 +65,8 @@ export default function RootLayout({
           <Meteors number={60} />
         </div>
         
-        {/* Layer 3: VÙNG KHUNG CHÍNH (Nằm trên cùng z-10) */}
-        <div className="relative z-10 w-[75%] lg:w-[70%] max-w-[1440px] mx-auto min-h-screen flex flex-col shadow-2xl">
+        {/* Layer 3: VÙNG KHUNG CHÍNH (Đã đổi thành full width) */}
+        <div className="relative z-10 w-full min-h-screen flex flex-col">
           <Header />
 
           {/* Phần nội dung của từng trang */}

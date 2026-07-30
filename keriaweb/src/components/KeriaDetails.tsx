@@ -2,8 +2,7 @@ import Image from "next/image";
 
 export default function KeriaDetails() {
   return (
-    <section className="relative w-full max-w-[1440px] h-auto bg-[#7CB9E8] flex flex-col items-center">
-      {/* Khung chứa bọc ngoài y hệt chuẩn cấu trúc phía trên */}
+    <section className="relative w-full h-auto bg-[#7CB9E8] flex flex-col items-center">
       <div className="relative w-full h-auto">
         
         {/* Ảnh chính */}
@@ -12,12 +11,13 @@ export default function KeriaDetails() {
           alt="New Section Image" 
           width={1440} 
           height={1024} 
+          quality={100} /* 1. Đẩy chất lượng lên tối đa, không nén */
+          sizes="100vw" /* 2. Báo cho Next.js ảnh này chiếm 100% chiều rộng màn hình */
           style={{ width: '100%', height: 'auto' }} 
           className="relative z-10 w-full h-auto object-contain block"
         />
         
-        {/* Vách ngăn dùng đúng thông số absolute -bottom-12 giống hệt phần trên để nó tràn đè xuống dưới */}
-        <div className="absolute -bottom-11 left-0 w-full z-50 flex items-end  pointer-events-none">
+        <div className="absolute -bottom-11 left-0 w-full z-50 flex items-end pointer-events-none">
           <Image 
             src="/images/vachngan2.png" 
             alt="Vách ngăn giấy rách" 

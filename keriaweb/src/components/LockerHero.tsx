@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function LockerHero() {
   return (
     
-    <div className="relative w-full max-w-[1440px] aspect-[1440/1024] bg-[#7CB9E8] shadow-2xl flex-shrink-0 flex flex-col items-center overflow-hidden mx-auto [container-type:inline-size]">
+    <div className="relative w-full aspect-[1440/1024] bg-[#7CB9E8] flex-shrink-0 flex flex-col items-center overflow-hidden [container-type:inline-size]">
       
       {/* Lớp nền tủ đồ */}
       <div className="absolute inset-0 z-0 bg-[#7CB9E8]">
@@ -16,7 +16,7 @@ export default function LockerHero() {
         />
       </div>
 
-      {/* 2. THAY w-[90%] max-w-[1280px] BẰNG w-[88.89%] ĐỂ TỈ LỆ CO GIÃN CHÍNH XÁC TUYỆT ĐỐI */}
+      {/* 2. Dùng tỉ lệ w-[88.89%] để luôn co giãn chính xác tuyệt đối theo màn hình */}
       <section className="relative w-[88.89%] mx-auto z-10 my-auto flex justify-center translate-x-[3.125%] pb-[6.25%]"> 
         <div className="relative w-full mx-auto flex flex-col items-center -translate-y-[6.25%]"> 
           
@@ -90,7 +90,7 @@ export default function LockerHero() {
               />
 
               <div className="w-[85%] mx-auto -rotate-3 -translate-x-[3.125%]"> 
-                {/* 3. DÙNG 'cqw' (Container Query Width) THAY CHO 'vw' ĐỂ CHỮ SCALE THEO KHUNG */}
+                {/* 3. DÙNG 'cqw' (Container Query Width) ĐỂ CHỮ SCALE THEO KHUNG */}
                 <p className="text-[#0F0F4F] font-medium text-center tracking-wide leading-relaxed text-[clamp(10px,1.6cqw,23px)]">
                   DearKeriaVN tồn tại với mục tiêu ủng hộ Support xuất sắc nhất lịch sử Liên Minh Huyền Thoại - 
                   <strong className="text-black font-bold"> Ryu &apos;Keria&apos; Minseok</strong>, cùng đồng hành và lưu giữ lại những dấu ấn rực rỡ theo từng cột mốc sự nghiệp, dõi theo mỗi bước chân nỗ lực trên hành trình vĩ đại của 
@@ -102,7 +102,7 @@ export default function LockerHero() {
               <div className="flex items-center justify-center gap-[2cqw] mt-[3%] pointer-events-auto -rotate-3 -translate-x-[2.5%]">
                 <a href="https://www.facebook.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(24px,3.3cqw,48px)] h-[clamp(24px,3.3cqw,48px)] rounded-full bg-[#1877F2] flex items-center justify-center text-white shadow-md hover:scale-110 transition-transform duration-200">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-[50%] h-[50%]">
-                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
                   </svg>
                 </a>
                 <a href="https://www.threads.com/@dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(24px,3.3cqw,48px)] h-[clamp(24px,3.3cqw,48px)] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden bg-black">

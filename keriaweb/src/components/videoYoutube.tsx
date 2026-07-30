@@ -14,21 +14,20 @@ export default function VideoYoutube({
 }: VideoYoutubeProps) {
   return (
     <div
-      className={`relative w-full flex-1 pt-50 pb-32 px-6 md:px-16 bg-gray-100 shadow-lg flex flex-col justify-center ${className}`}
+      className={`relative w-full z-0 flex-1 pt-[clamp(80px,8vw,120px)] pb-32 px-6 md:px-16 bg-[#f3f4f6] flex flex-col justify-center ${className}`}
     >
       
-      <div className="relative w-full max-w-4xl mx-auto">
+      {/* Khung chứa dùng flex-col để xếp dọc các phần tử */}
+      <div className="relative w-full max-w-4xl mx-auto z-10 flex flex-col items-center">
 
         {/* FRAME LED TRÀNG TIỀN */}
         <div
           className="
-            absolute
-            -top-30
-            left-1/2
-            -translate-x-1/2
+            relative
             z-20
             pointer-events-none
             w-[45%]
+            mb-[clamp(30px,4vw,60px)] /* ĐÃ TĂNG KHOẢNG CÁCH MẠNH HƠN ĐỂ CÁCH XA VIDEO */
           "
         >
           <Image
@@ -51,18 +50,18 @@ export default function VideoYoutube({
           />
         </div>
 
-
-
       </div>
-      <div className="absolute -bottom-[4.9%] left-0 w-full z-50 flex items-end translate-y-[1px]">
-              <Image 
-                src="/images/vachngan4.png" 
-                alt="Vách ngăn giấy rách" 
-                width={1440} 
-                height={100} 
-                className="w-full h-auto object-cover drop-shadow-md object-bottom pointer-events-none"
-              />
-            </div>
+      
+      {/* Vách ngăn dưới cùng */}
+      <div className="absolute -bottom-[7%] left-0 w-full z-50 flex items-end translate-y-[1px]">
+        <Image 
+          src="/images/vachngan4.png" 
+          alt="Vách ngăn giấy rách" 
+          width={1440} 
+          height={100} 
+          className="w-full h-auto object-cover drop-shadow-md object-bottom pointer-events-none"
+        />
+      </div>
     </div>
   );
 }
