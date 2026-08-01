@@ -52,14 +52,16 @@ export default function VideoYoutube({
 
       </div>
       
-      {/* Vách ngăn dưới cùng */}
-      <div className="absolute -bottom-[7%] left-0 w-full z-50 flex items-end translate-y-[1px]">
+      {/* 
+        
+      */}
+      <div className="absolute bottom-0 left-0 w-full z-50 flex items-end translate-y-[55%] pointer-events-none">
         <Image 
           src="/images/vachngan4.png" 
           alt="Vách ngăn giấy rách" 
           width={1440} 
           height={100} 
-          className="w-full h-auto object-cover drop-shadow-md object-bottom pointer-events-none"
+          className="w-full h-auto object-cover drop-shadow-md object-bottom"
         />
       </div>
     </div>

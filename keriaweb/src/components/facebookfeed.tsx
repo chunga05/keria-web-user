@@ -69,7 +69,8 @@ export default function FacebookFeed() {
   };
 
   return (
-    <section className="w-full bg-[#f5f5f5] py-16 md:py-20">
+    
+    <section className="w-full bg-[#f5f5f5] pt-[clamp(80px,10vw,160px)] pb-16 md:pb-20">
       <div className="relative mx-auto w-full max-w-[1280px] px-10 md:px-16">
 
         {/* =========================

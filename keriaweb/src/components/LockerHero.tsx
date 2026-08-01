@@ -16,7 +16,6 @@ export default function LockerHero() {
         />
       </div>
 
-      {/* 2. Dùng tỉ lệ w-[88.89%] để luôn co giãn chính xác tuyệt đối theo màn hình */}
       <section className="relative w-[88.89%] mx-auto z-10 my-auto flex justify-center translate-x-[3.125%] pb-[6.25%]"> 
         <div className="relative w-full mx-auto flex flex-col items-center -translate-y-[6.25%]"> 
           
@@ -42,7 +41,7 @@ export default function LockerHero() {
           <div className="absolute top-[5%] -right-[4%] w-[20%] z-10">
             <Image src="/images/Star.png" alt="Star" width={255} height={289} className="w-full h-auto" />
           </div>
-          <div className="absolute -bottom-[2%] -left-[9.2%] w-[13.6%] z-20">
+          <div className="absolute -bottom-[2%] -left-[9.4%] w-[13.6%] z-20">
             <Image src="/images/Star (1).png" alt="Star" width={182} height={182} className="w-full h-auto" />
           </div>
           <div className="absolute bottom-[2.9%] -left-[5%] w-[21.8%] z-10">
@@ -90,32 +89,41 @@ export default function LockerHero() {
               />
 
               <div className="w-[85%] mx-auto -rotate-3 -translate-x-[3.125%]"> 
-                {/* 3. DÙNG 'cqw' (Container Query Width) ĐỂ CHỮ SCALE THEO KHUNG */}
-                <p className="text-[#0F0F4F] font-medium text-center tracking-wide leading-relaxed text-[clamp(10px,1.6cqw,23px)]">
+                {/* ĐÃ SỬA: Chia breakpoint cho điện thoại (tối thiểu 7px, scale nhanh hơn 2.5cqw) và máy tính (md:...) */}
+                <p className="text-[#0F0F4F] font-medium text-center tracking-wide leading-snug md:leading-relaxed text-[clamp(7px,2.5cqw,16px)] md:text-[clamp(14px,1.6cqw,23px)]">
                   DearKeriaVN tồn tại với mục tiêu ủng hộ Support xuất sắc nhất lịch sử Liên Minh Huyền Thoại - 
                   <strong className="text-black font-bold"> Ryu &apos;Keria&apos; Minseok</strong>, cùng đồng hành và lưu giữ lại những dấu ấn rực rỡ theo từng cột mốc sự nghiệp, dõi theo mỗi bước chân nỗ lực trên hành trình vĩ đại của 
                   <em className="font-semibold italic"> Quái vật Thiên tài.</em>
                 </p>
               </div>
               
-              {/* 4. DÙNG 'cqw' ĐỂ ICON MẠNG XÃ HỘI CŨNG SCALE ĐỒNG BỘ MƯỢT MÀ */}
-              <div className="flex items-center justify-center gap-[2cqw] mt-[3%] pointer-events-auto -rotate-3 -translate-x-[2.5%]">
-                <a href="https://www.facebook.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(24px,3.3cqw,48px)] h-[clamp(24px,3.3cqw,48px)] rounded-full bg-[#1877F2] flex items-center justify-center text-white shadow-md hover:scale-110 transition-transform duration-200">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-[50%] h-[50%]">
-                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
-                  </svg>
+              {/* ĐÃ SỬA: Chia breakpoint cho kích thước Icon và Gap */}
+              <div className="flex items-center justify-center gap-[3cqw] md:gap-[2cqw] mt-[3%] pointer-events-auto -rotate-3 -translate-x-[2.5%]">
+               <a 
+                  href="https://www.facebook.com/dearkeriavn" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-[clamp(18px,4cqw,32px)] h-[clamp(18px,4cqw,32px)] md:w-[clamp(32px,3.3cqw,48px)] md:h-[clamp(32px,3.3cqw,48px)] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden"
+                >
+                  <Image 
+                    src="/images/facelogo.png" /* Thay đường dẫn này bằng tên file ảnh logo Facebook thực tế của bạn */
+                    alt="Facebook" 
+                    width={48} 
+                    height={48} 
+                    className="w-full h-full object-cover" 
+                  />
                 </a>
-                <a href="https://www.threads.com/@dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(24px,3.3cqw,48px)] h-[clamp(24px,3.3cqw,48px)] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden bg-black">
+                <a href="https://www.threads.com/@dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(18px,4cqw,32px)] h-[clamp(18px,4cqw,32px)] md:w-[clamp(32px,3.3cqw,48px)] md:h-[clamp(32px,3.3cqw,48px)] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden bg-black">
                   <Image src="/images/threadicon.png" alt="Threads" width={48} height={48} className="w-full h-full object-cover" />
                 </a>
-                <a href="https://www.instagram.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(24px,3.3cqw,48px)] h-[clamp(24px,3.3cqw,48px)] rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] flex items-center justify-center text-white shadow-md hover:scale-110 transition-transform duration-200">
+                <a href="https://www.instagram.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(18px,4cqw,32px)] h-[clamp(18px,4cqw,32px)] md:w-[clamp(32px,3.3cqw,48px)] md:h-[clamp(32px,3.3cqw,48px)] rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] flex items-center justify-center text-white shadow-md hover:scale-110 transition-transform duration-200">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[50%] h-[50%]">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                   </svg>
                 </a>
-                <a href="https://x.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(24px,3.3cqw,48px)] h-[clamp(24px,3.3cqw,48px)] rounded-full bg-white flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden">
+                <a href="https://x.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(18px,4cqw,32px)] h-[clamp(18px,4cqw,32px)] md:w-[clamp(32px,3.3cqw,48px)] md:h-[clamp(32px,3.3cqw,48px)] rounded-full bg-white flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden">
                   <Image src="/images/Union.png" alt="X" width={48} height={48} className="w-1/2 h-1/2 object-contain" />
                 </a>
               </div>

@@ -17,7 +17,7 @@ export default function KeriaDetails() {
           className="relative z-10 w-full h-auto object-contain block"
         />
         
-        <div className="absolute -bottom-11 left-0 w-full z-50 flex items-end pointer-events-none">
+        <div className="absolute -bottom-[5%] left-0 w-full z-50 flex items-end pointer-events-none">
           <Image 
             src="/images/vachngan2.png" 
             alt="Vách ngăn giấy rách" 

@@ -6,8 +6,9 @@ export default function KeriaBoard() {
   return (
     <section className="relative w-full h-auto bg-[#f3f4f6] flex flex-col items-center mx-auto [container-type:inline-size] pt-[clamp(40px,6cqw,80px)]">
       
-      {/* Đã tăng mb-[clamp(24px...)] cũ thành mb-[clamp(120px,10vw,180px)] để tạo khoảng trống lớn dưới bài đăng */}
-      <div className="relative w-[70%] mb-[clamp(120px,10vw,180px)] grid grid-cols-1 md:grid-cols-2 grid-rows-3 gap-[clamp(16px,1.6cqw,24px)] z-10">
+      {/* 1. GIẢM MARGIN BOTTOM TRÊN MOBILE: 
+          Đổi từ 120px xuống 60px để khoảng trống trên điện thoại vừa phải hơn */}
+      <div className="relative w-[70%] mb-[clamp(60px,10vw,180px)] grid grid-cols-1 md:grid-cols-2 grid-rows-3 gap-[clamp(16px,1.6cqw,24px)] z-10">
         
         {cards.map((item) => (
           <div 
@@ -56,7 +57,11 @@ export default function KeriaBoard() {
 
       </div>
 
-      <div className="absolute -bottom-[4.9%] left-0 w-full z-60 flex items-end translate-y-[1px] pointer-events-none">
+      {/* 2. SỬA LẠI VỊ TRÍ VÁCH NGĂN:
+          Dùng bottom-0 để neo sát đáy section, sau đó dùng translate-y-[80%] 
+          để đẩy nó tụt xuống dưới một đoạn bằng 80% CHIỀU CAO CỦA VÁCH NGĂN. 
+          Cách này đảm bảo khoảng cách luôn chuẩn xác trên cả Desktop lẫn Mobile! */}
+      <div className="absolute bottom-0 left-0 w-full z-60 flex items-end translate-y-[80%] pointer-events-none">
         <Image 
           src="/images/vachngan3.png" 
           alt="Vách ngăn giấy rách" 
