@@ -1,9 +1,9 @@
-import LockerHero from "@/components/LockerHero";
-import KeriaDetails from "@/components/KeriaDetails";
-import KeriaBoard from "@/components/KeriaBoard";
-import VideoYoutube from "@/components/videoYoutube";
+import LockerHero from "@/app/TrangChu/LockerHero";
+import KeriaDetails from "@/app/TrangChu/KeriaDetails";
+import KeriaBoard from "@/app/TrangChu/KeriaBoard";
+import VideoYoutube from "@/app/TrangChu/videoYoutube";
 import { Metadata, Viewport } from "next";
-import FacebookFeed from "@/components/facebookfeed";
+import FacebookFeed from "@/app/TrangChu/facebookfeed";
 
 export default function Home() {
   return (
