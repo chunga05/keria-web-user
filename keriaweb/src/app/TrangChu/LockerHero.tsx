@@ -2,7 +2,6 @@ import Image from "next/image";
 
 export default function LockerHero() {
   return (
-    
     <div className="relative w-full aspect-[1440/1024] bg-[#7CB9E8] flex-shrink-0 flex flex-col items-center overflow-hidden [container-type:inline-size]">
       
       {/* Lớp nền tủ đồ */}
@@ -89,41 +88,41 @@ export default function LockerHero() {
               />
 
               <div className="w-[85%] mx-auto -rotate-3 -translate-x-[3.125%]"> 
-                {/* ĐÃ SỬA: Chia breakpoint cho điện thoại (tối thiểu 7px, scale nhanh hơn 2.5cqw) và máy tính (md:...) */}
-                <p className="text-[#0F0F4F] font-medium text-center tracking-wide leading-snug md:leading-relaxed text-[clamp(7px,2.5cqw,16px)] md:text-[clamp(14px,1.6cqw,23px)]">
+                {/* ĐÃ SỬA: Dùng 1.6cqw cố định để chữ scale tỷ lệ thuận chính xác 100% theo kích thước giấy */}
+                <p className="text-[#0F0F4F] font-medium text-center tracking-wide leading-[1.6] text-[1.6cqw]">
                   DearKeriaVN tồn tại với mục tiêu ủng hộ Support xuất sắc nhất lịch sử Liên Minh Huyền Thoại - 
                   <strong className="text-black font-bold"> Ryu &apos;Keria&apos; Minseok</strong>, cùng đồng hành và lưu giữ lại những dấu ấn rực rỡ theo từng cột mốc sự nghiệp, dõi theo mỗi bước chân nỗ lực trên hành trình vĩ đại của 
                   <em className="font-semibold italic"> Quái vật Thiên tài.</em>
                 </p>
               </div>
               
-              {/* ĐÃ SỬA: Chia breakpoint cho kích thước Icon và Gap */}
-              <div className="flex items-center justify-center gap-[3cqw] md:gap-[2cqw] mt-[3%] pointer-events-auto -rotate-3 -translate-x-[2.5%]">
-               <a 
+              {/* ĐÃ SỬA: Các icon cũng dùng cqw để scale mượt mà y như chữ */}
+              <div className="flex items-center justify-center gap-[2cqw] mt-[3%] pointer-events-auto -rotate-3 -translate-x-[2.5%]">
+                <a 
                   href="https://www.facebook.com/dearkeriavn" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="w-[clamp(18px,4cqw,32px)] h-[clamp(18px,4cqw,32px)] md:w-[clamp(32px,3.3cqw,48px)] md:h-[clamp(32px,3.3cqw,48px)] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden"
+                  className="w-[3.3cqw] h-[3.3cqw] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden"
                 >
                   <Image 
-                    src="/images/facelogo.png" /* Thay đường dẫn này bằng tên file ảnh logo Facebook thực tế của bạn */
+                    src="/images/facelogo.png" 
                     alt="Facebook" 
                     width={48} 
                     height={48} 
                     className="w-full h-full object-cover" 
                   />
                 </a>
-                <a href="https://www.threads.com/@dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(18px,4cqw,32px)] h-[clamp(18px,4cqw,32px)] md:w-[clamp(32px,3.3cqw,48px)] md:h-[clamp(32px,3.3cqw,48px)] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden bg-black">
+                <a href="https://www.threads.com/@dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[3.3cqw] h-[3.3cqw] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden bg-black">
                   <Image src="/images/threadicon.png" alt="Threads" width={48} height={48} className="w-full h-full object-cover" />
                 </a>
-                <a href="https://www.instagram.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(18px,4cqw,32px)] h-[clamp(18px,4cqw,32px)] md:w-[clamp(32px,3.3cqw,48px)] md:h-[clamp(32px,3.3cqw,48px)] rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] flex items-center justify-center text-white shadow-md hover:scale-110 transition-transform duration-200">
+                <a href="https://www.instagram.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[3.3cqw] h-[3.3cqw] rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] flex items-center justify-center text-white shadow-md hover:scale-110 transition-transform duration-200">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[50%] h-[50%]">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                   </svg>
                 </a>
-                <a href="https://x.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[clamp(18px,4cqw,32px)] h-[clamp(18px,4cqw,32px)] md:w-[clamp(32px,3.3cqw,48px)] md:h-[clamp(32px,3.3cqw,48px)] rounded-full bg-white flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden">
+                <a href="https://x.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-[3.3cqw] h-[3.3cqw] rounded-full bg-white flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden">
                   <Image src="/images/Union.png" alt="X" width={48} height={48} className="w-1/2 h-1/2 object-contain" />
                 </a>
               </div>

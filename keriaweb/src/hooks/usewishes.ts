@@ -30,9 +30,19 @@ export function useWishes(idolId: number = 1, pageSize: number = 9) {
       const from = (page - 1) * pageSize;
       const to = from + pageSize - 1;
 
+      // CẬP NHẬT: Thêm join với bảng users để lấy avatar và khung viền
       const { data, error, count } = await supabase
         .from("fan_wishes")
-        .select("*", { count: "exact" })
+        .select(`
+          *,
+          users!fan_wishes_user_id_fkey (
+            display_name,
+            avatar_url,    
+            avatar_frames!fk_equipped_frame (
+              image_url
+            )
+          )
+        `, { count: "exact" })
         .eq("idol_id", idolId)
         .eq("is_hidden", false)
         .is("deleted_at", null)
@@ -49,23 +59,32 @@ export function useWishes(idolId: number = 1, pageSize: number = 9) {
           const isBlue = index % 2 === 0;
           const decoStars = ["none", "blue", "pink", "none"];
           
+          // Ưu tiên lấy tên từ bảng users (nếu user đăng nhập), nếu không thì dùng guest_name
+          const authorName = item.users?.display_name || item.guest_name || "Ẩn danh";
+          
           return {
             id: item.id,
-            author: item.guest_name || "Ẩn danh",
+            author: authorName,
             date: formattedDate,
             content: item.content,
             bgColor: isBlue ? "blue" : "pink",
             decorationStar: decoStars[index % 4],
             hasGoldStar: index % 5 === 0,
+            
+            // CẬP NHẬT: Truyền thêm avatar và frame vào object
+            avatar: item.users?.avatar_url || null,
+            frameUrl: item.users?.avatar_frames?.image_url || null,
+
             reactions: [
               { type: 'cry', emoji: "😭", count: item.react_cry || 0 },
               { type: 'wow', emoji: "😮", count: item.react_wow || 0 },
               { type: 'star', emoji: "🤩", count: item.react_star || 0 },
               { type: 'heart', emoji: "🥰", count: item.react_heart || 0 },
             ]
-          };
+         };
         });
         setMessages(formattedMessages);
+      
       }
     } catch (error) {
       console.error("Lỗi fetch:", error);
@@ -80,11 +99,16 @@ export function useWishes(idolId: number = 1, pageSize: number = 9) {
 
     setIsSubmitting(true);
     try {
+      // CẬP NHẬT: Nếu hệ thống của bạn có Auth (đăng nhập), bạn nên lấy thêm user_id hiện tại
+      // const session = await supabase.auth.getSession();
+      // const userId = session.data.session?.user.id || null;
+
       const { error } = await supabase.from("fan_wishes").insert([{
           idol_id: idolId,
           guest_name: guestName.trim(),
           content: content.trim(),
-          is_hidden: false
+          is_hidden: false,
+          // user_id: userId // <-- Truyền user_id vào đây nếu có
       }]);
       if (error) throw error;
       alert("Gửi lời chúc thành công!");
@@ -96,7 +120,6 @@ export function useWishes(idolId: number = 1, pageSize: number = 9) {
     }
   };
 
-  // CẬP NHẬT HÀM REACT ĐỂ CHẶN BẤM NHIỀU LẦN
   const handleReact = async (wishId: number, reactionType: string, currentCount: number) => {
     // 1. Kiểm tra xem user đã bấm cảm xúc này chưa
     const reactedTypes = userReactions[wishId] || [];
@@ -107,8 +130,8 @@ export function useWishes(idolId: number = 1, pageSize: number = 9) {
     
     // Cập nhật mảng lịch sử ở LocalStorage
     const newReactedTypes = hasReacted 
-      ? reactedTypes.filter(t => t !== reactionType) // Xóa khỏi danh sách đã bấm
-      : [...reactedTypes, reactionType];             // Thêm vào danh sách đã bấm
+      ? reactedTypes.filter(t => t !== reactionType)
+      : [...reactedTypes, reactionType];             
     
     const newUserReactions = { ...userReactions, [wishId]: newReactedTypes };
     setUserReactions(newUserReactions);
@@ -137,6 +160,5 @@ export function useWishes(idolId: number = 1, pageSize: number = 9) {
     if (error) console.error("Lỗi update reaction:", error);
   };
 
-  // NHỚ EXPORT THÊM userReactions ĐỂ GIAO DIỆN SỬ DỤNG
   return { messages, isLoading, isSubmitting, totalPages, userReactions, fetchWishes, submitWish, handleReact };
 }

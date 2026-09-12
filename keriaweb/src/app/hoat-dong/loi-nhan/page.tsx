@@ -12,7 +12,8 @@ export default function ToMyDearestPage() {
   const [wishContent, setWishContent] = useState("");
 
   // Gọi hook với idolId = 1 (hoặc số ID thực tế của bạn), lấy thêm totalPages
-const { messages, isLoading, isSubmitting, totalPages, userReactions, fetchWishes, submitWish, handleReact } = useWishes(1, 9);
+  const { messages, isLoading, isSubmitting, totalPages, userReactions, fetchWishes, submitWish, handleReact } = useWishes(1, 9);
+  
   // Khi thay đổi BỘ LỌC -> Phải reset trang về 1
   useEffect(() => {
     setCurrentPage(1);
@@ -33,8 +34,8 @@ const { messages, isLoading, isSubmitting, totalPages, userReactions, fetchWishe
     });
   };
 
-const safeTotalPages = Math.max(1, totalPages);
-const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
+  const safeTotalPages = Math.max(1, totalPages);
+  const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
 
   return (
     <main className="min-h-screen bg-[#F4F5F7] pb-20 pt-20 font-sans">
@@ -42,7 +43,6 @@ const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
         
         {/* === PHẦN FORM NHẬP LỜI CHÚC (GIỮ NGUYÊN) === */}
         <div className="relative mx-auto mb-12 w-full max-w-4xl rounded-xl bg-white px-6 pb-12 pt-20 shadow-sm md:px-12">
-          {/* ... (Các thẻ Image và Title giữ nguyên) ... */}
           <div className="absolute -top-10 left-1/2 w-[280px] -translate-x-1/2 drop-shadow-md md:w-[461px]">
             <Image src="/images/tomydear.png" alt="To My Dearest" width={461} height={88} priority className="h-auto w-full object-contain" />
           </div>
@@ -99,11 +99,31 @@ const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
                 )}
 
                 <div className="mb-4 flex items-center gap-3">
-                  {msg.avatar && (
-                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-300">
-                       <Image src={msg.avatar} alt={msg.author} width={40} height={40} className="h-full w-full object-cover" />
-                    </div>
-                  )}
+                  
+                  {/* === BỌC AVATAR VÀ KHUNG VÀO ĐÂY === */}
+                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center">
+                    
+                    {/* Render ảnh Khung lấy thẳng từ Database (nếu có) */}
+                    {msg.frameUrl && (
+                      <div className="absolute -inset-2 z-10 pointer-events-none">
+                        <Image 
+                          src={msg.frameUrl} 
+                          alt="avatar-frame" 
+                          fill 
+                          className="object-contain" 
+                        />
+                      </div>
+                    )}
+
+                    {/* Render Avatar gốc */}
+                    {msg.avatar && (
+                      <div className="h-10 w-10 overflow-hidden rounded-full bg-gray-300">
+                        <Image src={msg.avatar} alt={msg.author} width={40} height={40} className="h-full w-full object-cover" />
+                      </div>
+                    )}
+                  </div>
+                  {/* ================================== */}
+
                   <div>
                     <div className="flex items-center gap-1">
                       <span className="text-[15px] font-bold text-gray-900">{msg.author}</span>
@@ -119,7 +139,6 @@ const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
 
                 <div className="flex flex-wrap justify-center gap-6">
                   {msg.reactions.map((reaction: any, index: number) => {
-                    // Kiểm tra xem user này đã bấm biểu tượng này ở lời chúc này chưa
                     const hasReacted = userReactions[msg.id]?.includes(reaction.type);
                     
                     return (
@@ -128,8 +147,8 @@ const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
                         onClick={() => handleReact(msg.id, reaction.type, reaction.count)} 
                         className={`flex flex-col items-center gap-1 transition-all p-1.5 rounded-lg
                           ${hasReacted 
-                            ? "bg-white/50 scale-110 shadow-sm" // Style nổi bật khi ĐÃ BẤM
-                            : "hover:scale-125 active:scale-95" // Style bình thường khi CHƯA BẤM
+                            ? "bg-white/50 scale-110 shadow-sm"
+                            : "hover:scale-125 active:scale-95"
                           }`}
                       >
                         <span className="text-[22px] leading-none">{reaction.emoji}</span>
@@ -152,7 +171,6 @@ const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
         {!isLoading && (
           <div className="mt-12 flex items-center justify-center gap-6">
             
-            {/* Nút TRƯỚC - Luôn màu Xanh */}
             <button 
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={currentPage <= 1}
@@ -164,7 +182,6 @@ const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
               </svg>
             </button>
 
-            {/* Các nút Số Trang (Sẽ luôn có ít nhất nút số 1) */}
             <div className="flex gap-2 mx-2">
               {pagesArray.map((pageNum) => (
                 <button 
@@ -180,7 +197,6 @@ const pagesArray = Array.from({ length: safeTotalPages }, (_, i) => i + 1);
               ))}
             </div>
 
-            {/* Nút TIẾP THEO - Luôn màu Hồng */}
             <button 
               onClick={() => setCurrentPage(prev => Math.min(safeTotalPages, prev + 1))}
               disabled={currentPage >= safeTotalPages}
