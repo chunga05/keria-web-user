@@ -6,8 +6,7 @@ import Image from "next/image";
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import FallingStars from "@/components/FallingStars";
-import { Meteors } from "@/components/ui/meteors";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,13 +58,7 @@ export default function RootLayout({
           />
         </div>
 
-        {/* Layer 2: Lớp nền sao rơi (Nằm trên ảnh nền, dưới nội dung) */}
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          <FallingStars />
-          <Meteors number={60} />
-        </div>
-        
-        {/* Layer 3: VÙNG KHUNG CHÍNH (Đã đổi thành full width) */}
+        {/* Nội dung chính */}
         <div className="relative z-10 w-full min-h-screen flex flex-col">
           <Header />
 

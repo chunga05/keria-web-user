@@ -12,8 +12,6 @@ export interface ProjectStage {
 }
 
 export function useProjectStages(projectId?: number) {
-console.log('👀 Giá trị projectId truyền vào useProjectStages:', projectId, typeof projectId);
-console.trace('📍 Vết gọi modal từ file nào:');
   const [stages, setStages] = useState<ProjectStage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,8 +26,6 @@ console.trace('📍 Vết gọi modal từ file nào:');
     }
 
     const fetchStages = async () => {
-      console.log('🔎 Đang lấy stages cho projectId:', projectId);
-
       setLoading(true);
       setError(null);
 
@@ -40,8 +36,7 @@ console.trace('📍 Vết gọi modal từ file nào:');
         .eq('project_id', Number(projectId))
         .order('stage_order', { ascending: true });
 
-      console.log('📦 Data:', data);
-      if (error) console.log('❌ Error:', error);
+      if (error) console.error('Error fetching stages:', error);
 
       if (error) {
         setError(error.message);

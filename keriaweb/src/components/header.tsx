@@ -167,10 +167,10 @@ export default function Header() {
   // ============================================================
   const handleLogout = async () => {
     setIsUserMenuOpen(false);
-
     await supabase.auth.signOut();
-
-    window.location.reload();
+    // Xoá state ngay lập tức — không cần reload toàn trang
+    setUserData(null);
+    router.refresh();
   };
 
   // ============================================================

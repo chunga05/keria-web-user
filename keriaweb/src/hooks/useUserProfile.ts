@@ -8,6 +8,7 @@ export function useUserProfile() {
   
   const [profile, setProfile] = useState<any>(null);
   const [email, setEmail] = useState<string>("");
+  const [userId, setUserId] = useState<string | null>(null); // cache để dùng lại
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -18,10 +19,11 @@ export function useUserProfile() {
     equipped_frame: ""
   });
 
-  // Danh sách các khung viền đầy đủ thông tin (id, image_url, name) để hiển thị cho user chọn
   const [availableFrames, setAvailableFrames] = useState<any[]>([]);
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchUserProfile = async () => {
       try {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -30,57 +32,55 @@ export function useUserProfile() {
           return;
         }
         
+        if (cancelled) return;
         setEmail(user.email ?? "");
+        setUserId(user.id); // cache userId
 
-        // 1. Lấy thông tin user
         const { data: userRecord, error: dbError } = await supabase
           .from("users")
           .select("*")
           .eq("id", user.id)
           .single();
 
-        if (dbError || !userRecord) return;
+        if (dbError || !userRecord || cancelled) return;
 
-        // 2. Truy vấn sang bảng chứa danh mục khung viền (Giả sử bảng của bạn tên là "frames")
-        // Lấy toàn bộ thông tin các khung mà user này đang sở hữu trong mảng unlocked_frames
         let resolvedFrames: any[] = [];
         if (userRecord.unlocked_frames && userRecord.unlocked_frames.length > 0) {
           const { data: frameData } = await supabase
-            .from("avatar_frames") // <-- Đảm bảo tên bảng danh mục khung viền của bạn khớp với chữ này (nếu khác hãy đổi lại)
+            .from("avatar_frames")
             .select("id, name, image_url")
             .in("id", userRecord.unlocked_frames);
 
-          if (frameData) {
+          if (frameData && !cancelled) {
             resolvedFrames = frameData;
           }
         }
 
-        // Lưu profile đã được bọc thêm danh sách khung chi tiết
-        setProfile({
-          ...userRecord,
-          unlocked_frames_details: resolvedFrames // Lưu danh sách object khung để hiển thị UI
-        });
-
-        // Đổ dữ liệu vào form edit
-        setEditForm({
-          display_name: userRecord.display_name || "",
-          address: userRecord.address || "",
-          equipped_frame: userRecord.equipped_frame || ""
-        });
+        if (!cancelled) {
+          setProfile({
+            ...userRecord,
+            unlocked_frames_details: resolvedFrames
+          });
+          setEditForm({
+            display_name: userRecord.display_name || "",
+            address: userRecord.address || "",
+            equipped_frame: userRecord.equipped_frame || ""
+          });
+        }
 
       } catch (error) {
         console.error("Lỗi:", error);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchUserProfile();
+    return () => { cancelled = true; };
   }, [router]);
 
-  // Hàm Lưu dữ liệu lên Supabase
-const handleSaveProfile = async () => {
-  if (!profile) {
+  const handleSaveProfile = async () => {
+  if (!profile || !userId) {
     alert("Không tìm thấy profile!");
     return;
   }
@@ -93,24 +93,11 @@ const handleSaveProfile = async () => {
   try {
     setIsSaving(true);
 
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      alert("Bạn chưa đăng nhập!");
-      return;
-    }
-
     const updateData = {
       display_name: editForm.display_name.trim(),
       address: editForm.address.trim() || null,
       equipped_frame: editForm.equipped_frame || null,
     };
-
-    console.log("User ID:", user.id);
-    console.log("Update data:", updateData);
 
     const {
       data: updatedUser,
@@ -118,22 +105,14 @@ const handleSaveProfile = async () => {
     } = await supabase
       .from("users")
       .update(updateData)
-      .eq("id", user.id)
+      .eq("id", userId) // dùng cached userId
       .select("*")
       .single();
 
     if (updateError) {
-      console.error("UPDATE ERROR:", updateError);
-
-      alert(
-        "Lưu thất bại!\n\n" +
-        updateError.message
-      );
-
+      alert("Lưu thất bại!\n\n" + updateError.message);
       return;
     }
-
-    console.log("UPDATED USER:", updatedUser);
 
     setProfile({
       ...updatedUser,
@@ -144,24 +123,16 @@ const handleSaveProfile = async () => {
     setEditForm({
       display_name: updatedUser.display_name || "",
       address: updatedUser.address || "",
-      equipped_frame:
-        updatedUser.equipped_frame
-          ? String(updatedUser.equipped_frame)
-          : "",
+      equipped_frame: updatedUser.equipped_frame
+        ? String(updatedUser.equipped_frame)
+        : "",
     });
 
     setIsEditing(false);
-
     alert("Lưu thông tin thành công!");
 
   } catch (error: any) {
-    console.error("SAVE ERROR:", error);
-
-    alert(
-      "Có lỗi xảy ra:\n\n" +
-      (error?.message || "Unknown error")
-    );
-
+    alert("Có lỗi xảy ra:\n\n" + (error?.message || "Unknown error"));
   } finally {
     setIsSaving(false);
   }

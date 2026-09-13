@@ -10,12 +10,20 @@ export interface Post {
   created_at: string;
 }
 
-// Hàm lấy danh sách bài viết cho User hiển thị ra màn hình
-export async function getPosts(): Promise<{ data: Post[] | null; error: any }> {
-  const { data, error } = await supabase
+// Hàm lấy danh sách bài viết cho User — có phân trang, chỉ lấy cột cần thiết
+export async function getPosts(
+  page = 1,
+  pageSize = 10
+): Promise<{ data: Post[] | null; error: any; totalCount: number | null }> {
+  const from = (page - 1) * pageSize;
+  const { data, error, count } = await supabase
     .from("posts")
-    .select("*")
-    .order("created_at", { ascending: false });
+    .select(
+      "id, content, image_urls, video_url, likes_count, comments_count, created_at",
+      { count: "exact" }
+    )
+    .order("created_at", { ascending: false })
+    .range(from, from + pageSize - 1);
 
-  return { data, error };
+  return { data, error, totalCount: count };
 }

@@ -8,17 +8,19 @@ export default function KeriaBoard() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Tải danh sách bài viết khi vào trang
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchKeriaPosts() {
       setLoading(true);
-      const { data } = await getPosts();
-      if (data) {
+      const { data } = await getPosts(1, 10); // lấy 10 bài mới nhất
+      if (!cancelled && data) {
         setPosts(data);
       }
-      setLoading(false);
+      if (!cancelled) setLoading(false);
     }
     fetchKeriaPosts();
+    return () => { cancelled = true; };
   }, []);
 
   return (
