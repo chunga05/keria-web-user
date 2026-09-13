@@ -1,9 +1,10 @@
 "use client";
 
+
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import ActiveIndicator from "@/components/ui/ActiveIndicator";
 import { supabase } from "@/lib/supabase";
 
@@ -60,6 +61,7 @@ type UserRecord = {
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

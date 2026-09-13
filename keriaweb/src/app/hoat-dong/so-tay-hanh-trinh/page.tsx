@@ -6,14 +6,20 @@ import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button
 import { BookOpen, Award } from 'lucide-react';
 import { InstructionModal } from './instruction-modal';
 import { NhanDauModal } from './nhan-dau-modal';
+import { usePassportData } from '@/hooks/usePassportData';
+import { useActiveProject } from '@/hooks/useActiveProject';
 
 export default function SoTayHanhTrinhPage() {
-  const [isOpen, setIsOpen] = useState(false); // State lật mở sổ
+  const [isOpen, setIsOpen] = useState(false);
   const [isInstructionOpen, setIsInstructionOpen] = useState(false);
-  const [isNhanDauOpen, setIsNhanDauOpen] = useState(false); // State mở Modal Nhận Dấu
+  const [isNhanDauOpen, setIsNhanDauOpen] = useState(false);
 
-  // ID dự án hiện tại của trang Sổ Tay (đặt cố định 13 để nạp chặng từ Supabase)
-  const currentProjectId = 13;
+  // 1. Hook passport
+  const { passportInfo } = usePassportData();
+
+  // 2. Hook tự động lấy project đang active từ database (không còn fix cứng 13)
+  const { activeProject } = useActiveProject();
+  const currentProjectId = activeProject?.id;
 
   return (
     <main className="relative w-screen h-screen overflow-hidden select-none bg-[#7CB9E8]">
@@ -55,27 +61,18 @@ export default function SoTayHanhTrinhPage() {
 
         {/* CÁC ELEMENT NGÔI SAO TRANG TRÍ */}
         <div className="absolute inset-0 z-10 pointer-events-none">
-          {/* 1. Sao xanh đậm */}
           <div className="absolute top-[7%] left-[4%] w-[13%] aspect-square">
             <Image src="/images/element/darkblue.png" alt="Dark Blue Star" fill className="object-contain" />
           </div>
-
-          {/* 2. Sao hồng nhạt kẻ ô to */}
           <div className="absolute top-[6%] right-[-2%] w-[18%] aspect-square">
             <Image src="/images/element/lightpink.png" alt="Light Pink Star" fill className="object-contain" />
           </div>
-
-          {/* 3. Sao xanh nhạt caro */}
           <div className="absolute bottom-[5%] -left-[0.5%] w-[19%] aspect-square">
             <Image src="/images/element/lightblue.png" alt="Light Blue Star" fill className="object-contain" />
           </div>
-
-          {/* 4. Sao hồng sen kẻ ô */}
           <div className="absolute bottom-[1%] -left-[0.5%] w-[12%] aspect-square">
             <Image src="/images/element/pink.png" alt="Pink Star" fill className="object-contain" />
           </div>
-
-          {/* 5. Sao xanh dương */}
           <div className="absolute bottom-[8%] right-[5%] w-[12%] aspect-square">
             <Image src="/images/element/blue.png" alt="Blue Star" fill className="object-contain" />
           </div>
@@ -87,8 +84,7 @@ export default function SoTayHanhTrinhPage() {
             isOpen ? 'translate-x-[50%]' : 'translate-x-0'
           }`}
         >
-
-          {/* A. PHẦN RUỘT SỔ MỞ 2 TRANG (OPEN BOOK) */}
+          {/* A. PHẦN RUỘT SỔ MỞ 2 TRANG */}
           <div 
             onClick={() => setIsOpen(false)}
             className={`absolute top-0 left-[-100%] w-[200%] h-full transition-opacity duration-700 select-none ${
@@ -97,7 +93,6 @@ export default function SoTayHanhTrinhPage() {
                 : 'opacity-0 pointer-events-none'
             }`}
           >
-            {/* 1. Nền bìa da mở + còng */}
             <Image
               src="/images/handbook/openbook.png"
               alt="Open Book Inside"
@@ -105,7 +100,7 @@ export default function SoTayHanhTrinhPage() {
               className="w-full h-full object-contain pointer-events-none"
             />
 
-            {/* 2. Trang 1 bên trái */}
+            {/* Trang 1 bên trái */}
             <div className="absolute top-[8%] left-[13%] w-[35%] h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm pointer-events-none z-10">
               <Image
                 src="/images/handbook/page1.png"
@@ -123,7 +118,7 @@ export default function SoTayHanhTrinhPage() {
               </div>
             </div>
 
-            {/* 3. Trang 2 bên phải (KERIA PAWPORT) */}
+            {/* Trang 2 bên phải (KERIA PAWPORT) */}
             <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm z-10 p-[6%] flex flex-col justify-between">
               <Image
                 src="/images/handbook/page2.png"
@@ -132,7 +127,6 @@ export default function SoTayHanhTrinhPage() {
                 className="w-full h-full object-contain pointer-events-none -z-10"
               />
 
-              {/* Nửa trên: Ảnh thẻ + Phụ kiện + Title Pawport */}
               <div className="relative w-full h-[54%]">
                 <div className="absolute top-[15%] -left-[12%] w-[65%] aspect-[3/4] bg-white p-[3%] rounded shadow-md -rotate-5">
                   <div className="relative w-full h-full overflow-hidden rounded-[2px]">
@@ -210,26 +204,26 @@ export default function SoTayHanhTrinhPage() {
                 </div>
               </div>
 
-              {/* Nửa dưới: Form thông tin cá nhân Passport */}
+              {/* Form Passport */}
               <div className="absolute left-[13%] bottom-[17%] w-[75%] flex flex-col gap-2 px-1 pb-2">  
                 <div className="flex flex-col">
                   <span className="text-[13px] text-gray-700 tracking-tight">Tên/Nickname</span>
-                  <div className="w-full bg-white/80 rounded px-2 py-1 text-[16px] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased">
-                    Chani
+                  <div className="w-full bg-white/80 rounded px-2 py-1 text-[16px] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased min-h-[32px] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                    {passportInfo.nickname}
                   </div>
                 </div>
 
                 <div className="flex flex-col">
                   <span className="text-[13px] text-gray-700 tracking-tight">Ngày khởi hành</span>
-                  <div className="w-full bg-white/80 rounded px-2 py-1 text-[16px] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased">
-                    14/10/2026
+                  <div className="w-full bg-white/80 rounded px-2 py-1 text-[16px] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased min-h-[32px] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                    {passportInfo.departureDate}
                   </div>
                 </div>
 
                 <div className="flex flex-col">
                   <span className="text-[13px] text-gray-700 tracking-tight">Địa bàn hoạt động</span>
-                  <div className="w-full bg-white/80 rounded px-2 py-1 text-[16px] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased">
-                    Hồ Chí Minh
+                  <div className="w-full bg-white/80 rounded px-2 py-1 text-[16px] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased min-h-[32px] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                    {passportInfo.location}
                   </div>
                 </div>
 
@@ -239,7 +233,7 @@ export default function SoTayHanhTrinhPage() {
               </div>
             </div>
 
-            {/* 4. DẢI DA GÁY Ở GIỮA */}
+            {/* Gáy sổ ở giữa */}
             <div className="absolute top-[7%] left-1/2 -translate-x-1/2 w-[7.6%] h-[90%] pointer-events-none z-20">
               <Image
                 src="/images/handbook/midgap.png"
@@ -328,7 +322,7 @@ export default function SoTayHanhTrinhPage() {
         onClose={() => setIsInstructionOpen(false)}
       />
 
-      {/* MODAL NHẬN DẤU: Đã map chuẩn state và ID 13 */}
+      {/* MODAL NHẬN DẤU (truyền projectId động) */}
       <NhanDauModal 
         isOpen={isNhanDauOpen} 
         onClose={() => setIsNhanDauOpen(false)} 
