@@ -1,42 +1,135 @@
-// app/api/projects/[id]/stages/route.ts
-import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
+
+interface RouteContext {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
 export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  _request: Request,
+  { params }: RouteContext
 ) {
   try {
+    const supabase = await createClient();
+
+    // ============================================================
+    // 1. LẤY PROJECT ID TỪ URL
+    // Ví dụ: /api/projects/1/stages
+    // ============================================================
+
     const { id } = await params;
+
     const projectId = Number(id);
 
-    if (isNaN(projectId)) {
+    if (!Number.isInteger(projectId) || projectId <= 0) {
       return NextResponse.json(
-        { error: 'ID dự án không hợp lệ' },
-        { status: 400 }
+        {
+          error: "projectId không hợp lệ",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
-    const supabase = await createClient();
+    // ============================================================
+    // 2. KIỂM TRA PROJECT CÓ TỒN TẠI KHÔNG
+    // ============================================================
 
-    // Query các chặng thuộc project từ Supabase
-    const { data, error } = await supabase
-      .from('project_stages')
-      .select('id, project_id, stage_order, stage_name, stamp_image_url')
-      .eq('project_id', projectId)
-      .order('stage_order', { ascending: true });
+    const {
+      data: project,
+      error: projectError,
+    } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("id", projectId)
+      .maybeSingle();
 
-    if (error) {
-      console.error('Lỗi khi truy vấn project_stages:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (projectError) {
+      console.error(
+        "❌ Lỗi khi tìm project:",
+        projectError
+      );
+
+      return NextResponse.json(
+        {
+          error: projectError.message,
+        },
+        {
+          status: 500,
+        }
+      );
     }
 
-    return NextResponse.json(data ?? []);
-  } catch (err) {
-    console.error('API Error /api/projects/[id]/stages:', err);
+    if (!project) {
+      return NextResponse.json(
+        {
+          error: "Không tìm thấy project",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    // ============================================================
+    // 3. LẤY CÁC CHẶNG CỦA PROJECT
+    // ============================================================
+
+    const {
+      data: stages,
+      error: stagesError,
+    } = await supabase
+      .from("project_stages")
+      .select(
+        "id, project_id, stage_order, stage_name, stamp_image_url"
+      )
+      .eq("project_id", projectId)
+      .order("stage_order", {
+        ascending: true,
+      });
+
+    if (stagesError) {
+      console.error(
+        "❌ Lỗi khi truy vấn project_stages:",
+        stagesError
+      );
+
+      return NextResponse.json(
+        {
+          error: stagesError.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+    // ============================================================
+    // 4. TRẢ VỀ ARRAY STAGES
+    // ============================================================
+
     return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
+      stages ?? [],
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error(
+      "❌ API Error /api/projects/[id]/stages:",
+      error
+    );
+
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }

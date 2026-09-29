@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import Image from 'next/image';
 import { X, ChevronDown, Loader2 } from 'lucide-react';
 import { useProjectStages, FormattedStageItem } from '@/hooks/useProjectStages';
-import { supabase } from '@/lib/supabase';
-
-interface ProjectOption {
-  id: number;
-  title: string;
-}
+import {
+  ProjectOption,
+  validateSecureImage,
+  fetchActiveProjects,
+} from '@/hooks/nhanDauUtils';
 
 export interface NhanDauModalProps {
   isOpen: boolean;
@@ -23,28 +22,23 @@ export function NhanDauModal({ isOpen, onClose, projectId }: NhanDauModalProps) 
   const [selectedStage, setSelectedStage] = useState<FormattedStageItem | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Hook quản lý toàn bộ dữ liệu, trạng thái và upload của các chặng
+  // Hook quản lý dữ liệu các chặng
   const { stages, loading, error, uploadingStageId, submitStageProof } =
     useProjectStages(isOpen && activeProjectId ? Number(activeProjectId) : undefined);
 
-  // Nạp danh sách project active
+  // Nạp danh sách dự án khi modal mở
   useEffect(() => {
     if (!isOpen) return;
 
-    async function loadProjects() {
-      const { data } = await supabase
-        .from('projects')
-        .select('id, title')
-        .eq('is_active', true)
-        .order('id', { ascending: false });
-
-      if (data && data.length > 0) {
+    async function load() {
+      const data = await fetchActiveProjects();
+      if (data.length > 0) {
         setProjectList(data);
         setActiveProjectId((prev) => prev ?? projectId ?? data[0].id);
       }
     }
 
-    loadProjects();
+    load();
   }, [isOpen, projectId]);
 
   // Kích hoạt chọn file
@@ -56,10 +50,19 @@ export function NhanDauModal({ isOpen, onClose, projectId }: NhanDauModalProps) 
     }
   };
 
-  // Nộp file minh chứng
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Nộp file minh chứng sau khi đã kiểm tra an toàn
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !selectedStage) return;
+
+    // Kiểm tra an toàn file qua hàm đã tách
+    const checkResult = await validateSecureImage(file);
+    if (!checkResult.valid) {
+      alert(`⚠️ Cảnh báo an toàn:\n${checkResult.message}`);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setSelectedStage(null);
+      return;
+    }
 
     const isSuccess = await submitStageProof(selectedStage.id, file);
     if (isSuccess) {
@@ -75,7 +78,7 @@ export function NhanDauModal({ isOpen, onClose, projectId }: NhanDauModalProps) 
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp"
         onChange={handleFileChange}
         className="hidden"
       />

@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { getCurrentJwtUser } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 
 export type StampStatus = 'chua_gui' | 'da_gui' | 'tu_choi' | 'da_nhan';
@@ -98,8 +99,8 @@ export function useProjectStages(projectId?: number) {
 
   useEffect(() => {
     async function checkUser() {
-      const { data: { session } } = await supabase.auth.getSession();
-      setCurrentUserId(session?.user?.id || null);
+      const currentUser = await getCurrentJwtUser();
+      setCurrentUserId(currentUser?.id || null);
     }
     checkUser();
   }, []);
@@ -122,8 +123,8 @@ export function useProjectStages(projectId?: number) {
       const stageData: ProjectStage[] = await res.json();
       setStages(stageData ?? []);
 
-      const { data: { session } } = await supabase.auth.getSession();
-      const uid = session?.user?.id;
+      const currentUser = await getCurrentJwtUser();
+      const uid = currentUser?.id;
 
       if (uid && stageData.length > 0) {
         const stageIds = stageData.map((s) => s.id);

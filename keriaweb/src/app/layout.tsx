@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Montserrat } from 'next/font/google';
 import Image from "next/image";
@@ -7,16 +6,6 @@ import Image from "next/image";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const montserrat = Montserrat({
   subsets: ["vietnamese"], 
@@ -53,8 +42,7 @@ export default function RootLayout({
             alt="Locker Background"
             fill
             className="w-full h-full object-cover opacity-70" 
-            priority
-            quality={100}
+            quality={75}
           />
         </div>
 

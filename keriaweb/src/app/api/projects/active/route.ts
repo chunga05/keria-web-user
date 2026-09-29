@@ -1,63 +1,113 @@
-// app/api/projects/[id]/stages/route.ts
-import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET() {
   try {
-    const { id } = await params;
     const supabase = await createClient();
 
-    let targetProjectId: number;
+    // ============================================================
+    // 1. TÌM PROJECT ĐANG ACTIVE
+    // ============================================================
 
-    // Nếu truyền id là 'active' thì tự tìm project active mới nhất
-    if (id === 'active') {
-      const { data: activeProj, error: projError } = await supabase
-        .from('projects')
-        .select('id')
-        .eq('is_active', true)
-        .order('id', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+    const {
+      data: activeProject,
+      error: projectError,
+    } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("is_active", true)
+      .order("id", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-      if (projError || !activeProj) {
-        return NextResponse.json(
-          { error: 'Không tìm thấy dự án đang hoạt động' },
-          { status: 404 }
-        );
-      }
+    if (projectError) {
+      console.error(
+        "❌ Lỗi khi tìm project active:",
+        projectError
+      );
 
-      targetProjectId = activeProj.id;
-    } else {
-      targetProjectId = Number(id);
-      if (isNaN(targetProjectId)) {
-        return NextResponse.json(
-          { error: 'ID dự án không hợp lệ' },
-          { status: 400 }
-        );
-      }
+      return NextResponse.json(
+        {
+          error: projectError.message,
+        },
+        {
+          status: 500,
+        }
+      );
     }
 
-    // Query các chặng theo targetProjectId
-    const { data, error } = await supabase
-      .from('project_stages')
-      .select('id, project_id, stage_order, stage_name, stamp_image_url')
-      .eq('project_id', targetProjectId)
-      .order('stage_order', { ascending: true });
-
-    if (error) {
-      console.error('Lỗi khi truy vấn project_stages:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!activeProject) {
+      return NextResponse.json(
+        {
+          error: "Không tìm thấy dự án đang hoạt động",
+        },
+        {
+          status: 404,
+        }
+      );
     }
 
-    return NextResponse.json(data ?? []);
-  } catch (err: any) {
-    console.error('API Error /api/projects/[id]/stages:', err);
+    const projectId = activeProject.id;
+
+    // ============================================================
+    // 2. LẤY CÁC CHẶNG CỦA PROJECT ACTIVE
+    // ============================================================
+
+    const {
+      data: stages,
+      error: stagesError,
+    } = await supabase
+      .from("project_stages")
+      .select(
+        "id, project_id, stage_order, stage_name, stamp_image_url"
+      )
+      .eq("project_id", projectId)
+      .order("stage_order", {
+        ascending: true,
+      });
+
+    if (stagesError) {
+      console.error(
+        "❌ Lỗi khi truy vấn project_stages:",
+        stagesError
+      );
+
+      return NextResponse.json(
+        {
+          error: stagesError.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+    // ============================================================
+    // 3. TRẢ VỀ PROJECT ID + STAGES
+    // ============================================================
+
     return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
+      {
+        projectId,
+        stages: stages ?? [],
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error(
+      "❌ API Error /api/projects/active:",
+      error
+    );
+
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }

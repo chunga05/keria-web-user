@@ -1,3 +1,4 @@
+// Footer
 import Image from "next/image";
 import Link from "next/link";
 
@@ -68,11 +69,12 @@ export default function Footer() {
           
           {/* Cột 1 */}
           <div className="flex flex-col">
-            <h4 className="text-gray-900 font-semibold mb-4 text-[15px]">Trang chủ</h4>
+            <h4 className="text-gray-900 font-semibold mb-4 text-[15px]">Danh mục</h4>
             <ul className="space-y-3 text-gray-500 text-[14px]">
-              <li><Link href="/kerias" className="hover:text-[#FF76C3] transition-colors">KERIA&apos;S</Link></li>
-              <li><Link href="/hoat-dong" className="hover:text-[#FF76C3] transition-colors">HOẠT ĐỘNG</Link></li>
-              <li><Link href="/project" className="hover:text-[#FF76C3] transition-colors">PROJECT</Link></li>
+              <li><Link href="/" className="hover:text-[#FF76C3] transition-colors">Trang chủ</Link></li>
+              <li className="cursor-default">KERIA&apos;S</li>
+              <li className="cursor-default">HOẠT ĐỘNG</li>
+              <li className="cursor-default">PROJECT</li>
             </ul>
           </div>
 
@@ -90,7 +92,7 @@ export default function Footer() {
             <h4 className="text-gray-900 font-semibold mb-4 text-[15px]">Hoạt động</h4>
             <ul className="space-y-3 text-gray-500 text-[14px]">
               <li><Link href="/hoat-dong/loi-nhan" className="hover:text-[#FF76C3] transition-colors">Lời nhắn</Link></li>
-              <li><Link href="/hoat-dong/so-tay" className="hover:text-[#FF76C3] transition-colors">Sổ tay hành trình</Link></li>
+              <li><Link href="/hoat-dong/so-tay-hanh-trinh" className="hover:text-[#FF76C3] transition-colors">Sổ tay hành trình</Link></li>
             </ul>
           </div>
 
@@ -98,9 +100,9 @@ export default function Footer() {
           <div className="flex flex-col">
             <h4 className="text-gray-900 font-semibold mb-4 text-[15px]">Project</h4>
             <ul className="space-y-3 text-gray-500 text-[14px]">
-              <li><Link href="/project/welcome" className="hover:text-[#FF76C3] transition-colors">&apos;Welcome to Vietnam&apos; Project</Link></li>
-              <li><Link href="/project/supporting" className="hover:text-[#FF76C3] transition-colors">Supporting Project</Link></li>
-              <li><Link href="/project/donations" className="hover:text-[#FF76C3] transition-colors">Stream Donations</Link></li>
+              <li><Link href="/project/welcome-to-vietnam" className="hover:text-[#FF76C3] transition-colors">&apos;Welcome to Vietnam&apos; Project</Link></li>
+              <li><Link href="/content" className="hover:text-[#FF76C3] transition-colors">Supporting Project</Link></li>
+              <li><Link href="/stream-donation" className="hover:text-[#FF76C3] transition-colors">Stream Donations</Link></li>
             </ul>
           </div>
 

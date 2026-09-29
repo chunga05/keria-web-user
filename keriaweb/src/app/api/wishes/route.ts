@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+// 1. Import Redis Client
+import { redis } from "@/lib/redis";
 
 export async function GET(request: Request) {
   try {
@@ -9,7 +11,22 @@ export async function GET(request: Request) {
     const pageSize = Math.max(1, Number(searchParams.get("pageSize")) || 9);
     const filter = searchParams.get("filter") || "Mới nhất";
 
+    // ============================================================
+    // 2. TẠO CACHE KEY DUY NHẤT VÀ KIỂM TRA REDIS
+    // ============================================================
     const isAscending = filter === "Cũ nhất";
+    const CACHE_KEY = `wishes_api_i${idolId}_p${page}_s${pageSize}_${isAscending ? "old" : "new"}`;
+
+    const cachedData = await redis.get(CACHE_KEY);
+    if (cachedData) {
+      console.log("⚡ [API WISHES GET] Phản hồi ngay từ Redis Cache:", CACHE_KEY);
+      return NextResponse.json(JSON.parse(cachedData));
+    }
+
+    // ============================================================
+    // 3. NẾU KHÔNG CÓ CACHE -> GỌI SUPABASE
+    // ============================================================
+    console.log("🐢 [API WISHES GET] Lấy dữ liệu từ Supabase");
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
@@ -42,8 +59,8 @@ export async function GET(request: Request) {
     }
 
     const totalPages = count !== null ? Math.ceil(count / pageSize) : 1;
-
     const decoStars = ["none", "blue", "pink", "none"];
+    
     const formattedMessages = (data || []).map((item: any, index: number) => {
       const dateObj = new Date(item.created_at);
       const formattedDate = `${dateObj.getDate().toString().padStart(2, "0")}-${(dateObj.getMonth() + 1).toString().padStart(2, "0")}-${dateObj.getFullYear()}`;
@@ -69,11 +86,20 @@ export async function GET(request: Request) {
       };
     });
 
-    return NextResponse.json({
+    const responseData = {
       messages: formattedMessages,
       totalPages,
       totalCount: count || 0,
-    });
+    };
+
+    // ============================================================
+    // 4. LƯU KẾT QUẢ VÀO REDIS CACHE (30 GIÂY)
+    // ============================================================
+    if (formattedMessages.length > 0) {
+      await redis.set(CACHE_KEY, JSON.stringify(responseData), "EX", 30);
+    }
+
+    return NextResponse.json(responseData);
   } catch (error: any) {
     console.error("API Wishes GET Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

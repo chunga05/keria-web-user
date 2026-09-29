@@ -37,24 +37,31 @@ export default function LockerHero() {
           <div className="absolute top-[13%] left-[2%] w-[13.6%] z-0">
             <Image src="/images/bigpink.png" alt="Pin" width={174} height={174} className="w-full h-auto" />
           </div>
+          
+          {/* THÊM HOVER: Ngôi sao */}
           <div className="absolute top-[5%] -right-[4%] w-[20%] z-10">
-            <Image src="/images/Star.png" alt="Star" width={255} height={289} className="w-full h-auto" />
+            <Image src="/images/Star.png" alt="Star" width={255} height={289} className="w-full h-auto hover:scale-110 hover:rotate-6 transition-all duration-300" />
           </div>
           <div className="absolute -bottom-[2%] -left-[9.4%] w-[13.6%] z-20">
-            <Image src="/images/Star (1).png" alt="Star" width={182} height={182} className="w-full h-auto" />
+            <Image src="/images/Star (1).png" alt="Star" width={182} height={182} className="w-full h-auto hover:scale-110 hover:-rotate-6 transition-all duration-300" />
           </div>
           <div className="absolute bottom-[2.9%] -left-[5%] w-[21.8%] z-10">
-            <Image src="/images/Star (2).png" alt="Star" width={240} height={240} className="w-full h-auto" />
+            <Image src="/images/Star (2).png" alt="Star" width={240} height={240} className="w-full h-auto hover:scale-110 hover:rotate-3 transition-all duration-300" />
           </div>
+          
+          {/* THÊM HOVER: Trái tim */}
           <div className="absolute bottom-[20%] left-[11.5%] w-[7.8%] z-10">
-            <Image src="/images/Heart 2.png" alt="Heart" width={100} height={83} className="w-full h-auto" />
+            <Image src="/images/Heart 2.png" alt="Heart" width={100} height={83} className="w-full h-auto hover:scale-110 transition-transform duration-300" />
           </div>
+          
+          {/* THÊM HOVER: Ngôi sao */}
           <div className="absolute top-[23%] right-[16%] w-[11.7%] z-30">
-            <Image src="/images/Star (3).png" alt="Star" width={150} height={150} className="w-full h-auto" />
+            <Image src="/images/Star (3).png" alt="Star" width={150} height={150} className="w-full h-auto hover:scale-110 transition-transform duration-300" />
           </div>
           <div className="absolute bottom-[32%] right-[5%] w-[15.6%] z-10">
-            <Image src="/images/hongnhat.png" alt="Star" width={200} height={200} className="w-full h-auto" />
+            <Image src="/images/hongnhat.png" alt="Star" width={200} height={200} className="w-full h-auto hover:scale-110 hover:-rotate-3 transition-all duration-300" />
           </div>
+          
           <div className="absolute bottom-[26%] right-[35%] w-[2.7%] z-10">
             <Image src="/images/drawpink.png" alt="Star" width={35} height={35} className="w-full h-auto" />
           </div>
@@ -67,28 +74,39 @@ export default function LockerHero() {
           <div className="absolute top-[42%] right-[17%] w-[7.8%] z-10">
             <Image src="/images/ngoackep2.png" alt="Quote" width={100} height={120} className="w-full h-auto" />
           </div>
+          
+          {/* THÊM HOVER: Soft Star */}
           <div className="absolute top-[51%] left-[12%] w-[9.3%] z-10">
-            <Image src="/images/Soft Star.png" alt="Star" width={120} height={120} className="w-full h-auto" />
+            <Image src="/images/Soft Star.png" alt="Star" width={120} height={120} className="w-full h-auto hover:scale-110 transition-transform duration-300" />
           </div>
 
           {/* Vùng nội dung chữ và logo */}
           <div className="absolute inset-0 w-full h-full z-20 flex flex-col items-center pt-[8%]">
+            
+            {/* THÊM HOVER: Logo */}
             <div className="top-[15%] w-[18.3%] flex justify-center items-center mb-[2%] -translate-x-[17%]">
-              <Image src="/images/DEARKERIAVN LOGO 1.svg" alt="Logo" width={300} height={150} className="drop-shadow-lg w-full h-auto" />
+              <Image 
+                src="/images/DEARKERIAVN LOGO 1.svg" 
+                alt="Logo" 
+                width={300} 
+                height={150} 
+                className="drop-shadow-lg w-full h-auto cursor-pointer hover:scale-105 transition-transform duration-300" 
+              />
             </div>
 
             <div className="w-[75%] text-center font-montserrat mx-auto flex flex-col items-center">
+              
+              {/* THÊM HOVER: Title */}
               <Image 
                 src="/images/Group 5.png" 
                 alt="Title" 
                 width={790} 
                 height={201} 
-                className="w-[82%] mx-auto mb-[2.5%] -translate-x-[6%]" 
+                className="w-[82%] mx-auto mb-[2.5%] -translate-x-[6%] cursor-pointer hover:scale-105 transition-transform duration-300" 
                 style={{ height: 'auto' }}
               />
 
               <div className="w-[85%] mx-auto -rotate-3 -translate-x-[3.125%]"> 
-                {/* ĐÃ SỬA: Dùng 1.6cqw cố định để chữ scale tỷ lệ thuận chính xác 100% theo kích thước giấy */}
                 <p className="text-[#0F0F4F] font-medium text-center tracking-wide leading-[1.6] text-[1.6cqw]">
                   DearKeriaVN tồn tại với mục tiêu ủng hộ Support xuất sắc nhất lịch sử Liên Minh Huyền Thoại - 
                   <strong className="text-black font-bold"> Ryu &apos;Keria&apos; Minseok</strong>, cùng đồng hành và lưu giữ lại những dấu ấn rực rỡ theo từng cột mốc sự nghiệp, dõi theo mỗi bước chân nỗ lực trên hành trình vĩ đại của 
@@ -96,7 +114,6 @@ export default function LockerHero() {
                 </p>
               </div>
               
-              {/* ĐÃ SỬA: Các icon cũng dùng cqw để scale mượt mà y như chữ */}
               <div className="flex items-center justify-center gap-[2cqw] mt-[3%] pointer-events-auto -rotate-3 -translate-x-[2.5%]">
                 <a 
                   href="https://www.facebook.com/dearkeriavn" 

@@ -11,7 +11,7 @@ export default function KeriaDetails() {
           alt="New Section Image" 
           width={1440} 
           height={1024} 
-          quality={100} /* 1. Đẩy chất lượng lên tối đa, không nén */
+          quality={75}
           sizes="100vw" /* 2. Báo cho Next.js ảnh này chiếm 100% chiều rộng màn hình */
           style={{ width: '100%', height: 'auto' }} 
           className="relative z-10 w-full h-auto object-contain block"
