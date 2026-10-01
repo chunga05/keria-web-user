@@ -84,6 +84,23 @@ export default function ToMyDearestPage() {
     useState(true);
 
   // ==========================================================
+  // CUSTOM MODAL
+  // ==========================================================
+
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    message: string;
+  }>({ isOpen: false, message: "" });
+
+  const showModal = (message: string) => {
+    setModal({ isOpen: true, message });
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, message: "" });
+  };
+
+  // ==========================================================
   // HOOK WISH
   // ==========================================================
 
@@ -96,7 +113,7 @@ export default function ToMyDearestPage() {
   fetchWishes,
   submitWish,
   handleReact,
-} = useWishes(1, 9, visitorId);
+} = useWishes(1, 9, visitorId, showModal);
 
   // ==========================================================
   // TÍNH SCALE
@@ -337,7 +354,7 @@ export default function ToMyDearestPage() {
         const hours24 = 24 * 60 * 60 * 1000; // 24 giờ tính bằng milliseconds
 
         if (timePassed < hours24) {
-          alert("Mỗi thiết bị chỉ được gửi 1 lời chúc trong vòng 24 giờ. Vui lòng quay lại sau!");
+          showModal("Bạn chỉ được gửi lời chúc sau mỗi 24h. Vui lòng quay lại sau nhé!");
           return;
         }
       }
@@ -347,7 +364,7 @@ export default function ToMyDearestPage() {
     // CHƯA LOGIN
     // --------------------------------------------------------
     if (!isLoggedIn && !guestName.trim()) {
-      alert("Vui lòng nhập tên người gửi.");
+      showModal("Vui lòng nhập tên người gửi.");
       return;
     }
 
@@ -355,7 +372,7 @@ export default function ToMyDearestPage() {
     // CONTENT
     // --------------------------------------------------------
     if (!wishContent.trim()) {
-      alert("Vui lòng nhập lời chúc.");
+      showModal("Vui lòng nhập lời chúc.");
       return;
     }
 
@@ -1111,14 +1128,28 @@ export default function ToMyDearestPage() {
                       padding: 5,
                     }}
                   >
-                    <span
-                      className="leading-none"
-                      style={{
-                        fontSize: 18,
-                      }}
-                    >
-                      {reaction.emoji}
-                    </span>
+                    {reaction.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={reaction.imageUrl}
+                        alt={reaction.type}
+                        style={{
+                          width: 25,
+                          height: 25,
+                          objectFit: "contain",
+                          display: "block",
+                        }}
+                      />
+                    ) : (
+                      <span
+                        className="leading-none"
+                        style={{
+                          fontSize: 18,
+                        }}
+                      >
+                        {reaction.emoji}
+                      </span>
+                    )}
 
                     <span
                       className={`
@@ -1318,6 +1349,86 @@ export default function ToMyDearestPage() {
           )}
         </div>
       </div>
+      {/* ====================================================== */}
+      {/* CUSTOM MODAL                                           */}
+      {/* ====================================================== */}
+
+      {modal.isOpen && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center"
+          style={{ backgroundColor: "rgba(0,0,0,0.35)" }}
+          onClick={closeModal}
+        >
+          <div
+            className="relative flex flex-col items-center rounded-2xl bg-white shadow-2xl"
+            style={{
+              width: 340,
+              paddingTop: 36,
+              paddingBottom: 32,
+              paddingLeft: 32,
+              paddingRight: 32,
+              gap: 0,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* LOGO */}
+            <div style={{ marginBottom: 12, width: 160 }}>
+              <Image
+                src="/images/DEARKERIAVN LOGO 1.png"
+                alt="DearKeria Logo"
+                width={320}
+                height={120}
+                className="h-auto w-full object-contain"
+              />
+            </div>
+
+            {/* HEART ICON — góc trên trái, tràn ra ngoài khung */}
+            <div
+              className="absolute"
+              style={{
+                top: -28,
+                left: -20,
+                width: 72,
+              }}
+            >
+              <Image
+                src="/images/Heart 2.png"
+                alt="heart"
+                width={144}
+                height={144}
+                className="h-auto w-full object-contain"
+              />
+            </div>
+
+            {/* MESSAGE */}
+            <p
+              className="text-center font-semibold text-gray-700"
+              style={{
+                fontSize: 14,
+                lineHeight: 1.6,
+                marginBottom: 24,
+              }}
+            >
+              {modal.message}
+            </p>
+
+            {/* OK BUTTON */}
+            <button
+              onClick={closeModal}
+              className="rounded-full bg-[#FF76C3] font-bold text-white shadow-sm transition-transform hover:scale-105 active:scale-95"
+              style={{
+                paddingTop: 10,
+                paddingBottom: 10,
+                paddingLeft: 40,
+                paddingRight: 40,
+                fontSize: 14,
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

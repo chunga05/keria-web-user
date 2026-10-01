@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Post } from "@/hooks/postServices"; 
 import { getCachedPosts } from "@/app/actions/post";
+import { getMediaUrl } from "@/lib/utils";
 
 export default function KeriaBoard() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -71,7 +72,7 @@ export default function KeriaBoard() {
               const thumbnail =
                 post.image_urls &&
                 post.image_urls.length > 0
-                  ? post.image_urls[0]
+                  ? getMediaUrl(post.image_urls[0])
                   : "/images/Frame 1495 (2).png";
 
               const formattedDate = post.created_at

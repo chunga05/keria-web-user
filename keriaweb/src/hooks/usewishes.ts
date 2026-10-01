@@ -9,7 +9,8 @@ import {
 export function useWishes(
   idolId: number = 1,
   pageSize: number = 9,
-  visitorId: string | null = null
+  visitorId: string | null = null,
+  onAlert?: (message: string) => void
 ) {
   const [messages, setMessages] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -187,13 +188,14 @@ export function useWishes(
         );
       }
 
-      alert(
-        "Gửi lời chúc thành công!"
-      );
+      const showAlert = onAlert ?? alert;
+
+      showAlert("Gửi lời chúc thành công!");
 
       onSuccess();
     } catch (error: any) {
-      alert(
+      const showAlert = onAlert ?? alert;
+      showAlert(
         "Lỗi: " +
           (error?.message ||
             "Không xác định")
@@ -483,7 +485,7 @@ export function useWishes(
           "⚠️ Reaction thất bại, trạng thái UI sẽ được đồng bộ lại."
         );
 
-        alert(
+        (onAlert ?? alert)(
           "Không thể lưu reaction. Vui lòng thử lại."
         );
       }

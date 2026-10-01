@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { X } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
 interface InstructionModalProps {
   isOpen: boolean;
@@ -9,25 +10,53 @@ interface InstructionModalProps {
 }
 
 export function InstructionModal({ isOpen, onClose }: InstructionModalProps) {
-  if (!isOpen) return null;
+  // Dùng ref để track lần đầu mount — tránh animation giật khi load trang
+  const hasOpenedOnce = useRef(false);
+  if (isOpen) hasOpenedOnce.current = true;
+
+  // Đóng bằng phím Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // Chưa mở lần nào → không render gì (tiết kiệm tài nguyên lần đầu)
+  if (!hasOpenedOnce.current) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop mờ tối nhẹ */}
-      <div 
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+    <div
+      className={`
+        fixed inset-0 z-50 flex items-center justify-center p-4
+        transition-all duration-200
+        ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+      `}
+    >
+      {/* Backdrop — bỏ backdrop-blur vì rất tốn GPU */}
+      <div
+        className="absolute inset-0 bg-black/50"
         onClick={onClose}
       />
 
-      {/* Modal Container */}
-      <div className="relative z-10 w-full max-w-2xl rounded-[28px] bg-white px-10 pt-14 pb-10 shadow-[0_20px_50px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-200">
-        
-        {/* Tag PAWPORT đè mép trên */}
+      {/* Modal Container — scale nhẹ khi mở/đóng */}
+      <div
+        className={`
+          relative z-10 w-full max-w-2xl rounded-[28px] bg-white px-10 pt-14 pb-10
+          shadow-[0_20px_50px_rgba(0,0,0,0.25)]
+          transition-transform duration-200
+          ${isOpen ? 'scale-100' : 'scale-95'}
+        `}
+      >
+        {/* Tag PAWPORT đè mép trên — preload để không bị chậm lần đầu */}
         <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-48 aspect-[320/110] drop-shadow-md pointer-events-none">
           <Image
             src="/images/handbook/pinkpaw.png"
             alt="PAWPORT Banner"
             fill
+            priority
             className="object-contain"
           />
         </div>

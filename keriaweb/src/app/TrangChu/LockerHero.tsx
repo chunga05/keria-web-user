@@ -4,16 +4,8 @@ export default function LockerHero() {
   return (
     <div className="relative w-full aspect-[1440/1024] bg-[#7CB9E8] flex-shrink-0 flex flex-col items-center overflow-hidden [container-type:inline-size]">
       
-      {/* Lớp nền tủ đồ */}
-      <div className="absolute inset-0 z-0 bg-[#7CB9E8]">
-        <Image
-          src="/images/locker.png"
-          alt="Locker"
-          fill
-          className="w-full h-full object-cover"
-          priority
-        />
-      </div>
+      {/* Lớp nền màu — layout.tsx đã render locker.png toàn trang, không cần load lại */}
+      <div className="absolute inset-0 z-0 bg-[#7CB9E8]" />
 
       <section className="relative w-[88.89%] mx-auto z-10 my-auto flex justify-center translate-x-[3.125%] pb-[6.25%]"> 
         <div className="relative w-full mx-auto flex flex-col items-center -translate-y-[6.25%]"> 
@@ -38,46 +30,46 @@ export default function LockerHero() {
             <Image src="/images/bigpink.png" alt="Pin" width={174} height={174} className="w-full h-auto" />
           </div>
           
-          {/* THÊM HOVER: Ngôi sao */}
+          {/* Ngôi sao */}
           <div className="absolute top-[5%] -right-[4%] w-[20%] z-10">
-            <Image src="/images/Star.png" alt="Star" width={255} height={289} className="w-full h-auto hover:scale-110 hover:rotate-6 transition-all duration-300" />
+            <Image src="/images/Star.png" alt="Star" width={255} height={289} sizes="20vw" className="w-full h-auto hover:scale-110 hover:rotate-6 transition-all duration-300" />
           </div>
           <div className="absolute -bottom-[2%] -left-[9.4%] w-[13.6%] z-20">
-            <Image src="/images/Star (1).png" alt="Star" width={182} height={182} className="w-full h-auto hover:scale-110 hover:-rotate-6 transition-all duration-300" />
+            <Image src="/images/Star (1).png" alt="Star" width={182} height={182} sizes="14vw" className="w-full h-auto hover:scale-110 hover:-rotate-6 transition-all duration-300" />
           </div>
           <div className="absolute bottom-[2.9%] -left-[5%] w-[21.8%] z-10">
-            <Image src="/images/Star (2).png" alt="Star" width={240} height={240} className="w-full h-auto hover:scale-110 hover:rotate-3 transition-all duration-300" />
+            <Image src="/images/Star (2).png" alt="Star" width={240} height={240} sizes="22vw" className="w-full h-auto hover:scale-110 hover:rotate-3 transition-all duration-300" />
           </div>
-          
-          {/* THÊM HOVER: Trái tim */}
+
+          {/* Trái tim */}
           <div className="absolute bottom-[20%] left-[11.5%] w-[7.8%] z-10">
-            <Image src="/images/Heart 2.png" alt="Heart" width={100} height={83} className="w-full h-auto hover:scale-110 transition-transform duration-300" />
+            <Image src="/images/Heart 2.png" alt="Heart" width={100} height={83} sizes="8vw" className="w-full h-auto hover:scale-110 transition-transform duration-300" />
           </div>
-          
-          {/* THÊM HOVER: Ngôi sao */}
+
+          {/* Ngôi sao */}
           <div className="absolute top-[23%] right-[16%] w-[11.7%] z-30">
-            <Image src="/images/Star (3).png" alt="Star" width={150} height={150} className="w-full h-auto hover:scale-110 transition-transform duration-300" />
+            <Image src="/images/Star (3).png" alt="Star" width={150} height={150} sizes="12vw" className="w-full h-auto hover:scale-110 transition-transform duration-300" />
           </div>
           <div className="absolute bottom-[32%] right-[5%] w-[15.6%] z-10">
-            <Image src="/images/hongnhat.png" alt="Star" width={200} height={200} className="w-full h-auto hover:scale-110 hover:-rotate-3 transition-all duration-300" />
+            <Image src="/images/hongnhat.png" alt="Star" width={200} height={200} sizes="16vw" className="w-full h-auto hover:scale-110 hover:-rotate-3 transition-all duration-300" />
           </div>
-          
+
           <div className="absolute bottom-[26%] right-[35%] w-[2.7%] z-10">
-            <Image src="/images/drawpink.png" alt="Star" width={35} height={35} className="w-full h-auto" />
+            <Image src="/images/drawpink.png" alt="Star" width={35} height={35} sizes="3vw" className="w-full h-auto" />
           </div>
           <div className="absolute bottom-[22%] right-[22%] w-[11.7%] z-10">
-            <Image src="/images/arrow.png" alt="Arrow" width={150} height={130} className="w-full h-auto" />
+            <Image src="/images/arrow.png" alt="Arrow" width={150} height={130} sizes="12vw" className="w-full h-auto" />
           </div>
           <div className="absolute top-[33%] left-[11%] w-[7.8%] z-10">
-            <Image src="/images/ngoackep1.png" alt="Quote" width={100} height={120} className="w-full h-auto" />
+            <Image src="/images/ngoackep1.png" alt="Quote" width={100} height={120} sizes="8vw" className="w-full h-auto" />
           </div>
           <div className="absolute top-[42%] right-[17%] w-[7.8%] z-10">
-            <Image src="/images/ngoackep2.png" alt="Quote" width={100} height={120} className="w-full h-auto" />
+            <Image src="/images/ngoackep2.png" alt="Quote" width={100} height={120} sizes="8vw" className="w-full h-auto" />
           </div>
-          
-          {/* THÊM HOVER: Soft Star */}
+
+          {/* Soft Star */}
           <div className="absolute top-[51%] left-[12%] w-[9.3%] z-10">
-            <Image src="/images/Soft Star.png" alt="Star" width={120} height={120} className="w-full h-auto hover:scale-110 transition-transform duration-300" />
+            <Image src="/images/Soft Star.png" alt="Star" width={120} height={120} sizes="10vw" className="w-full h-auto hover:scale-110 transition-transform duration-300" />
           </div>
 
           {/* Vùng nội dung chữ và logo */}

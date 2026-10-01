@@ -69,56 +69,20 @@ export function usePassportData(enabled: boolean = false) {
       try {
         setIsLoading(true);
 
-        console.log("📘 [usePassportData] Đang lấy passport...");
-
-        const {
-          data: { user },
-          error: userError,
-        } = await supabase.auth.getUser();
-
-        // Nếu session biến mất trong lúc đang chạy
-        if (userError || !user) {
-          console.warn(
-            "⚠️ [usePassportData] Không tìm thấy user → bỏ qua fetch passport"
-          );
-
-          if (mounted) {
-            setPassportInfo(EMPTY_PASSPORT);
-          }
-
-          return;
-        }
-
-        console.log(
-          "👤 [usePassportData] User:",
-          user.id
-        );
-
+        // Gọi thẳng /api/passport — server tự kiểm tra auth bên trong
+        // Không cần gọi supabase.auth.getUser() thêm ở đây (giảm 1 round-trip)
         const response = await fetch("/api/passport", {
           method: "GET",
           credentials: "include",
           cache: "no-store",
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
-          console.error(
-            "❌ [usePassportData] API error:",
-            data
-          );
-
-          if (mounted) {
-            setPassportInfo(EMPTY_PASSPORT);
-          }
-
+          if (mounted) setPassportInfo(EMPTY_PASSPORT);
           return;
         }
 
-        console.log(
-          "✅ [usePassportData] Passport data:",
-          data
-        );
+        const data = await response.json();
 
         if (!mounted) return;
 
@@ -160,21 +124,6 @@ export function usePassportData(enabled: boolean = false) {
                 )
               : [],
         });
-
-        console.log(
-          "🏆 [usePassportData] Stamp:",
-          data?.userStamps
-        );
-
-        console.log(
-          "🎯 [usePassportData] receivedStageIds:",
-          data?.receivedStageIds
-        );
-
-        console.log(
-          "📖 [usePassportData] projects:",
-          data?.projects
-        );
       } catch (error) {
         console.error(
           "❌ [usePassportData] Fetch error:",

@@ -11,12 +11,10 @@ export async function getCachedVideos() {
     const cachedData = await redis.get(CACHE_KEY);
     
     if (cachedData) {
-      console.log("⚡ [VIDEO_YOUTUBE] Lấy data từ Redis Cache");
       return JSON.parse(cachedData);
     }
 
-    // 2. Nếu chưa có cache, gọi Supabase
-    console.log("🐢 [VIDEO_YOUTUBE] Lấy data từ Supabase");
+    // Nếu chưa có cache, gọi Supabase
     const { data, error } = await supabase
       .from("content")
       .select("*")
@@ -29,7 +27,7 @@ export async function getCachedVideos() {
 
     // 3. Lưu vào Redis Cache (sống trong 60 giây)
     if (data && data.length > 0) {
-      await redis.set(CACHE_KEY, JSON.stringify(data), "EX", 60);
+      await redis.set(CACHE_KEY, JSON.stringify(data), "EX", 300);
     }
 
     return data || [];

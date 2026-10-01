@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 // Import Server Action
 import { getCachedVideos } from "@/app/actions/video";
+import { getMediaUrl } from "@/lib/utils";
 
 interface VideoYoutubeProps {
   className?: string;
@@ -110,7 +111,7 @@ export default function VideoYoutube({
     if (!url) return false;
     const cleanUrl = url.split("?")[0].toLowerCase();
     const isExtensionMatch = /\.(mp4|webm|ogg|mov|mkv)$/i.test(cleanUrl);
-    const isStorageVideo = url.includes("/storage/v1/object/public/") && !/\.(jpg|jpeg|png|webp|gif)$/i.test(cleanUrl);
+    const isStorageVideo = (url.includes("/storage/v1/object/public/") || url.includes(".r2.dev") || url.includes(".r2.cloudflarestorage.com")) && !/\.(jpg|jpeg|png|webp|gif)$/i.test(cleanUrl);
     return isExtensionMatch || isStorageVideo;
   };
 
@@ -294,7 +295,7 @@ export default function VideoYoutube({
                         ref={(el) => {
                           videoRefs.current[String(vid.id)] = el;
                         }}
-                        src={vid.media_url}
+                        src={getMediaUrl(vid.media_url)}
                         controls
                         playsInline
                         preload="metadata"

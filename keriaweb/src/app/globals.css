@@ -143,6 +143,23 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
+  input, textarea {
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
   }
   html {
     @apply font-sans;
@@ -156,9 +173,11 @@ html {
 
 @font-face {
   font-family: 'SVN-BeCool';
-  src: url('/fonts/SVN-Be Cool.otf') format('opentype'); /* Cần khớp với tên file của bạn */
+  /* TODO: Convert sang woff2 để giảm ~35% dung lượng: https://cloudconvert.com/otf-to-woff2 */
+  /* src: url('/fonts/SVN-Be Cool.woff2') format('woff2'), */
+  src: url('/fonts/SVN-Be Cool.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap; /* Giúp hiển thị chữ nhanh hơn */
+  font-display: swap;
 }
 

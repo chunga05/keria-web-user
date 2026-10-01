@@ -78,10 +78,9 @@ export async function GET(request: Request) {
         avatar: item.users?.avatar_url || null,
         frameUrl: item.users?.avatar_frames?.image_url || null,
         reactions: [
-          { type: "cry", emoji: "😭", count: item.react_cry || 0 },
-          { type: "wow", emoji: "😮", count: item.react_wow || 0 },
-          { type: "star", emoji: "🤩", count: item.react_star || 0 },
-          { type: "heart", emoji: "🥰", count: item.react_heart || 0 },
+          { type: "heart", emoji: "🥰", imageUrl: "/images/A 1.png", count: item.react_heart || 0 },
+          { type: "star", emoji: "🤩", imageUrl: "/images/B 1.png", count: item.react_star || 0 },
+          { type: "cry", emoji: "😭", imageUrl: "/images/C 1.png", count: item.react_cry || 0 },
         ],
       };
     });

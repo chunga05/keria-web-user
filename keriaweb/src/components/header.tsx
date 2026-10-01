@@ -241,8 +241,13 @@ export default function Header() {
   // RENDER
   // ============================================================
   return (
-    <div className="sticky top-0 z-50 flex w-full justify-center bg-white shadow-sm">
-      <header
+    <>
+      {/* Spacer để đẩy nội dung xuống, tránh bị header đè lên */}
+      <div className="h-[clamp(68px,5.56vw,80px)] w-full shrink-0" />
+      
+      {/* Header cố định (Fixed) với backdrop-blur để tối ưu hiệu suất và thẩm mỹ */}
+      <div className="fixed top-0 left-0 right-0 z-[100] flex w-full justify-center bg-white/95 backdrop-blur-md shadow-sm">
+        <header
         className="
           relative
           h-[clamp(68px,5.56vw,80px)]
@@ -771,6 +776,7 @@ export default function Header() {
         </div>
       </header>
     </div>
+    </>
   );
 }
 

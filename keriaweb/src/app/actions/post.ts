@@ -10,11 +10,9 @@ export async function getCachedPosts(page = 1, limit = 10) {
     const cachedData = await redis.get(CACHE_KEY);
     
     if (cachedData) {
-      console.log("⚡ [KERIABOARD] Lấy data từ Redis Cache");
       return JSON.parse(cachedData);
     }
 
-    console.log("🐢 [KERIABOARD] Lấy data từ Supabase");
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
@@ -30,7 +28,7 @@ export async function getCachedPosts(page = 1, limit = 10) {
     }
 
     if (data && data.length > 0) {
-      await redis.set(CACHE_KEY, JSON.stringify(data), "EX", 60);
+      await redis.set(CACHE_KEY, JSON.stringify(data), "EX", 300);
     }
 
     return data || [];

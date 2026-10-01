@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import Protection from "@/components/Protection";
 
 
 const montserrat = Montserrat({
@@ -33,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`${montserrat.variable} font-sans`}>
-      <body className="min-h-screen w-full relative font-sans touch-manipulation overflow-x-hidden bg-[#0a0a0a]">
+      <body className="min-h-screen w-full relative font-sans touch-manipulation overflow-x-clip bg-[#0a0a0a]">
         
         {/* Layer 1: Background tràn màn hình (Nằm dưới cùng nhất z-[-1]) */}
         <div className="fixed inset-0 z-[-1] pointer-events-none">
@@ -58,6 +59,8 @@ export default function RootLayout({
           <Footer />
         </div>
         
+        {/* Component bảo vệ trang web */}
+        <Protection />
       </body>
     </html>
   );

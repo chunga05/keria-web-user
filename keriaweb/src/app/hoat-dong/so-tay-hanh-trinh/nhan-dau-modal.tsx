@@ -22,24 +22,43 @@ export function NhanDauModal({ isOpen, onClose, projectId }: NhanDauModalProps) 
   const [selectedStage, setSelectedStage] = useState<FormattedStageItem | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Track lần đầu mở để tránh render khi chưa cần
+  const hasOpenedOnce = useRef(false);
+  if (isOpen) hasOpenedOnce.current = true;
+
+  // Cache cờ để không fetch lại khi modal đóng/mở lần sau
+  const projectListLoaded = useRef(false);
+
   // Hook quản lý dữ liệu các chặng
   const { stages, loading, error, uploadingStageId, submitStageProof } =
     useProjectStages(isOpen && activeProjectId ? Number(activeProjectId) : undefined);
 
-  // Nạp danh sách dự án khi modal mở
+  // Nạp danh sách dự án — chỉ fetch 1 lần duy nhất
   useEffect(() => {
     if (!isOpen) return;
+    if (projectListLoaded.current && projectList.length > 0) return;
 
     async function load() {
       const data = await fetchActiveProjects();
       if (data.length > 0) {
         setProjectList(data);
         setActiveProjectId((prev) => prev ?? projectId ?? data[0].id);
+        projectListLoaded.current = true;
       }
     }
 
     load();
-  }, [isOpen, projectId]);
+  }, [isOpen, projectId, projectList.length]);
+
+  // Đóng bằng phím Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   // Kích hoạt chọn file
   const handleOpenUpload = (item: FormattedStageItem) => {
@@ -55,7 +74,6 @@ export function NhanDauModal({ isOpen, onClose, projectId }: NhanDauModalProps) 
     const file = e.target.files?.[0];
     if (!file || !selectedStage) return;
 
-    // Kiểm tra an toàn file qua hàm đã tách
     const checkResult = await validateSecureImage(file);
     if (!checkResult.valid) {
       alert(`⚠️ Cảnh báo an toàn:\n${checkResult.message}`);
@@ -71,10 +89,17 @@ export function NhanDauModal({ isOpen, onClose, projectId }: NhanDauModalProps) 
     setSelectedStage(null);
   };
 
-  if (!isOpen) return null;
+  // Chưa mở lần nào → không render DOM (tiết kiệm tài nguyên)
+  if (!hasOpenedOnce.current) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-[2vw]">
+    <div
+      className={`
+        fixed inset-0 z-50 flex items-center justify-center p-[2vw]
+        transition-all duration-200
+        ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+      `}
+    >
       <input
         ref={fileInputRef}
         type="file"
@@ -83,10 +108,18 @@ export function NhanDauModal({ isOpen, onClose, projectId }: NhanDauModalProps) 
         className="hidden"
       />
 
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      {/* Backdrop — bỏ backdrop-blur vì rất tốn GPU */}
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
-      <div className="relative z-10 flex flex-col w-[88vw] max-w-[1150px] max-h-[92vh] rounded-[2.2vw] bg-white px-[3.5vw] pt-[5vw] pb-[4vw] shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-        {/* Banner PAWPORT */}
+      <div
+        className={`
+          relative z-10 flex flex-col w-[88vw] max-w-[1150px] max-h-[92vh]
+          rounded-[2.2vw] bg-white px-[3.5vw] pt-[5vw] pb-[4vw] shadow-2xl
+          transition-transform duration-200
+          ${isOpen ? 'scale-100' : 'scale-95'}
+        `}
+      >
+        {/* Banner PAWPORT — preload để không delay */}
         <div className="absolute -top-[3.2vw] left-1/2 -translate-x-1/2 w-[22vw] max-w-[280px] min-w-[180px] aspect-[320/110] drop-shadow-lg pointer-events-none">
           <Image
             src="/images/handbook/pinkpaw.png"
@@ -226,4 +259,4 @@ export function NhanDauModal({ isOpen, onClose, projectId }: NhanDauModalProps) 
       </div>
     </div>
   );
-}
+}

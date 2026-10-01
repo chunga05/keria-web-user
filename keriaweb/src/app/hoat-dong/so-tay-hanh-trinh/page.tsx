@@ -110,11 +110,6 @@ export default function SoTayHanhTrinhPage() {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-
-    console.log(
-      '🐛 [Frontend Debug] passportInfo:',
-      passportInfo
-    );
   }, [passportInfo, isAuthenticated]);
 
   // ============================================================
