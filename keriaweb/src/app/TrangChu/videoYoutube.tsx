@@ -166,26 +166,27 @@ export default function VideoYoutube({
       className={`
         relative
         w-full
-        aspect-[1440/800]
         bg-[#f3f4f6]
         flex-shrink-0
         overflow-visible
         [container-type:inline-size]
+        flex flex-col items-center py-[60px] pb-[80px]
+        md:block md:aspect-[1440/800] md:py-0
         ${className}
       `}
     >
       {/* =====================================================
           KHUNG NỘI DUNG
       ===================================================== */}
-      <div className="absolute inset-0 z-10">
+      <div className="md:absolute md:inset-0 z-10 flex flex-col items-center w-full">
 
         {/* FRAME LED TRÀNG TIỀN */}
         <div
           className="
-            absolute
-            top-[10%]
-            left-[40%]
-            w-[20%]
+            relative md:absolute
+            mb-[24px] md:mb-0
+            w-[50%] sm:w-[40%] md:w-[20%]
+            md:top-[10%] md:left-[40%]
             z-20
             flex
             justify-center
@@ -211,11 +212,10 @@ export default function VideoYoutube({
         ================================================= */}
         <div
           className="
-            absolute
-            top-[25%]
-            left-[27.5%]
-            w-[45%]
-            aspect-video
+            relative md:absolute
+            w-[90%] sm:w-[80%] md:w-[45%]
+            aspect-[3/4] md:aspect-video
+            md:top-[25%] md:left-[27.5%]
             z-10
           "
         >
@@ -226,7 +226,7 @@ export default function VideoYoutube({
               w-full
               h-full
               overflow-hidden
-              rounded-[1cqw]
+              rounded-[16px] md:rounded-[1cqw]
               bg-black
               shadow-2xl
             "
@@ -263,32 +263,21 @@ export default function VideoYoutube({
                   >
                     {/* TRƯỜNG HỢP 1: LINK YOUTUBE */}
                     {vidId ? (
-                      isCurrent ? (
-                        <iframe
-                          className="w-full h-full border-0"
-                          src={`https://www.youtube.com/embed/${vidId}?rel=0`}
-                          title={vid.title || `Video ${idx + 1}`}
-                          allow="
-                            accelerometer;
-                            autoplay;
-                            clipboard-write;
-                            encrypted-media;
-                            gyroscope;
-                            picture-in-picture;
-                            web-share
-                          "
-                          allowFullScreen
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full relative">
-                          <img
-                            src={`https://img.youtube.com/vi/${vidId}/hqdefault.jpg`}
-                            alt={vid.title || "Video Thumbnail"}
-                            className="w-full h-full object-cover opacity-60"
-                          />
-                        </div>
-                      )
+                      <iframe
+                        className="w-full h-full border-0"
+                        src={`https://www.youtube.com/embed/${vidId}?rel=0&playsinline=1`}
+                        title={vid.title || `Video ${idx + 1}`}
+                        allow="
+                          accelerometer;
+                          autoplay;
+                          clipboard-write;
+                          encrypted-media;
+                          gyroscope;
+                          picture-in-picture;
+                          web-share
+                        "
+                        allowFullScreen
+                      />
                     ) : isLocalVideo ? (
                       /* TRƯỜNG HỢP 2: FILE VIDEO TỪ MÁY / STORAGE */
                       <video
@@ -298,6 +287,7 @@ export default function VideoYoutube({
                         src={getMediaUrl(vid.media_url)}
                         controls
                         playsInline
+                        webkit-playsinline="true"
                         preload="metadata"
                         className="w-full h-full object-cover bg-black"
                       >
@@ -345,10 +335,11 @@ export default function VideoYoutube({
           aria-label="Video trước"
           className="
             absolute
-            top-[43%]
-            left-[18%]
-            w-[3cqw]
-            h-[3cqw]
+            top-[45%] md:top-[43%]
+            -translate-y-1/2 md:translate-y-0
+            left-[2%] md:left-[18%]
+            w-[36px] md:w-[3cqw]
+            h-[36px] md:h-[3cqw]
             min-w-[28px]
             min-h-[28px]
             rounded-full
@@ -388,10 +379,11 @@ export default function VideoYoutube({
           aria-label="Video tiếp theo"
           className="
             absolute
-            top-[43%]
-            right-[18%]
-            w-[3cqw]
-            h-[3cqw]
+            top-[45%] md:top-[43%]
+            -translate-y-1/2 md:translate-y-0
+            right-[2%] md:right-[18%]
+            w-[36px] md:w-[3cqw]
+            h-[36px] md:h-[3cqw]
             min-w-[28px]
             min-h-[28px]
             rounded-full
@@ -429,12 +421,12 @@ export default function VideoYoutube({
           <h3
             key={currentVideo.id}
             className="
-              absolute
-              bottom-[15%]
-              left-[15%]
-              w-[70%]
+              relative md:absolute
+              mt-[24px] md:mt-0
+              w-[90%] md:w-[70%]
+              md:bottom-[15%] md:left-[15%]
               text-center
-              text-[2cqw]
+              text-[16px] md:text-[2cqw]
               font-semibold
               text-[#1F2937]
               leading-tight
@@ -452,7 +444,8 @@ export default function VideoYoutube({
       <div
         className="
           absolute
-          bottom-[-6.25%]
+          bottom-0 md:bottom-[-6.25%]
+          translate-y-[60%] md:translate-y-0
           left-0
           w-full
           z-50

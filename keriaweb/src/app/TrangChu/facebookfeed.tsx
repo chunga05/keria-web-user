@@ -46,7 +46,8 @@ function FacebookCard({
     return () => observer.disconnect();
   }, []);
 
-  const facebookUrl = encodeURIComponent(link.url);
+  const cleanUrl = link.url.replace('m.facebook.com', 'www.facebook.com');
+  const facebookUrl = encodeURIComponent(cleanUrl);
 
   return (
     <article
@@ -55,7 +56,7 @@ function FacebookCard({
         relative
         min-w-0
         shrink-0
-        snap-start
+        snap-center
         overflow-hidden
         rounded-2xl
         bg-white
@@ -82,8 +83,8 @@ function FacebookCard({
       <div className="h-[600px] w-full overflow-y-auto overflow-x-hidden bg-white">
         {isVisible ? (
           <iframe
-            src={`https://www.facebook.com/plugins/post.php?href=${facebookUrl}&show_text=true&width=500`}
-            width="500"
+            src={`https://www.facebook.com/plugins/post.php?href=${facebookUrl}&show_text=true`}
+            width="100%"
             height="800"
             style={{
               border: "none",
@@ -202,25 +203,26 @@ export default function FacebookFeed() {
                 h-10 w-10 sm:h-12 sm:w-12
                 items-center
                 justify-center
-                rounded-full
-                bg-white
-                text-xl sm:text-2xl
-                font-semibold
-                text-gray-700
+                rounded-none md:rounded-full
+                bg-[#009FE3] md:bg-white
+                text-white md:text-gray-700
                 shadow-[0_5px_20px_rgba(0,0,0,0.15)]
                 transition-all
                 duration-300
                 hover:scale-110
                 hover:bg-[#009FE3]
                 hover:text-white
-                left-0
+                -left-4
+                sm:-left-8
                 md:-left-6
                 xl:-left-14
                 ${links.length <= 3 ? "xl:hidden" : ""}
                 ${links.length <= 2 ? "md:hidden" : ""}
               `}
             >
-              ←
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+              </svg>
             </button>
           )}
 
@@ -230,8 +232,10 @@ export default function FacebookFeed() {
             className={`
               flex
               w-full
-              gap-6
+              gap-4
+              md:gap-6
               xl:gap-8
+              px-0
               overflow-x-auto
               scroll-smooth
               snap-x
@@ -266,25 +270,26 @@ export default function FacebookFeed() {
                 h-10 w-10 sm:h-12 sm:w-12
                 items-center
                 justify-center
-                rounded-full
-                bg-white
-                text-xl sm:text-2xl
-                font-semibold
-                text-gray-700
+                rounded-none md:rounded-full
+                bg-[#F45BA9] md:bg-white
+                text-white md:text-gray-700
                 shadow-[0_5px_20px_rgba(0,0,0,0.15)]
                 transition-all
                 duration-300
                 hover:scale-110
                 hover:bg-[#F45BA9]
                 hover:text-white
-                right-0
+                -right-4
+                sm:-right-8
                 md:-right-6
                 xl:-right-14
                 ${links.length <= 3 ? "xl:hidden" : ""}
                 ${links.length <= 2 ? "md:hidden" : ""}
               `}
             >
-              →
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
             </button>
           )}
         </div>

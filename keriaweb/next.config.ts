@@ -4,6 +4,15 @@ import type { NextConfig } from "next";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "*.devtunnels.ms",
+        "xc5kf3vh-3000.asse.devtunnels.ms"
+      ],
+    },
+  },
   images: {
     // Cho phép các quality mà project đang sử dụng
     qualities: [70, 75, 100],

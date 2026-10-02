@@ -437,21 +437,20 @@ export default function ToMyDearestPage() {
         w-full
         bg-[#F4F5F7]
         font-sans
+        pt-[100px] lg:pt-[150px]
+        pb-[60px] lg:pb-[100px]
       "
-      style={{
-        paddingTop: 150,
-        paddingBottom: 100,
-      }}
     >
       {/* ====================================================== */}
       {/* OUTER SCALE CONTAINER                                  */}
       {/* ====================================================== */}
 
       <div
-        ref={scaleContainerRef}
         className="
           mx-auto
-          w-[60%]
+          w-[92%]
+          lg:w-[60%]
+          max-w-[1200px]
         "
       >
         {/* ==================================================== */}
@@ -461,12 +460,8 @@ export default function ToMyDearestPage() {
         <div
           className="
             relative
-            w-[1200px]
-            origin-top-left
+            w-full
           "
-          style={{
-            zoom: scale,
-          }}
         >
           {/* ================================================= */}
           {/* FORM NHẬP LỜI CHÚC */}
@@ -476,18 +471,15 @@ export default function ToMyDearestPage() {
             className="
               relative
               mx-auto
-              w-[80%]
-              rounded-1xl
+              w-full lg:w-[80%]
+              rounded-[16px] lg:rounded-1xl
               bg-white
               shadow-sm
+              mb-8 lg:mb-12
+              px-5 sm:px-8 lg:px-[60px]
+              pt-14 lg:pt-[72px]
+              pb-8 lg:pb-[48px]
             "
-            style={{
-              marginBottom: 48,
-              paddingLeft: 60,
-              paddingRight: 60,
-              paddingTop: 72,
-              paddingBottom: 48,
-            }}
           >
             {/* ================================================= */}
             {/* LOGO TO MY DEAREST */}
@@ -499,11 +491,9 @@ export default function ToMyDearestPage() {
                 left-1/2
                 -translate-x-1/2
                 drop-shadow-md
+                w-[220px] sm:w-[280px] lg:w-[384px]
+                -top-[22px] sm:-top-[28px] lg:-top-[38px]
               "
-              style={{
-                top: -38,
-                width: 384,
-              }}
             >
               <Image
                 src="/images/tomydear.png"
@@ -529,11 +519,9 @@ export default function ToMyDearestPage() {
                 font-black
                 tracking-wide
                 text-black
+                text-lg lg:text-[24px]
+                mb-6 lg:mb-9
               "
-              style={{
-                marginBottom: 36,
-                fontSize: 24,
-              }}
             >
               <span className="text-[#FF76C3]">
                 ♥
@@ -551,21 +539,15 @@ export default function ToMyDearestPage() {
 
             {!isCheckingAuth &&
               !isLoggedIn && (
-                <div
-                  style={{
-                    marginBottom: 28,
-                  }}
-                >
+                <div className="mb-5 lg:mb-7">
                   <label
                     className="
                       mb-2
                       block
                       font-bold
                       text-gray-800
+                      text-sm lg:text-[14px]
                     "
-                    style={{
-                      fontSize: 14,
-                    }}
                   >
                     Tên người gửi
                   </label>
@@ -591,10 +573,8 @@ export default function ToMyDearestPage() {
                       focus:border-[#FF76C3]
                       focus:ring-1
                       focus:ring-[#FF76C3]
+                      text-sm lg:text-[14px]
                     "
-                    style={{
-                      fontSize: 14,
-                    }}
                   />
                 </div>
               )}
@@ -610,15 +590,10 @@ export default function ToMyDearestPage() {
                     rounded-lg
                     bg-pink-50
                     text-gray-600
+                    mb-5 lg:mb-7
+                    px-4 py-3
+                    text-xs lg:text-[13px]
                   "
-                  style={{
-                    marginBottom: 28,
-                    paddingLeft: 16,
-                    paddingRight: 16,
-                    paddingTop: 11,
-                    paddingBottom: 11,
-                    fontSize: 13,
-                  }}
                 >
                   Đang gửi lời chúc với tên{" "}
                   <span className="font-bold text-[#FF76C3]">
@@ -631,21 +606,15 @@ export default function ToMyDearestPage() {
             {/* NỘI DUNG */}
             {/* ================================================= */}
 
-            <div
-              style={{
-                marginBottom: 36,
-              }}
-            >
+            <div className="mb-6 lg:mb-9">
               <label
                 className="
                   mb-2
                   block
                   font-bold
                   text-gray-800
+                  text-sm lg:text-[14px]
                 "
-                style={{
-                  fontSize: 14,
-                }}
               >
                 Viết lời chúc mừng sinh nhật
                 tới Keria
@@ -673,10 +642,8 @@ export default function ToMyDearestPage() {
                   focus:border-[#FF76C3]
                   focus:ring-1
                   focus:ring-[#FF76C3]
+                  text-sm lg:text-[14px]
                 "
-                style={{
-                  fontSize: 14,
-                }}
               />
             </div>
 
@@ -704,6 +671,7 @@ export default function ToMyDearestPage() {
                   text-white
                   shadow-sm
                   transition-transform
+                  text-sm lg:text-[14px]
                   ${
                     isSubmitting ||
                     isCheckingAuth
@@ -711,9 +679,6 @@ export default function ToMyDearestPage() {
                       : "bg-[#FF76C3] hover:scale-105"
                   }
                 `}
-                style={{
-                  fontSize: 14,
-                }}
               >
                 {isSubmitting
                   ? "Đang gửi..."
@@ -728,15 +693,12 @@ export default function ToMyDearestPage() {
 
           <div
             className="
-              flex
-              justify-start
+              mx-auto
+              w-full lg:w-[90%] xl:w-[1080px]
+              mb-6 lg:mb-8
             "
-            style={{
-              marginLeft: "5%",
-              marginBottom: 30,
-            }}
           >
-            <div className="relative">
+            <div className="relative w-full">
               <select
                 value={filter}
                 onChange={(e) =>
@@ -746,6 +708,7 @@ export default function ToMyDearestPage() {
                 }
                 className="
                   appearance-none
+                  w-full
                   rounded-lg
                   border
                   border-gray-200
@@ -755,14 +718,10 @@ export default function ToMyDearestPage() {
                   outline-none
                   shadow-sm
                   focus:border-[#0070F3]
+                  px-4 lg:px-5
+                  py-3 lg:py-[10px]
+                  text-sm lg:text-[14px]
                 "
-                style={{
-                  paddingLeft: 20,
-                  paddingRight: 40,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  fontSize: 14,
-                }}
               >
                 <option value="Mới nhất">
                   Mới nhất
@@ -812,34 +771,20 @@ export default function ToMyDearestPage() {
 
           {isLoading ? (
   <div
-    className="flex justify-center"
-    style={{
-      paddingTop: 80,
-      paddingBottom: 80,
-    }}
+    className="flex justify-center py-20"
   >
     <span
-      className="font-bold text-gray-500"
-      style={{
-        fontSize: 14,
-      }}
+      className="font-bold text-gray-500 text-sm lg:text-[14px]"
     >
       Đang tải lời chúc...
     </span>
   </div>
 ) : messages.length === 0 ? (
   <div
-    className="flex justify-center"
-    style={{
-      paddingTop: 80,
-      paddingBottom: 80,
-    }}
+    className="flex justify-center py-20"
   >
     <span
-      className="font-bold text-gray-500"
-      style={{
-        fontSize: 14,
-      }}
+      className="font-bold text-gray-500 text-sm lg:text-[14px]"
     >
       Chưa có lời chúc nào.
     </span>
@@ -848,25 +793,10 @@ export default function ToMyDearestPage() {
   /*
    * ==========================================================
    * VÙNG WISH RIÊNG
-   *
-   * 1200px = canvas chính
-   * 1080px = canvas của danh sách lời nhắn
-   *
-   * => Card nhỏ hơn nhưng tỷ lệ nội bộ vẫn giữ nguyên
    * ==========================================================
    */
-  <div
-    className="mx-auto"
-    style={{
-      width: 1080,
-    }}
-  >
-    <div
-      className="columns-3"
-      style={{
-        columnGap: 20,
-      }}
-    >
+  <div className="mx-auto w-full lg:w-[90%] xl:w-[1080px]">
+    <div className="columns-1 md:columns-2 lg:columns-3 gap-5">
       {messages.map((msg) => (
         <div
           key={msg.id}
@@ -879,15 +809,13 @@ export default function ToMyDearestPage() {
             justify-between
             transition-transform
             hover:-translate-y-1
+            p-5
             ${
               msg.bgColor === "blue"
                 ? "bg-[#9CE2FF]"
                 : "bg-[#FFCBE8]"
             }
           `}
-          style={{
-            padding: 20,
-          }}
         >
           {/* ================================================= */}
           {/* STAR */}
@@ -936,11 +864,9 @@ export default function ToMyDearestPage() {
             className="
               flex
               items-center
+              mb-3 lg:mb-4
+              gap-2 lg:gap-3
             "
-            style={{
-              marginBottom: 12,
-              gap: 10,
-            }}
           >
             {/* AVATAR + FRAME */}
 
@@ -951,11 +877,9 @@ export default function ToMyDearestPage() {
                 shrink-0
                 items-center
                 justify-center
+                w-[42px] h-[42px]
+                lg:w-[48px] lg:h-[48px]
               "
-              style={{
-                width: 42,
-                height: 42,
-              }}
             >
               {/* FRAME */}
 
@@ -987,17 +911,15 @@ export default function ToMyDearestPage() {
                     overflow-hidden
                     rounded-full
                     bg-gray-300
+                    w-[83.33%]
+                    h-[83.33%]
                   "
-                  style={{
-                    width: "83.33%",
-                    height: "83.33%",
-                  }}
                 >
                   <Image
                     src={msg.avatar}
                     alt={msg.author}
-                    width={36}
-                    height={36}
+                    width={48}
+                    height={48}
                     className="
                       h-full
                       w-full
@@ -1015,29 +937,22 @@ export default function ToMyDearestPage() {
                 className="
                   flex
                   items-center
+                  gap-1
                 "
-                style={{
-                  gap: 3,
-                }}
               >
                 <span
                   className="
                     font-bold
                     text-gray-900
+                    text-[13px] lg:text-[15px]
                   "
-                  style={{
-                    fontSize: 13,
-                  }}
                 >
                   {msg.author}
                 </span>
 
                 {msg.hasGoldStar && (
                   <span
-                    className="text-yellow-400"
-                    style={{
-                      fontSize: 12,
-                    }}
+                    className="text-yellow-400 text-[12px] lg:text-[14px]"
                   >
                     ⭐
                   </span>
@@ -1048,10 +963,8 @@ export default function ToMyDearestPage() {
                 className="
                   block
                   text-gray-600
+                  text-[10px] lg:text-[12px]
                 "
-                style={{
-                  fontSize: 10,
-                }}
               >
                 {msg.date}
               </span>
@@ -1069,11 +982,9 @@ export default function ToMyDearestPage() {
               font-medium
               leading-relaxed
               text-black
+              mb-5 lg:mb-6
+              text-[12px] lg:text-[14px]
             "
-            style={{
-              marginBottom: 24,
-              fontSize: 12,
-            }}
           >
             {msg.content}
           </p>
@@ -1087,10 +998,8 @@ export default function ToMyDearestPage() {
               flex
               flex-wrap
               justify-center
+              gap-3 lg:gap-4
             "
-            style={{
-              gap: 16,
-            }}
           >
            {(msg.reactions || []).map(
               (
@@ -1117,35 +1026,24 @@ export default function ToMyDearestPage() {
                       items-center
                       rounded-lg
                       transition-all
+                      gap-1 p-1
                       ${
                         hasReacted
                           ? "bg-white/50 scale-110 shadow-sm"
                           : "hover:scale-125 active:scale-95"
                       }
                     `}
-                    style={{
-                      gap: 3,
-                      padding: 5,
-                    }}
                   >
                     {reaction.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={reaction.imageUrl}
                         alt={reaction.type}
-                        style={{
-                          width: 25,
-                          height: 25,
-                          objectFit: "contain",
-                          display: "block",
-                        }}
+                        className="w-5 h-5 lg:w-[25px] lg:h-[25px] object-contain block"
                       />
                     ) : (
                       <span
-                        className="leading-none"
-                        style={{
-                          fontSize: 18,
-                        }}
+                        className="leading-none text-[16px] lg:text-[18px]"
                       >
                         {reaction.emoji}
                       </span>
@@ -1154,15 +1052,13 @@ export default function ToMyDearestPage() {
                     <span
                       className={`
                         font-bold
+                        text-[9px] lg:text-[11px]
                         ${
                           hasReacted
                             ? "text-pink-600"
                             : "text-gray-800"
                         }
                       `}
-                      style={{
-                        fontSize: 9,
-                      }}
                     >
                       {reaction.count}
                     </span>
@@ -1186,11 +1082,9 @@ export default function ToMyDearestPage() {
                 flex
                 items-center
                 justify-center
+                mt-8 lg:mt-12
+                gap-4 lg:gap-6
               "
-              style={{
-                marginTop: 48,
-                gap: 24,
-              }}
             >
               {/* PREVIOUS */}
 
@@ -1216,16 +1110,13 @@ export default function ToMyDearestPage() {
                   text-white
                   shadow-sm
                   transition-all
+                  w-8 h-8 lg:w-[32px] lg:h-[32px]
                   ${
                     currentPage <= 1
                       ? "cursor-not-allowed opacity-50"
                       : "hover:scale-105 hover:bg-[#0070F3]"
                   }
                 `}
-                style={{
-                  width: 32,
-                  height: 32,
-                }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1249,12 +1140,9 @@ export default function ToMyDearestPage() {
               <div
                 className="
                   flex
+                  gap-1 lg:gap-2
+                  mx-1 lg:mx-2
                 "
-                style={{
-                  gap: 8,
-                  marginLeft: 8,
-                  marginRight: 8,
-                }}
               >
                 {pagesArray.map(
                   (pageNum) => (
@@ -1273,6 +1161,8 @@ export default function ToMyDearestPage() {
                         font-bold
                         shadow-sm
                         transition-all
+                        w-8 h-8 lg:w-[32px] lg:h-[32px]
+                        text-sm lg:text-[14px]
                         ${
                           currentPage ===
                           pageNum
@@ -1280,11 +1170,6 @@ export default function ToMyDearestPage() {
                             : "bg-transparent text-gray-700 hover:bg-white hover:shadow-sm"
                         }
                       `}
-                      style={{
-                        width: 32,
-                        height: 32,
-                        fontSize: 14,
-                      }}
                     >
                       {pageNum}
                     </button>
@@ -1317,6 +1202,7 @@ export default function ToMyDearestPage() {
                   text-white
                   shadow-sm
                   transition-all
+                  w-8 h-8 lg:w-[32px] lg:h-[32px]
                   ${
                     currentPage >=
                     safeTotalPages
@@ -1324,10 +1210,6 @@ export default function ToMyDearestPage() {
                       : "hover:scale-105 hover:bg-[#FF4D91]"
                   }
                 `}
-                style={{
-                  width: 32,
-                  height: 32,
-                }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

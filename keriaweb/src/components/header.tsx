@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -94,6 +94,13 @@ export default function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // ============================================================
+  // MOBILE MENU
+  // ============================================================
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileOpenSection, setMobileOpenSection] = useState<string | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // ============================================================
   // ADMIN
   // ============================================================
   const [isGoingToAdmin, setIsGoingToAdmin] = useState(false);
@@ -155,6 +162,14 @@ export default function Header() {
       subscription.unsubscribe();
     };
   }, [checkAuthStatus]);
+
+  // ============================================================
+  // ĐÓNG MOBILE MENU KHI CHUYỂN TRANG
+  // ============================================================
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setMobileOpenSection(null);
+  }, [pathname]);
 
   // ============================================================
   // ĐĂNG XUẤT
@@ -295,7 +310,8 @@ export default function Header() {
             left-1/2
             top-1/2
             z-10
-            flex
+            hidden
+            md:flex
             -translate-x-1/2
             -translate-y-1/2
             items-center
@@ -491,6 +507,50 @@ export default function Header() {
         </nav>
 
         {/* ================================================== */}
+        {/* HAMBURGER BUTTON (chỉ hiện trên mobile) */}
+        {/* ================================================== */}
+
+        <button
+          type="button"
+          aria-label={isMobileMenuOpen ? "Đóng menu" : "Mở menu"}
+          aria-expanded={isMobileMenuOpen}
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+          className="
+            absolute
+            right-[5.56%]
+            top-1/2
+            z-30
+            -translate-y-1/2
+            flex
+            md:hidden
+            h-10 w-10
+            items-center
+            justify-center
+            rounded-md
+            text-[#0070F3]
+            transition-colors
+            hover:bg-blue-50
+            focus:outline-none
+          "
+        >
+          {isMobileMenuOpen ? (
+            /* ✕ close icon */
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            /* ☰ hamburger icon */
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          )}
+        </button>
+
+        {/* ================================================== */}
+        {/* LOGO (căn giữa trên mobile, căn trái trên desktop) */}
+        {/* ================================================== */}
+
+        {/* ================================================== */}
         {/* USER / LOGIN */}
         {/* ================================================== */}
 
@@ -500,7 +560,8 @@ export default function Header() {
             right-[5.56%]
             top-1/2
             z-20
-            flex
+            hidden
+            md:flex
             -translate-y-1/2
             items-center
             gap-[clamp(8px,1.11vw,16px)]
@@ -775,6 +836,240 @@ export default function Header() {
 
         </div>
       </header>
+
+      {/* ================================================== */}
+      {/* MOBILE MENU PANEL */}
+      {/* ================================================== */}
+
+      {/* Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-[90] md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Drawer */}
+      <div
+        ref={mobileMenuRef}
+        className={`
+          fixed
+          left-0
+          right-0
+          top-[clamp(68px,5.56vw,80px)]
+          z-[95]
+          md:hidden
+          overflow-hidden
+          bg-white/98
+          backdrop-blur-md
+          shadow-lg
+          border-t border-gray-100
+          transition-all
+          duration-300
+          ease-in-out
+          ${isMobileMenuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"}
+        `}
+      >
+        <nav className="flex flex-col py-2 overflow-y-auto max-h-[80vh]">
+          {NAV_LINKS.map((link) => {
+            const isActive = isLinkActive(link);
+
+            // Có sub-links → accordion
+            if ("subLinks" in link && link.subLinks) {
+              const isOpen = mobileOpenSection === link.name;
+
+              return (
+                <div key={link.name} className="border-b border-gray-50 last:border-b-0">
+                  {/* Accordion header */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setMobileOpenSection(isOpen ? null : link.name)
+                    }
+                    className={`
+                      flex
+                      w-full
+                      items-center
+                      justify-between
+                      px-6
+                      py-4
+                      text-left
+                      text-sm
+                      font-bold
+                      tracking-wide
+                      transition-colors
+                      ${isActive ? "text-[#FF76C3]" : "text-[#0070F3] hover:text-[#FF76C3]"}
+                    `}
+                  >
+                    <span>{link.name}</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2.5}
+                      stroke="currentColor"
+                      className={`h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </button>
+
+                  {/* Sub-links */}
+                  <div
+                    className={`
+                      overflow-hidden
+                      transition-all
+                      duration-200
+                      ease-in-out
+                      ${isOpen ? "max-h-96" : "max-h-0"}
+                    `}
+                  >
+                    <div className="flex flex-col bg-blue-50/30 pb-1">
+                      {link.subLinks.map((subLink) => {
+                        const isSubActive = pathname === subLink.href;
+
+                        return (
+                          <Link
+                            key={subLink.href}
+                            href={subLink.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={`
+                              block
+                              px-10
+                              py-3
+                              text-sm
+                              font-medium
+                              transition-colors
+                              border-l-2
+                              ml-6
+                              ${
+                                isSubActive
+                                  ? "border-[#FF76C3] text-[#FF76C3] bg-pink-50/40"
+                                  : "border-transparent text-gray-600 hover:border-[#FF76C3] hover:text-[#FF76C3] hover:bg-pink-50/20"
+                              }
+                            `}
+                          >
+                            {subLink.name}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // Không có sub-links → link thẳng
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`
+                  block
+                  border-b border-gray-50
+                  last:border-b-0
+                  px-6
+                  py-4
+                  text-sm
+                  font-bold
+                  tracking-wide
+                  transition-colors
+                  ${isActive ? "text-[#FF76C3]" : "text-[#0070F3] hover:text-[#FF76C3]"}
+                `}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
+
+          {/* ================================================ */}
+          {/* NÚT ĐĂNG NHẬP / TÀI KHOẢN CÁ NHÂN (Mobile)         */}
+          {/* ================================================ */}
+
+          {!isAuthChecking && !userData && (
+            <div className="border-t border-gray-100 px-6 py-4">
+              <Link
+                href={loginUrl}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="
+                  flex
+                  w-full
+                  items-center
+                  justify-center
+                  rounded-md
+                  bg-[#FF76C3]
+                  py-3
+                  text-sm
+                  font-bold
+                  text-white
+                  shadow-md
+                  transition-colors
+                  hover:bg-[#FF4D91]
+                "
+              >
+                ĐĂNG NHẬP
+              </Link>
+            </div>
+          )}
+
+          {!isAuthChecking && userData && (
+            <div className="border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-[#FF76C3]">
+                  {userData.avatar_url ? (
+                    <Image
+                      src={userData.avatar_url}
+                      alt="User Avatar"
+                      width={40}
+                      height={40}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-pink-100 font-bold text-pink-500">
+                      {userData.display_name?.charAt(0) || "U"}
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-gray-800 line-clamp-1">
+                    {userData.display_name || "Người dùng"}
+                  </span>
+                  <span className="text-xs text-gray-500 line-clamp-1">
+                    {userData.role === "admin" ? "Quản trị viên" : "Thành viên"}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                className="
+                  flex
+                  w-full
+                  items-center
+                  justify-center
+                  rounded-md
+                  border-2 border-[#FF76C3]
+                  bg-white
+                  py-2.5
+                  text-sm
+                  font-bold
+                  text-[#FF76C3]
+                  shadow-sm
+                  transition-colors
+                  hover:bg-pink-50
+                "
+              >
+                ĐĂNG XUẤT
+              </button>
+            </div>
+          )}
+        </nav>
+      </div>
     </div>
     </>
   );
