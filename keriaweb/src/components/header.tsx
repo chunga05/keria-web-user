@@ -143,6 +143,23 @@ export default function Header() {
   }, [pathname]);
 
   // ============================================================
+  // ĐÓNG MOBILE MENU KHI RESIZE SANG DESKTOP (>= 1280px)
+  // ============================================================
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1280px)");
+    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (e.matches) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleMediaChange);
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaChange);
+    };
+  }, []);
+
+  // ============================================================
   // ĐĂNG XUẤT
   // ============================================================
   const handleLogout = async () => {
@@ -285,7 +302,7 @@ export default function Header() {
             top-1/2
             z-10
             hidden
-            md:flex
+            xl:flex
             -translate-x-1/2
             -translate-y-1/2
             items-center
@@ -333,10 +350,12 @@ export default function Header() {
                       }
                     `}
                   >
-                    {isActive && <ActiveIndicator />}
+                    <span className="relative inline-flex items-center justify-center">
+                      {isActive && <ActiveIndicator />}
 
-                    <span className="relative z-10">
-                      {link.name}
+                      <span className="relative z-10 px-[clamp(6px,0.56vw,8px)] py-0.5">
+                        {link.name}
+                      </span>
                     </span>
                   </div>
 
@@ -468,10 +487,12 @@ export default function Header() {
                     }
                   `}
                 >
-                  {isActive && <ActiveIndicator />}
+                  <span className="relative inline-flex items-center justify-center">
+                    {isActive && <ActiveIndicator />}
 
-                  <span className="relative z-10">
-                    {link.name}
+                    <span className="relative z-10 px-[clamp(6px,0.56vw,8px)] py-0.5">
+                      {link.name}
+                    </span>
                   </span>
                 </Link>
               </div>
@@ -496,7 +517,7 @@ export default function Header() {
             z-30
             -translate-y-1/2
             flex
-            md:hidden
+            xl:hidden
             h-10 w-10
             items-center
             justify-center
@@ -535,7 +556,7 @@ export default function Header() {
             top-1/2
             z-20
             hidden
-            md:flex
+            xl:flex
             -translate-y-1/2
             items-center
             gap-[clamp(8px,1.11vw,16px)]
@@ -818,7 +839,7 @@ export default function Header() {
       {/* Backdrop */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[90] md:hidden"
+          className="fixed inset-0 z-[90] xl:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -832,7 +853,7 @@ export default function Header() {
           right-0
           top-[clamp(68px,5.56vw,80px)]
           z-[95]
-          md:hidden
+          xl:hidden
           overflow-hidden
           bg-white/98
           backdrop-blur-md

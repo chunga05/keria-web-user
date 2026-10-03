@@ -17,15 +17,21 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Dear Keria VN", 
   description: "Fanpage ủng hộ Ryu 'Keria' Minseok",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  minimumScale: 1,
-  userScalable: false, 
-}
+};
 
 export default function RootLayout({
   children,
@@ -34,6 +40,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`${montserrat.variable} font-sans`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
       <body className="min-h-screen w-full relative font-sans touch-manipulation overflow-x-clip bg-[#0a0a0a]">
         
         {/* Layer 1: Background tràn màn hình (Nằm dưới cùng nhất z-[-1]) */}

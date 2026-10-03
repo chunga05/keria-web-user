@@ -82,7 +82,7 @@ export default function Footer() {
           <div className="flex flex-col">
             <h4 className="text-gray-900 font-semibold mb-4 text-[15px]">Keria&apos;s</h4>
             <ul className="space-y-3 text-gray-500 text-[14px]">
-              <li><Link href="/kerias/thanh-tich" className="hover:text-[#FF76C3] transition-colors">Thành tích</Link></li>
+              <li><Link href="/thanh-tich" className="hover:text-[#FF76C3] transition-colors">Thành tích</Link></li>
               <li><Link href="/kerias/lich-trinh" className="hover:text-[#FF76C3] transition-colors">Lịch trình</Link></li>
             </ul>
           </div>

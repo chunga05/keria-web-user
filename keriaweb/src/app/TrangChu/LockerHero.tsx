@@ -1,5 +1,32 @@
 import Image from "next/image";
 
+const SOCIAL_LINKS = [
+  {
+    name: "Facebook",
+    href: "https://www.facebook.com/dearkeriavn",
+    left: "35.08%",
+    top: "69.34%",
+  },
+  {
+    name: "Threads",
+    href: "https://www.threads.com/@dearkeriavn",
+    left: "45.00%",
+    top: "69.38%",
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/dearkeriavn",
+    left: "54.83%",
+    top: "69.38%",
+  },
+  {
+    name: "X (Twitter)",
+    href: "https://x.com/dearkeriavn",
+    left: "64.75%",
+    top: "69.19%",
+  },
+];
+
 export default function LockerHero() {
   return (
     <div className="relative w-full flex-shrink-0 flex flex-col">
@@ -23,169 +50,33 @@ export default function LockerHero() {
       {/* ================================= */}
       {/* MOBILE LAYOUT (< md)              */}
       {/* ================================= */}
-      <div className="relative md:hidden w-full flex flex-col items-center pt-20 pb-8 min-h-screen">
+      <div className="relative md:hidden w-full">
+        <Image
+          src="/images/locker-hero-mobile.png"
+          alt="Dear Keria VN"
+          width={600}
+          height={1024}
+          priority
+          sizes="(max-width: 767px) 100vw, 0vw"
+          className="w-full h-auto block"
+        />
 
-
-        {/* Tờ giấy mobile — 88% chiều ngang, portrait */}
-        <div className="relative w-[95%] max-w-[420px] mx-auto">
-
-          {/* Tờ giấy nền */}
-          <Image
-            src="/images/paper-mobile.png"
-            alt="Tờ giấy"
-            width={440}
-            height={653}
-            priority
-            className="w-full h-auto relative z-10"
+        {/* Các vùng bấm thay thế cho các nút mạng xã hội */}
+        {SOCIAL_LINKS.map((item) => (
+          <a
+            key={item.name}
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={item.name}
+            title={item.name}
+            className="absolute w-[8.5%] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full z-50 cursor-pointer active:scale-90 transition-transform focus:outline-none focus:ring-2 focus:ring-blue-400"
+            style={{
+              left: item.left,
+              top: item.top,
+            }}
           />
-
-          {/* ---- Trang trí đặt ngoài / viền tờ giấy ---- */}
-
-          {/* Ngôi sao hồng — trái trên (Nằm DƯỚI giấy) */}
-          <div className="absolute top-[3%] left-[0%] w-[20%] z-0">
-            <Image src="/images/bigpink.png" alt="Pink star" width={174} height={174} className="w-full h-auto" />
-          </div>
-
-          {/* Ngôi sao tối — phải trên (Nằm DƯỚI giấy) */}
-          <div className="absolute -top-[5%] -right-[3%] w-[30%] z-0">
-            <Image src="/images/Star.png" alt="Star" width={255} height={289} className="w-full h-auto hover:scale-110 hover:rotate-6 transition-all duration-300" />
-          </div>
-
-          {/* Pin ghim — trái trên (Nằm TRÊN giấy) */}
-          <div className="absolute top-[3%] -left-[1%] w-[30%] z-20 rotate-1">
-            <Image src="/images/ghim.png" alt="Pin" width={200} height={200} className="w-full h-auto" />
-          </div>
-
-          {/* Ngôi sao xanh dương nhỏ — phải giữa (TRÊN giấy và TRÊN chữ/title) */}
-          <div className="absolute top-[17%] -right-[1%] w-[18%] z-40">
-            <Image src="/images/Star (3).png" alt="Star" width={150} height={150} className="w-full h-auto hover:scale-110 transition-transform duration-300" />
-          </div>
-
-          {/* Ngôi sao hồng — phải dưới (TRÊN giấy) */}
-          <div className="absolute bottom-[28%] -right-[3%] w-[20%] z-20">
-            <Image src="/images/hongnhat.png" alt="Star" width={200} height={200} className="w-full h-auto" />
-          </div>
-
-          {/* Ngôi sao xanh lam — trái dưới (TRÊN giấy) */}
-          <div className="absolute bottom-[2%] -left-[7%] w-[20%] z-20">
-            <Image src="/images/Star (1).png" alt="Star" width={182} height={182} className="w-full h-auto hover:scale-110 transition-all duration-300" />
-          </div>
-          {/* Ngôi sao xanh nước biển nhạt — trái dưới (TRÊN ngôi sao xanh lam) */}
-          <div className="absolute bottom-[5%] -left-[2%] w-[32%] z-30">
-            <Image src="/images/Star (2).png" alt="Star" width={240} height={240} className="w-full h-auto hover:scale-110 transition-all duration-300" />
-          </div>
-
-          {/* Trái tim — trái dưới, trong giấy (TRÊN giấy) */}
-          <div className="absolute bottom-[17%] left-[21%] w-[11%] z-30">
-            <Image src="/images/Heart 2.png" alt="Heart" width={100} height={83} className="w-full h-auto" />
-          </div>
-
-          {/* ---- Nội dung bên trong tờ giấy ---- */}
-          <div className="absolute inset-0 z-20 flex flex-col items-center pt-[7%]">
-
-            {/* Ngoặc kép trái — DƯỚI chữ */}
-            <div className="absolute top-[20%] left-[17%] w-[13%] z-0 opacity-70">
-              <Image src="/images/ngoackep1.png" alt="Quote" width={100} height={120} className="w-full h-auto" />
-            </div>
-            {/* Ngoặc kép phải — DƯỚI chữ */}
-            <div className="absolute top-[32%] right-[13%] w-[13%] z-0 opacity-70">
-              <Image src="/images/ngoackep2.png" alt="Quote" width={100} height={120} className="w-full h-auto" />
-            </div>
-            {/* Soft star — giữa trái — DƯỚI chữ */}
-            <div className="absolute top-[40%] left-[15%] w-[15%] z-0">
-              <Image src="/images/Soft Star.png" alt="Star" width={120} height={120} className="w-full h-auto" />
-            </div>
-
-            {/* Logo */}
-            <div className="relative z-10 w-[37%] mb-[2%] translate-x-[6%] translate-y-[-30%]">
-              <Image
-                src="/images/DEARKERIAVN LOGO 1.svg"
-                alt="Logo"
-                width={300}
-                height={150}
-                className="drop-shadow-lg w-full h-auto cursor-pointer hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-
-            {/* Title sticker */}
-            <Image
-              src="/images/Group 5.png"
-              alt="Title"
-              width={790}
-              height={201}
-              className="relative z-10 w-[90%] mb-[3%] -translate-x-[1%] translate-y-[-15%] cursor-pointer hover:scale-105 transition-transform duration-300"
-              style={{ height: "auto" }}
-            />
-
-            {/* Đoạn văn */}
-            <div className="relative z-10 w-[60%] translate-x-[6%]">
-              <p className="
-                text-[#0F0F4F]
-                font-medium
-                text-center
-                tracking-wide
-                leading-[1.2]
-                text-[3.2cqw]
-              ">
-                DearKeriaVN tồn tại với mục tiêu ủng hộ Support xuất sắc nhất lịch sử Liên Minh Huyền Thoại -{" "}
-                <strong className="text-black font-bold">Ryu &apos;Keria&apos; Minseok</strong>, cùng đồng hành và lưu giữ lại những dấu ấn rực rỡ theo từng cột mốc sự nghiệp, dõi theo mỗi bước chân nỗ lực trên hành trình vĩ đại của{" "}
-                <em className="font-semibold italic">Quái vật Thiên tài.</em>
-              </p>
-            </div>
-
-            {/* Drawpink (ngôi sao nhỏ) — bên phải text, trước icons */}
-            <div className="relative z-10 w-full translate-x-[18%] mt-[1%]">
-              <div className="absolute right-[35%] -top-[1cqw] w-[4cqw] z-10">
-                <Image src="/images/drawpink.png" alt="Star" width={35} height={35} className="w-full h-auto" />
-              </div>
-            </div>
-
-            {/* Social icons — 4 icons trong giấy, dịch phải */}
-            <div className="flex items-center justify-center gap-[3cqw] mt-[4%] translate-x-[5%] pointer-events-auto">
-              <a
-                href="https://www.facebook.com/dearkeriavn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-[7cqw] h-[7cqw] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden"
-              >
-                <Image src="/images/facelogo.png" alt="Facebook" width={48} height={48} className="w-full h-full object-cover" />
-              </a>
-              <a
-                href="https://www.threads.com/@dearkeriavn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-[7cqw] h-[7cqw] rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden bg-black"
-              >
-                <Image src="/images/threadicon.png" alt="Threads" width={48} height={48} className="w-full h-full object-cover" />
-              </a>
-              <a
-                href="https://www.instagram.com/dearkeriavn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-[7cqw] h-[7cqw] rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] flex items-center justify-center text-white shadow-md hover:scale-110 transition-transform duration-200"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[50%] h-[50%]">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
-              </a>
-              <a
-                href="https://x.com/dearkeriavn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-[7cqw] h-[7cqw] rounded-full bg-white flex items-center justify-center shadow-md hover:scale-110 transition-transform duration-200 overflow-hidden"
-              >
-                <Image src="/images/Union.png" alt="X" width={48} height={48} className="w-1/2 h-1/2 object-contain" />
-              </a>
-            </div>
-
-            {/* Arrow — bên phải icons, dưới */}
-            <div className="absolute bottom-[21%] right-[14%] w-[20%] z-10">
-              <Image src="/images/arrow.png" alt="Arrow" width={150} height={130} className="w-full h-auto" />
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* ================================= */}

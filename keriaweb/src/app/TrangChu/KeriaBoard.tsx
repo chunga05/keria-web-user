@@ -52,7 +52,7 @@ export default function KeriaBoard() {
         pb-[40px] md:pb-[50px] overflow-visible
       "
     >
-      <div className="w-[92%] md:w-[65%] mx-auto">
+      <div className="w-[92%] md:w-[65%] mx-auto mb-[80px] ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-[24px] md:gap-[40px] w-full">
           {loading ? (
             <div className="col-span-2 flex justify-center py-[100px]">
