@@ -3,16 +3,10 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { verifyAccessToken } from "@/lib/jwt";
 // 1. Import hàm xóa cache từ Server Action
 import { clearWishesCache } from "@/app/actions/wishes";
-
-const supabaseAdmin = createSupabaseClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { persistSession: false, autoRefreshToken: false } }
-);
 
 export async function POST(request: Request) {
   try {
