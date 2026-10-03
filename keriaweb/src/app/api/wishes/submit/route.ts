@@ -1,9 +1,18 @@
 // app/api/wishes/submit/route.ts
 
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { verifyAccessToken } from "@/lib/jwt";
 // 1. Import hàm xóa cache từ Server Action
 import { clearWishesCache } from "@/app/actions/wishes";
+
+const supabaseAdmin = createSupabaseClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  { auth: { persistSession: false, autoRefreshToken: false } }
+);
 
 export async function POST(request: Request) {
   try {
@@ -40,14 +49,63 @@ export async function POST(request: Request) {
         : "";
 
     // ============================================================
-    // 2. KIỂM TRA DỮ LIỆU
+    // 2. LẤY THÔNG TIN USER HIỆN TẠI (NẾU ĐÃ ĐĂNG NHẬP)
     // ============================================================
 
-    if (!trimmedName || !trimmedContent) {
+    const cookieStore = await cookies();
+    let accessToken = cookieStore.get("dkvn_at")?.value;
+    const authHeader = request.headers.get("authorization");
+    if (!accessToken && authHeader?.startsWith("Bearer ")) {
+      accessToken = authHeader.substring(7).trim();
+    }
+
+    let userId: string | null = null;
+    let userNick: string | null = null;
+
+    if (accessToken) {
+      const payload = await verifyAccessToken(accessToken);
+      if (payload?.sub) {
+        userId = payload.sub;
+      }
+    }
+
+    // Fallback sang Supabase auth nếu không có dkvn_at
+    if (!userId) {
+      const supabaseUser = await createClient();
+      const {
+        data: { user },
+      } = await supabaseUser.auth.getUser();
+      if (user?.id) {
+        userId = user.id;
+      }
+    }
+
+    // Nếu đã đăng nhập: lấy tên nick (display_name hoặc username) từ DB
+    if (userId) {
+      const { data: profile } = await supabaseAdmin
+        .from("users")
+        .select("display_name, username")
+        .eq("id", userId)
+        .maybeSingle();
+
+      userNick = profile?.display_name || profile?.username || null;
+    }
+
+    // Xác định tên người gửi:
+    // - Đã đăng nhập: lấy tên nick của tài khoản
+    // - Chưa đăng nhập: lấy tên khách tự nhập
+    const finalAuthorName = userId
+      ? (userNick || trimmedName || "Thành viên")
+      : trimmedName;
+
+    // ============================================================
+    // 3. KIỂM TRA DỮ LIỆU
+    // ============================================================
+
+    if (!userId && !finalAuthorName) {
       return NextResponse.json(
         {
-          error:
-            "Vui lòng nhập đầy đủ thông tin!",
+          error: "Vui lòng nhập tên người gửi!",
         },
         {
           status: 400,
@@ -55,15 +113,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabase = await createClient();
-
-    // ============================================================
-    // 3. LẤY USER HIỆN TẠI
-    // ============================================================
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    if (!trimmedContent) {
+      return NextResponse.json(
+        {
+          error: "Vui lòng nhập lời chúc!",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     // ============================================================
     // 4. LẤY DANH SÁCH TỪ CẤM
@@ -72,7 +131,7 @@ export async function POST(request: Request) {
     const {
       data: bannedWordsData,
       error: bannedWordsError,
-    } = await supabase
+    } = await supabaseAdmin
       .from("banned_words")
       .select("word");
 
@@ -102,7 +161,7 @@ export async function POST(request: Request) {
       bannedWordsData.length > 0
     ) {
       const fullText =
-        `${trimmedName} ${trimmedContent}`
+        `${finalAuthorName} ${trimmedContent}`
           .toLowerCase()
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
@@ -176,15 +235,15 @@ export async function POST(request: Request) {
     const {
       data,
       error,
-    } = await supabase
+    } = await supabaseAdmin
       .from("fan_wishes")
       .insert([
         {
           idol_id: Number(idolId),
-          guest_name: trimmedName,
+          guest_name: finalAuthorName,
           content: trimmedContent,
           is_hidden: false,
-          user_id: user?.id ?? null,
+          user_id: userId,
         },
       ])
       .select()
@@ -215,7 +274,7 @@ export async function POST(request: Request) {
     // 9. SUCCESS & CLEAR CACHE
     // ============================================================
 
-    // 2. Ép Redis xóa sạch cache cũ để web tải lại dữ liệu mới nhất
+    // Ép Redis xóa sạch cache cũ để web tải lại dữ liệu mới nhất
     await clearWishesCache();
 
     return NextResponse.json(

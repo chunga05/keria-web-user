@@ -67,22 +67,26 @@ export async function POST(_request: NextRequest) {
 
     const res = NextResponse.json({ access_token: accessToken });
 
+    const cookieDomain = process.env.COOKIE_DOMAIN || undefined;
+
     // Access token cookie — NOT HttpOnly so middleware + JS can read
     res.cookies.set(AT_COOKIE, accessToken, {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 15 * 60,
       path: '/',
+      domain: cookieDomain,
     });
 
     // Refresh token cookie — HttpOnly, JS cannot read
     res.cookies.set(RT_COOKIE, refreshValue, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: REFRESH_TTL_SEC,
       path: '/',
+      domain: cookieDomain,
     });
 
     return res;

@@ -7,6 +7,12 @@ export interface AuthUser {
   display_name?: string;
   username?: string;
   avatar_url?: string | null;
+  email?: string;
+  user_metadata?: {
+    full_name?: string;
+    name?: string;
+    [key: string]: any;
+  };
   [key: string]: unknown;
 }
 

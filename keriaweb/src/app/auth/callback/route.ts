@@ -119,6 +119,8 @@ export async function GET(request: Request) {
 
   const response = NextResponse.redirect(destination);
 
+  const cookieDomain = process.env.COOKIE_DOMAIN || undefined;
+
   // Set Access Token cookie (15m, sameSite lax để chia sẻ giữa các port localhost)
   response.cookies.set(AT_COOKIE, accessToken, {
     httpOnly: false,
@@ -126,6 +128,7 @@ export async function GET(request: Request) {
     sameSite: 'lax',
     maxAge: 15 * 60,
     path: '/',
+    domain: cookieDomain,
   });
 
   // Set Refresh Token cookie (7d, HttpOnly chống XSS, sameSite lax)
@@ -135,6 +138,7 @@ export async function GET(request: Request) {
     sameSite: 'lax',
     maxAge: REFRESH_TTL_SEC,
     path: '/',
+    domain: cookieDomain,
   });
 
   return response;
