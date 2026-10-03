@@ -15,7 +15,7 @@ export async function getFacebookLinksCached() {
 
     const { data, error } = await supabase
       .from("facebook_links")
-      .select("id, title, url, created_at")
+      .select("id, title, url, thumbnail_url, created_at")
       .order("created_at", { ascending: false });
 
     if (error) {

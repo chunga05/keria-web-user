@@ -118,20 +118,7 @@ export default function Header() {
         return;
       }
 
-      // Đã đăng nhập → lấy thông tin user
-      const { data: userRecord, error } = await supabase
-        .from("users")
-        .select("status, role, avatar_url, display_name")
-        .eq("id", currentUser.id)
-        .single();
-
-      if (error) {
-        console.error("Lỗi lấy thông tin user:", error);
-        setUserData(null);
-        return;
-      }
-
-      setUserData(userRecord);
+      setUserData(currentUser as any);
     } catch (error) {
       console.error("Lỗi khi kiểm tra đăng nhập:", error);
       setUserData(null);
@@ -145,22 +132,6 @@ export default function Header() {
   // ============================================================
   useEffect(() => {
     checkAuthStatus();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        setUserData(null);
-        setIsUserMenuOpen(false);
-        setIsAuthChecking(false);
-      } else {
-        checkAuthStatus();
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
   }, [checkAuthStatus]);
 
   // ============================================================
@@ -177,15 +148,18 @@ export default function Header() {
   const handleLogout = async () => {
     setIsUserMenuOpen(false);
 
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (error) {
       console.error("Lỗi đăng xuất:", error);
-      return;
     }
 
     setUserData(null);
     router.refresh();
+    window.location.href = '/';
   };
 
   // ============================================================
