@@ -213,6 +213,8 @@ export default function ToMyDearestPage() {
           );
 
           setGuestName(
+            currentUser.display_name ||
+            currentUser.username ||
             currentUser.user_metadata
               ?.full_name ||
               currentUser.user_metadata
@@ -232,7 +234,9 @@ export default function ToMyDearestPage() {
 
         const displayName =
           user?.display_name ||
+          currentUser.display_name ||
           user?.username ||
+          currentUser.username ||
           currentUser.user_metadata
             ?.full_name ||
           currentUser.user_metadata?.name ||
@@ -297,7 +301,9 @@ export default function ToMyDearestPage() {
 
         const displayName =
           user?.display_name ||
+          currentUser.display_name ||
           user?.username ||
+          currentUser.username ||
           currentUser.user_metadata
             ?.full_name ||
           currentUser.user_metadata?.name ||
@@ -911,16 +917,21 @@ export default function ToMyDearestPage() {
 
               {/* AVATAR */}
 
-              {msg.avatar && (
-                <div
-                  className="
-                    overflow-hidden
-                    rounded-full
-                    bg-gray-300
-                    w-[83.33%]
-                    h-[83.33%]
-                  "
-                >
+              <div
+                className="
+                  overflow-hidden
+                  rounded-full
+                  bg-[#FDE2EC]
+                  text-[#FF76C3]
+                  font-bold
+                  flex
+                  items-center
+                  justify-center
+                  w-[83.33%]
+                  h-[83.33%]
+                "
+              >
+                {msg.avatar ? (
                   <Image
                     src={msg.avatar}
                     alt={msg.author}
@@ -932,8 +943,12 @@ export default function ToMyDearestPage() {
                       object-cover
                     "
                   />
-                </div>
-              )}
+                ) : (
+                  <span className="text-xs lg:text-sm uppercase">
+                    {msg.author?.trim()?.charAt(0) || "K"}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* USER INFO */}

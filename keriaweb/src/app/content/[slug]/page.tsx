@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, CalendarDays, Play, ChevronUp, ChevronDown } from "lucide-react";
+import { isFeatureEnabled, FEATURES } from "@/config/features";
+import UnderConstruction from "@/components/UnderConstruction";
 
 // ============================================================
 // TYPE
@@ -247,6 +249,7 @@ function RelatedCard({ item }: { item: ContentRecord }) {
 // ============================================================
 
 export default function ContentDetailPage() {
+  const isEnabled = isFeatureEnabled(FEATURES.SUPPORTING_PROJECT);
   const params = useParams();
   const router = useRouter();
 
@@ -279,6 +282,11 @@ export default function ContentDetailPage() {
   // ----------------------------------------------------------
 
   useEffect(() => {
+    if (!isEnabled) {
+      setLoading(false);
+      return;
+    }
+
     if (!slug) return;
 
     const loadContent = async () => {
@@ -351,6 +359,23 @@ export default function ContentDetailPage() {
 
     loadRelated();
   }, [content]);
+
+  // ----------------------------------------------------------
+  // FEATURE FLAG GUARD
+  // ----------------------------------------------------------
+
+  if (!isEnabled) {
+    return (
+      <UnderConstruction
+        variant="page"
+        featureName="Supporting Project"
+        description="Chuyên mục các dự án tiếp sức đang được cập nhật. Chúng mình sẽ sớm mang đến cho các bạn những hoạt động thú vị nhất!"
+        estimatedRelease="Dự kiến cập nhật trong thời gian tới"
+        showBackButton={true}
+        backButtonHref="/"
+      />
+    );
+  }
 
   // ----------------------------------------------------------
   // LOADING STATE

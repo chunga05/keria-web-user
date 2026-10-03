@@ -1,6 +1,28 @@
 import Image from "next/image";
+import { isFeatureEnabled, FEATURES } from "@/config/features";
+import UnderConstruction from "@/components/UnderConstruction";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Thành tích Keria | Dear Keria VN",
+  description: "Bảng thành tích và các danh hiệu của Ryu 'Keria' Minseok",
+};
 
 export default function KeriaAchievements() {
+  const isEnabled = isFeatureEnabled(FEATURES.ACHIEVEMENTS);
+
+  if (!isEnabled) {
+    return (
+      <UnderConstruction
+        variant="page"
+        featureName="Thành tích"
+        estimatedRelease="Dự kiến cập nhật trong thời gian tới"
+        showBackButton={true}
+        backButtonHref="/"
+      />
+    );
+  }
+
   return (
     <section className="relative w-full overflow-visible leading-none flex flex-col items-center justify-center pt-16 sm:pt-20 pb-20 md:pb-24">
       {/* 1. LỚP NỀN: Nhuộm xanh pastel trực tiếp lên vân giấy */}

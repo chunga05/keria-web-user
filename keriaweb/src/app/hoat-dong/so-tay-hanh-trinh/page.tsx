@@ -11,8 +11,11 @@ import { NhanDauModal } from './nhan-dau-modal';
 
 import { usePassportData } from '@/hooks/usePassportData';
 import { supabase } from '@/lib/supabase';
+import { isFeatureEnabled, FEATURES } from '@/config/features';
+import UnderConstruction from '@/components/UnderConstruction';
 
 export default function SoTayHanhTrinhPage() {
+  const isEnabled = isFeatureEnabled(FEATURES.HANDBOOK);
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +34,11 @@ export default function SoTayHanhTrinhPage() {
   // ============================================================
 
   useEffect(() => {
+    if (!isEnabled) {
+      setCheckingAuth(false);
+      return;
+    }
+
     let mounted = true;
 
     const checkAuth = async () => {
@@ -211,6 +219,22 @@ export default function SoTayHanhTrinhPage() {
     projectPages.find(
       (p) => p !== null
     )?.id;
+
+  // ============================================================
+  // FEATURE FLAG GUARD
+  // ============================================================
+
+  if (!isEnabled) {
+    return (
+      <UnderConstruction
+        variant="page"
+        featureName="Sổ tay hành trình"
+        estimatedRelease="Dự kiến cập nhật trong thời gian tới"
+        showBackButton={true}
+        backButtonHref="/"
+      />
+    );
+  }
 
   // ============================================================
   // ĐANG KIỂM TRA ĐĂNG NHẬP

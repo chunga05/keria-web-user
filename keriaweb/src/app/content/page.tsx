@@ -9,6 +9,8 @@ import {
   CalendarDays,
   Play,
 } from "lucide-react";
+import { isFeatureEnabled, FEATURES } from "@/config/features";
+import UnderConstruction from "@/components/UnderConstruction";
 
 // ============================================================
 // TYPE
@@ -209,6 +211,7 @@ function isDirectVideo(url?: string | null) {
 // ============================================================
 
 export default function ProjectPage() {
+  const isEnabled = isFeatureEnabled(FEATURES.SUPPORTING_PROJECT);
   const router = useRouter();
 
   // ==========================================================
@@ -237,6 +240,11 @@ export default function ProjectPage() {
   // ==========================================================
 
   useEffect(() => {
+    if (!isEnabled) {
+      setLoading(false);
+      return;
+    }
+
     const loadContents = async () => {
       try {
         setLoading(true);
@@ -605,6 +613,23 @@ export default function ProjectPage() {
       </article>
     );
   };
+
+  // ==========================================================
+  // FEATURE FLAG GUARD
+  // ==========================================================
+
+  if (!isEnabled) {
+    return (
+      <UnderConstruction
+        variant="page"
+        featureName="Supporting Project"
+        description="Chuyên mục các dự án tiếp sức đang được cập nhật. Chúng mình sẽ sớm mang đến cho các bạn những hoạt động thú vị nhất!"
+        estimatedRelease="Dự kiến cập nhật trong thời gian tới"
+        showBackButton={true}
+        backButtonHref="/"
+      />
+    );
+  }
 
   // ==========================================================
   // MAIN

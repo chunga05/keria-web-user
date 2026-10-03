@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import FeatureFlag from "@/components/FeatureFlag";
+import { FEATURES } from "@/config/features";
 
 // ============================================================
 // SVG ICONS
@@ -146,7 +148,14 @@ const AnimatedAmount = ({
 
 export default function StreamDonations() {
   return (
-    <div className="flex w-full flex-col items-center bg-[#F5F5F5] py-16 font-sans">
+    <FeatureFlag
+      flag={FEATURES.STREAM_DONATION}
+      fallbackVariant="page"
+      featureName="Stream Donations"
+      showBackButton={true}
+      backButtonHref="/"
+    >
+      <div className="flex w-full flex-col items-center bg-[#F5F5F5] py-16 font-sans">
       
       {/* ================================================== */}
       {/* TIÊU ĐỀ NỔI BẰNG ẢNH */}
@@ -285,5 +294,6 @@ export default function StreamDonations() {
         </div>
       </div>
     </div>
-  );
+  </FeatureFlag>
+);
 }
