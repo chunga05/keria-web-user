@@ -1,0 +1,39 @@
+services:
+  user-web:
+    image: ${IMAGE_NAME:-ghcr.io/chunga05/keria-web-user:latest}
+    container_name: keria-web-user
+    restart: always
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_ENABLE_SCHEDULE=${NEXT_PUBLIC_ENABLE_SCHEDULE:-false}
+      - NEXT_PUBLIC_ENABLE_WELCOME_PROJECT=${NEXT_PUBLIC_ENABLE_WELCOME_PROJECT:-false}
+      - NEXT_PUBLIC_ENABLE_STREAM_DONATION=${NEXT_PUBLIC_ENABLE_STREAM_DONATION:-true}
+      - NEXT_PUBLIC_ENABLE_HANDBOOK=${NEXT_PUBLIC_ENABLE_HANDBOOK:-false}
+      - NEXT_PUBLIC_ENABLE_ACHIEVEMENTS=${NEXT_PUBLIC_ENABLE_ACHIEVEMENTS:-false}
+      - NEXT_PUBLIC_ENABLE_SUPPORTING_PROJECT=${NEXT_PUBLIC_ENABLE_SUPPORTING_PROJECT:-false}
+      - NEXT_PUBLIC_ENABLE_WISHES=${NEXT_PUBLIC_ENABLE_WISHES:-true}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  # (Tùy chọn) Cloudflare Tunnel nếu muốn trỏ domain qua Cloudflare mà không cần mở port
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: user-cloudflared
+    restart: always
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN:-}
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      - user-web
+    profiles: ["tunnel"] # Chỉ chạy khi gõ: docker compose --profile tunnel up -d
