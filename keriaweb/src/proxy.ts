@@ -1,11 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
+import { isFeatureEnabled, FEATURES } from '@/config/features';
 
 const AT_COOKIE = 'dkvn_at';
 const RT_COOKIE = 'dkvn_rt';
-
-// Routes yêu cầu đăng nhập
-const PROTECTED_PREFIXES = ['/userProfile', '/hoat-dong'];
 
 function getSecret(): Uint8Array {
   const s = process.env.JWT_SECRET || process.env.USER_JWT_SECRET || '';
@@ -15,7 +13,8 @@ function getSecret(): Uint8Array {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
+  const isHandbookProtected = isFeatureEnabled(FEATURES.HANDBOOK) && pathname.startsWith('/hoat-dong/so-tay-hanh-trinh');
+  const isProtected = pathname.startsWith('/userProfile') || isHandbookProtected;
   if (!isProtected) return NextResponse.next();
 
   const token = request.cookies.get(AT_COOKIE)?.value;
