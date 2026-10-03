@@ -1,18 +1,19 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { getFacebookLinksCached } from "../actions/facebook";
 
 type FacebookLink = {
   id: string;
   title: string;
   url: string;
+  thumbnail_url: string | null;
   created_at: string;
 };
 
 // ============================================================
-// COMPONENT CON: Mỗi card Facebook — chỉ render iframe khi
-// vào viewport (IntersectionObserver lazy-load)
+// COMPONENT CON: Card đồng nhất — thumbnail cố định + tiêu đề + nút xem
 // ============================================================
 function FacebookCard({
   link,
@@ -21,100 +22,102 @@ function FacebookCard({
   link: FacebookLink;
   totalLinks: number;
 }) {
-  const cardRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const thumbnail = link.thumbnail_url || "/images/Frame 1495 (2).png";
 
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Chỉ cần trigger 1 lần
-        }
-      },
-      {
-        // Bắt đầu load trước khi vào màn hình 200px
-        rootMargin: "200px",
-        threshold: 0,
-      }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const facebookUrl = encodeURIComponent(link.url);
+  const formattedDate = link.created_at
+    ? new Date(link.created_at).toLocaleDateString("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+    : "";
 
   return (
     <article
-      ref={cardRef}
       className={`
         relative
         min-w-0
         shrink-0
         snap-start
+        flex
+        flex-col
         overflow-hidden
         rounded-2xl
         bg-white
         shadow-[0_8px_30px_rgba(0,0,0,0.06)]
         transition-shadow
         duration-300
-        hover:shadow-[0_8px_30px_rgba(0,159,227,0.12)]
-        ${totalLinks === 1
-          ? "w-full max-w-[500px]"
-          : "w-full md:w-[calc((100%-1.5rem)/2)] xl:w-[calc((100%-4rem)/3)]"
+        hover:shadow-[0_8px_30px_rgba(0,159,227,0.18)]
+        ${
+          totalLinks === 1
+            ? "w-full max-w-[420px]"
+            : "w-full md:w-[calc((100%-1.5rem)/2)] xl:w-[calc((100%-4rem)/3)]"
         }
       `}
     >
-      <div className="h-1.5 w-full bg-gradient-to-r from-[#009FE3] to-[#F45BA9]" />
+      {/* Thanh gradient đầu card */}
+      <div className="h-1.5 w-full shrink-0 bg-gradient-to-r from-[#009FE3] to-[#F45BA9]" />
 
-      {link.title && (
-        <div className="px-5 py-4">
-          <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">
+      {/* Thumbnail cố định tỉ lệ 4:3 */}
+      <div className="relative w-full" style={{ paddingBottom: "75%" }}>
+        <Image
+          src={thumbnail}
+          alt={link.title || "Facebook post"}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          className="object-cover"
+          unoptimized={thumbnail.startsWith("http")}
+        />
+        {/* Badge Facebook icon */}
+        <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#1877F2] shadow-md">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="white"
+          >
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+          </svg>
+        </span>
+      </div>
+
+      {/* Nội dung */}
+      <div className="flex flex-1 flex-col justify-between gap-3 px-5 py-4">
+        {/* Tiêu đề */}
+        {link.title && (
+          <h3 className="line-clamp-3 text-[15px] font-semibold leading-snug text-gray-800">
             {link.title}
           </h3>
-        </div>
-      )}
-
-      <div className="h-[600px] w-full overflow-y-auto overflow-x-hidden bg-white">
-        {isVisible ? (
-          <iframe
-            src={`https://www.facebook.com/plugins/post.php?href=${facebookUrl}&show_text=true&width=500`}
-            width="500"
-            height="800"
-            style={{
-              border: "none",
-              display: "block",
-              width: "100%",
-              maxWidth: "500px",
-              margin: "0 auto",
-            }}
-            scrolling="no"
-            frameBorder="0"
-            allowFullScreen
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            title={`Facebook Post - ${link.title}`}
-          />
-        ) : (
-          // Placeholder khi chưa vào viewport
-          <div className="flex h-full items-center justify-center">
-            <div className="flex flex-col items-center gap-3 text-gray-300">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-              </svg>
-              <p className="text-sm">Đang tải bài viết...</p>
-            </div>
-          </div>
         )}
+
+        {/* Footer: ngày + nút xem */}
+        <div className="flex items-center justify-between pt-2">
+          <span className="text-[12px] text-gray-400">{formattedDate}</span>
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              flex
+              items-center
+              gap-1.5
+              rounded-full
+              bg-[#1877F2]
+              px-4
+              py-1.5
+              text-[13px]
+              font-semibold
+              text-white
+              transition-all
+              duration-200
+              hover:bg-[#1464d8]
+              hover:shadow-[0_4px_12px_rgba(24,119,242,0.4)]
+            "
+          >
+            Xem bài viết ↗
+          </a>
+        </div>
       </div>
     </article>
   );

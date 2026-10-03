@@ -26,23 +26,25 @@ export function useUserProfile() {
 
     const fetchUserProfile = async () => {
       try {
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError || !user) {
-          router.push("/");
+        const res = await fetch('/api/auth/me', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (!res.ok) {
+          router.push('/');
           return;
         }
-        
-        if (cancelled) return;
-        setEmail(user.email ?? "");
-        setUserId(user.id); // cache userId
 
-        const { data: userRecord, error: dbError } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", user.id)
-          .single();
+        const data = await res.json();
+        const userRecord = data?.user;
 
-        if (dbError || !userRecord || cancelled) return;
+        if (!userRecord || cancelled) {
+          router.push('/');
+          return;
+        }
+
+        setEmail(userRecord.email ?? '');
+        setUserId(userRecord.id);
 
         let resolvedFrames: any[] = [];
         if (userRecord.unlocked_frames && userRecord.unlocked_frames.length > 0) {
@@ -80,45 +82,45 @@ export function useUserProfile() {
   }, [router]);
 
   const handleSaveProfile = async () => {
-  if (!profile || !userId) {
-    alert("Không tìm thấy profile!");
-    return;
-  }
-
-  if (!editForm.display_name.trim()) {
-    alert("Tên hiển thị không được để trống!");
-    return;
-  }
-
-  try {
-    setIsSaving(true);
-
-    const updateData = {
-      display_name: editForm.display_name.trim(),
-      address: editForm.address.trim() || null,
-      equipped_frame: editForm.equipped_frame || null,
-    };
-
-    const {
-      data: updatedUser,
-      error: updateError,
-    } = await supabase
-      .from("users")
-      .update(updateData)
-      .eq("id", userId) // dùng cached userId
-      .select("*")
-      .single();
-
-    if (updateError) {
-      alert("Lưu thất bại!\n\n" + updateError.message);
+    if (!profile || !userId) {
+      alert("Không tìm thấy profile!");
       return;
     }
 
-    setProfile({
-      ...updatedUser,
-      unlocked_frames_details:
-        profile.unlocked_frames_details || [],
-    });
+    if (!editForm.display_name.trim()) {
+      alert("Tên hiển thị không được để trống!");
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+
+      const updateData = {
+        display_name: editForm.display_name.trim(),
+        address: editForm.address.trim() || null,
+        equipped_frame: editForm.equipped_frame || null,
+      };
+
+      const res = await fetch('/api/auth/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(updateData),
+      });
+
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        alert(`Lỗi cập nhật: ${errBody?.error || 'Không thể lưu thay đổi'}`);
+        return;
+      }
+
+      const { user: updatedUser } = await res.json();
+
+      setProfile({
+        ...updatedUser,
+        unlocked_frames_details:
+          profile.unlocked_frames_details || [],
+      });
 
     setEditForm({
       display_name: updatedUser.display_name || "",
