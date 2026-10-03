@@ -698,7 +698,7 @@ export default function ToMyDearestPage() {
               mb-6 lg:mb-8
             "
           >
-            <div className="relative w-full">
+            <div className="relative w-[200px] lg:w-[240px]">
               <select
                 value={filter}
                 onChange={(e) =>
@@ -797,26 +797,32 @@ export default function ToMyDearestPage() {
    */
   <div className="mx-auto w-full lg:w-[90%] xl:w-[1080px]">
     <div className="columns-1 md:columns-2 lg:columns-3 gap-5">
-      {messages.map((msg) => (
-        <div
-          key={msg.id}
-          className={`
-            relative
-            mb-5
-            break-inside-avoid
-            flex
-            flex-col
-            justify-between
-            transition-transform
-            hover:-translate-y-1
-            p-5
-            ${
-              msg.bgColor === "blue"
-                ? "bg-[#9CE2FF]"
-                : "bg-[#FFCBE8]"
-            }
-          `}
-        >
+      {messages.map((msg, index) => {
+        // Tạo hiệu ứng lệch chiều cao (masonry so le) để tránh đơn điệu khi chữ quá ngắn
+        const minHeights = ["min-h-[200px]", "min-h-[280px]", "min-h-[240px]", "min-h-[300px]"];
+        const minHClass = minHeights[index % minHeights.length];
+
+        return (
+          <div
+            key={msg.id}
+            className={`
+              relative
+              mb-5
+              break-inside-avoid
+              flex
+              flex-col
+              justify-between
+              transition-transform
+              hover:-translate-y-1
+              p-5 lg:p-6
+              ${minHClass}
+              ${
+                msg.bgColor === "blue"
+                  ? "bg-[#9CE2FF]"
+                  : "bg-[#FFCBE8]"
+              }
+            `}
+          >
           {/* ================================================= */}
           {/* STAR */}
           {/* ================================================= */}
@@ -1068,7 +1074,8 @@ export default function ToMyDearestPage() {
             )}
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   </div>
 )}

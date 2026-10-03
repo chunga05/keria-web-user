@@ -310,7 +310,8 @@ export default function SoTayHanhTrinhPage() {
           className={`
             relative z-20 w-[35%] aspect-[792/1070] [perspective:3000px]
             transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]
-            ${isOpen ? 'translate-x-[50%] scale-[1.02]' : 'translate-x-0 scale-100'}
+            max-md:rotate-90
+            ${isOpen ? 'translate-x-[50%] md:scale-[1.02] max-md:scale-[2.2]' : 'translate-x-0 md:scale-100 max-md:scale-[2.2]'}
           `}
         >
           {/* ===================================================

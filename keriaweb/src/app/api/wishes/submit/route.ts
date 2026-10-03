@@ -19,14 +19,24 @@ export async function POST(request: Request) {
       idolId = 1,
     } = body;
 
+    // Hàm chống XSS: Chuyển đổi các ký tự đặc biệt thành HTML entities
+    const escapeHtml = (unsafe: string) => {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    };
+
     const trimmedName =
       typeof guestName === "string"
-        ? guestName.trim()
+        ? escapeHtml(guestName.trim())
         : "";
 
     const trimmedContent =
       typeof content === "string"
-        ? content.trim()
+        ? escapeHtml(content.trim())
         : "";
 
     // ============================================================

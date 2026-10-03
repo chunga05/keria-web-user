@@ -26,9 +26,23 @@ export default function VideoYoutube({
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Tham chiếu các thẻ video html5 để tạm dừng khi người dùng chuyển slide
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
+
+  // =========================================================
+  // AUTO SLIDE (10s)
+  // =========================================================
+  useEffect(() => {
+    if (videos.length <= 1 || isHovered) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1));
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [videos.length, isHovered]);
 
   // =========================================================
   // LOAD VIDEO (Redis Cache)
@@ -174,6 +188,8 @@ export default function VideoYoutube({
         md:block md:aspect-[1440/800] md:py-0
         ${className}
       `}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* =====================================================
           KHUNG NỘI DUNG

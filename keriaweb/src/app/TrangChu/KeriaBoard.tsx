@@ -49,7 +49,7 @@ export default function KeriaBoard() {
         flex-col
         items-center
         pt-[80px] md:pt-[150px]
-        overflow-visible
+        pb-[40px] md:pb-[50px] overflow-visible
       "
     >
       <div className="w-[92%] md:w-[65%] mx-auto">
@@ -242,14 +242,7 @@ export default function KeriaBoard() {
       </div>
 
       <div
-        className="
-          relative
-          w-full
-          pointer-events-none
-          mt-[20px] md:mt-[80px]
-          translate-y-[20px] md:translate-y-[90px]
-          z-20
-        "
+        className="absolute bottom-0 left-0 w-full pointer-events-none translate-y-[45%] z-20"
       >
         <Image
           src="/images/vachngan3.png"

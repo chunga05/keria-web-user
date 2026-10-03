@@ -125,7 +125,7 @@ export default function LockerHero() {
                 text-center
                 tracking-wide
                 leading-[1.2]
-                text-[2.85cqw]
+                text-[3.2cqw]
               ">
                 DearKeriaVN tồn tại với mục tiêu ủng hộ Support xuất sắc nhất lịch sử Liên Minh Huyền Thoại -{" "}
                 <strong className="text-black font-bold">Ryu &apos;Keria&apos; Minseok</strong>, cùng đồng hành và lưu giữ lại những dấu ấn rực rỡ theo từng cột mốc sự nghiệp, dõi theo mỗi bước chân nỗ lực trên hành trình vĩ đại của{" "}

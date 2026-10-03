@@ -212,49 +212,6 @@ export default function ProjectPage() {
   const router = useRouter();
 
   // ==========================================================
-  // SCALE CONTAINER
-  // ==========================================================
-
-  const scaleContainerRef = useRef<HTMLDivElement>(null);
-
-  const [scale, setScale] = useState(1);
-
-  // ==========================================================
-  // TÍNH SCALE THEO CONTAINER
-  // ==========================================================
-
-  useEffect(() => {
-    const element = scaleContainerRef.current;
-
-    if (!element) return;
-
-    const updateScale = () => {
-      const width = element.clientWidth;
-
-      if (!width) return;
-
-      const nextScale = width / DESIGN_WIDTH;
-
-      setScale(nextScale);
-    };
-
-    updateScale();
-
-    const observer = new ResizeObserver(() => {
-      updateScale();
-    });
-
-    observer.observe(element);
-
-    window.addEventListener("resize", updateScale);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateScale);
-    };
-  }, []);
-
-  // ==========================================================
   // TAB
   // ==========================================================
 
@@ -436,10 +393,8 @@ export default function ProjectPage() {
           w-full
           cursor-pointer
           flex-col
+          gap-3 lg:gap-[16px]
         "
-        style={{
-          gap: 16,
-        }}
       >
         {/* ================================================= */}
         {/* MEDIA */}
@@ -453,10 +408,8 @@ export default function ProjectPage() {
             overflow-hidden
             bg-gray-200
             shadow-sm
+            rounded-xl lg:rounded-[18px]
           "
-          style={{
-            borderRadius: 18,
-          }}
         >
           {/* ================= YOUTUBE ================= */}
 
@@ -502,19 +455,14 @@ export default function ProjectPage() {
                     shadow-lg
                     transition-transform
                     group-hover/card:scale-110
+                    w-10 lg:w-[55px]
                   "
-                  style={{
-                    width: 55,
-                  }}
                 >
                   <Play
                     className="
                       fill-current
+                      w-5 h-5 lg:w-[30px] lg:h-[30px]
                     "
-                    style={{
-                      width: 30,
-                      height: 30,
-                    }}
                   />
                 </div>
               </div>
@@ -524,19 +472,17 @@ export default function ProjectPage() {
               <div
                 className="
                   absolute
-                  left-4
-                  top-4
+                  left-2 lg:left-4
+                  top-2 lg:top-4
                   rounded-full
                   bg-red-600
-                  px-4
-                  py-2
+                  px-2 lg:px-4
+                  py-1 lg:py-2
                   font-semibold
                   text-white
                   shadow-md
+                  text-[10px] lg:text-[12px]
                 "
-                style={{
-                  fontSize: 12,
-                }}
               >
                 YOUTUBE
               </div>
@@ -598,19 +544,17 @@ export default function ProjectPage() {
             <div
               className="
                 absolute
-                left-4
-                top-4
+                left-2 lg:left-4
+                top-2 lg:top-4
                 rounded-full
                 bg-black/65
-                px-4
-                py-2
+                px-2 lg:px-4
+                py-1 lg:py-2
                 font-semibold
                 text-white
                 backdrop-blur-sm
+                text-[10px] lg:text-[12px]
               "
-              style={{
-                fontSize: 12,
-              }}
             >
               VIDEO
             </div>
@@ -629,10 +573,8 @@ export default function ProjectPage() {
             text-gray-800
             transition-colors
             group-hover/card:text-[#FF76C3]
+            text-sm lg:text-[15px]
           "
-          style={{
-            fontSize: 15,
-          }}
         >
           {item.title}
         </h3>
@@ -647,17 +589,12 @@ export default function ProjectPage() {
               flex
               items-center
               text-gray-400
+              gap-2 lg:gap-[8px]
+              text-[10px] lg:text-[11px]
             "
-            style={{
-              gap: 8,
-              fontSize: 11,
-            }}
           >
             <CalendarDays
-              style={{
-                width: 16,
-                height: 16,
-              }}
+              className="w-3.5 h-3.5 lg:w-[16px] lg:h-[16px]"
             />
 
             <span>
@@ -690,10 +627,11 @@ export default function ProjectPage() {
       {/* ====================================================== */}
 
       <div
-        ref={scaleContainerRef}
         className="
           mx-auto
-          w-[60%]
+          w-[92%]
+          lg:w-[60%]
+          max-w-[1200px]
         "
       >
         {/* ==================================================== */}
@@ -703,12 +641,8 @@ export default function ProjectPage() {
         <div
           className="
             relative
-            w-[1200px]
-            origin-top-left
+            w-full
           "
-          style={{
-            zoom: scale,
-          }}
         >
           {/* ================================================= */}
           {/* HERO */}
@@ -717,15 +651,13 @@ export default function ProjectPage() {
           <section
             className="
               relative
-              aspect-[2.4/1]
+              aspect-[4/3] sm:aspect-[2.4/1]
               w-full
               overflow-hidden
               bg-gray-900
               shadow-lg
+              rounded-2xl lg:rounded-[18px]
             "
-            style={{
-              borderRadius: 18,
-            }}
           >
             <Image
               src="/images/placeholder-banner.jpg"
@@ -746,8 +678,8 @@ export default function ProjectPage() {
                 absolute
                 inset-0
                 bg-gradient-to-r
-                from-black/75
-                via-black/35
+                from-black/80 sm:from-black/75
+                via-black/50 sm:via-black/35
                 to-transparent
               "
             />
@@ -761,10 +693,8 @@ export default function ProjectPage() {
                 flex
                 flex-col
                 justify-center
+                pl-5 sm:pl-10 lg:pl-[84px]
               "
-              style={{
-                paddingLeft: 84,
-              }}
             >
               <p
                 className="
@@ -772,40 +702,34 @@ export default function ProjectPage() {
                   uppercase
                   tracking-[0.2em]
                   text-[#FF76C3]
+                  mb-2 lg:mb-[12px]
+                  text-xs lg:text-[14px]
                 "
-                style={{
-                  marginBottom: 12,
-                  fontSize: 14,
-                }}
               >
                 KERIA'S PROJECT
               </p>
 
               <h1
                 className="
-                  max-w-[65%]
+                  max-w-[90%] lg:max-w-[65%]
                   font-extrabold
                   leading-[1.1]
                   text-white
+                  mb-3 lg:mb-[18px]
+                  text-2xl sm:text-3xl lg:text-[48px]
                 "
-                style={{
-                  marginBottom: 18,
-                  fontSize: 48,
-                }}
               >
                 Các dự án dành cho KERIA
               </h1>
 
               <p
                 className="
-                  max-w-[55%]
+                  max-w-[90%] sm:max-w-[80%] lg:max-w-[55%]
                   leading-[1.6]
                   text-white/80
+                  mb-5 lg:mb-[24px]
+                  text-sm lg:text-[15px]
                 "
-                style={{
-                  marginBottom: 24,
-                  fontSize: 15,
-                }}
               >
                 Cùng nhìn lại những hoạt động,
                 sự kiện và dự án đặc biệt dành
@@ -832,15 +756,10 @@ export default function ProjectPage() {
                   transition-all
                   hover:scale-105
                   hover:bg-[#FF4D91]
+                  rounded-lg
+                  px-6 py-2.5 lg:px-[36px] lg:py-[12px]
+                  text-sm lg:text-[14px]
                 "
-                style={{
-                  borderRadius: 8,
-                  paddingLeft: 36,
-                  paddingRight: 36,
-                  paddingTop: 12,
-                  paddingBottom: 12,
-                  fontSize: 14,
-                }}
               >
                 Xem Chi Tiết
               </button>
@@ -856,12 +775,10 @@ export default function ProjectPage() {
               flex
               flex-wrap
               items-center
+              mt-8 lg:mt-[60px]
+              mb-8 lg:mb-[60px]
+              gap-2 lg:gap-[14px]
             "
-            style={{
-              marginTop: 60,
-              marginBottom: 60,
-              gap: 14,
-            }}
           >
             {TABS.map((tab) => (
               <button
@@ -874,19 +791,14 @@ export default function ProjectPage() {
                   rounded-full
                   font-bold
                   transition-all
+                  px-4 py-2 lg:px-[24px] lg:py-[10px]
+                  text-xs lg:text-[14px]
                   ${
                     activeTab === tab.value
                       ? "bg-[#FF76C3] text-white shadow-md"
                       : "bg-white text-gray-500 shadow-sm hover:bg-gray-100"
                   }
                 `}
-                style={{
-                  paddingLeft: 24,
-                  paddingRight: 24,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                  fontSize: 14,
-                }}
               >
                 {tab.label}
               </button>
@@ -902,10 +814,8 @@ export default function ProjectPage() {
             className="
               flex
               flex-col
+              gap-12 lg:gap-[78px]
             "
-            style={{
-              gap: 78,
-            }}
           >
             {/* ================================================= */}
             {/* LOADING */}
@@ -917,10 +827,8 @@ export default function ProjectPage() {
                   flex
                   items-center
                   justify-center
+                  min-h-[150px] lg:min-h-[200px]
                 "
-                style={{
-                  minHeight: 200,
-                }}
               >
                 <div
                   className="
@@ -929,11 +837,8 @@ export default function ProjectPage() {
                     border-[3px]
                     border-gray-200
                     border-t-[#FF76C3]
+                    w-8 h-8 lg:w-[42px] lg:h-[42px]
                   "
-                  style={{
-                    width: 42,
-                    height: 42,
-                  }}
                 />
               </div>
             )}
@@ -946,26 +851,20 @@ export default function ProjectPage() {
               contents.length === 0 && (
                 <div
                   className="
-                    rounded-[24px]
+                    rounded-2xl lg:rounded-[24px]
                     bg-white
                     text-center
                     shadow-sm
+                    px-6 lg:px-[60px]
+                    py-16 lg:py-[96px]
                   "
-                  style={{
-                    paddingLeft: 60,
-                    paddingRight: 60,
-                    paddingTop: 96,
-                    paddingBottom: 96,
-                  }}
                 >
                   <p
                     className="
                       font-semibold
                       text-gray-500
+                      text-sm lg:text-[16px]
                     "
-                    style={{
-                      fontSize: 16,
-                    }}
                   >
                     Hiện chưa có bài viết nào.
                   </p>
@@ -1044,19 +943,15 @@ export default function ProjectPage() {
                           flex
                           items-center
                           justify-between
+                          mb-4 lg:mb-[24px]
                         "
-                        style={{
-                          marginBottom: 24,
-                        }}
                       >
                         <h2
                           className="
                             font-bold
                             text-gray-700
+                            text-lg lg:text-[21px]
                           "
-                          style={{
-                            fontSize: 21,
-                          }}
                         >
                           {section.title}
                         </h2>
@@ -1065,10 +960,8 @@ export default function ProjectPage() {
                           className="
                             font-medium
                             text-gray-400
+                            text-xs lg:text-[12px]
                           "
-                          style={{
-                            fontSize: 12,
-                          }}
                         >
                           {sectionContents.length}{" "}
                           bài viết
@@ -1108,27 +1001,23 @@ export default function ProjectPage() {
                               aspect-square
                               items-center
                               justify-center
-                              rounded-[18%]
+                              rounded-full lg:rounded-[18%]
+                              -translate-y-1/2 lg:translate-y-[-70%]
                               text-white
                               shadow-sm
                               transition-all
                               hover:scale-105
+                              -left-3 lg:-left-[48px]
+                              w-8 lg:w-[38px]
                               ${
                                 isBlueArrow
                                   ? "bg-[#38bdf8]"
                                   : "bg-[#FF76C3]"
                               }
                             `}
-                            style={{
-                              left: -48,
-                              width: 38,
-                            }}
                           >
                             <ChevronLeft
-                              style={{
-                                width: 23,
-                                height: 23,
-                              }}
+                              className="w-5 h-5 lg:w-[23px] lg:h-[23px]"
                             />
                           </button>
                         )}
@@ -1141,11 +1030,9 @@ export default function ProjectPage() {
                           className="
                             grid
                             w-full
-                            grid-cols-4
+                            grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
+                            gap-4 lg:gap-[24px]
                           "
-                          style={{
-                            gap: 24,
-                          }}
                         >
                           {visibleContents.map(
                             renderCard
@@ -1173,27 +1060,23 @@ export default function ProjectPage() {
                               aspect-square
                               items-center
                               justify-center
-                              rounded-[18%]
+                              -translate-y-1/2 lg:translate-y-[-70%]
+                              rounded-full lg:rounded-[18%]
                               text-white
                               shadow-sm
                               transition-all
                               hover:scale-105
+                              -right-3 lg:-right-[48px]
+                              w-8 lg:w-[38px]
                               ${
                                 isBlueArrow
                                   ? "bg-[#38bdf8]"
                                   : "bg-[#FF76C3]"
                               }
                             `}
-                            style={{
-                              right: -48,
-                              width: 38,
-                            }}
                           >
                             <ChevronRight
-                              style={{
-                                width: 23,
-                                height: 23,
-                              }}
+                              className="w-5 h-5 lg:w-[23px] lg:h-[23px]"
                             />
                           </button>
                         )}
