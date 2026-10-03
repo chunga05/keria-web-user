@@ -8,8 +8,44 @@ const AT_COOKIE = 'dkvn_at';
 const RT_COOKIE = 'dkvn_rt';
 const REFRESH_TTL_SEC = 7 * 24 * 60 * 60; // 7 days
 
+function getRealOrigin(request: Request): string {
+  // 1. Ưu tiên biến môi trường cấu hình domain chính thức trên VPS nếu có
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL;
+  if (envUrl && !envUrl.includes('0.0.0.0')) {
+    return envUrl.replace(/\/$/, '');
+  }
+
+  // 2. Lấy từ header proxy (Cloudflare Tunnel, Nginx, Docker...)
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
+  if (forwardedHost && !forwardedHost.includes('0.0.0.0')) {
+    return `${forwardedProto}://${forwardedHost}`;
+  }
+
+  // 3. Lấy từ header Host
+  const host = request.headers.get('host');
+  if (host && !host.includes('0.0.0.0')) {
+    const proto =
+      request.headers.get('x-forwarded-proto') ||
+      (request.url.startsWith('https') ? 'https' : 'http');
+    return `${proto}://${host}`;
+  }
+
+  // 4. Fallback từ request.url nếu không chứa 0.0.0.0
+  try {
+    const parsedOrigin = new URL(request.url).origin;
+    if (!parsedOrigin.includes('0.0.0.0')) {
+      return parsedOrigin;
+    }
+  } catch {}
+
+  // 5. Fallback an toàn cho local development
+  return 'http://localhost:3000';
+}
+
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const origin = getRealOrigin(request);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
   const next = searchParams.get('next') ?? '/';
 
@@ -19,6 +55,8 @@ export async function GET(request: Request) {
   }
 
   const cookieStore = await cookies();
+  const supabaseCookiesToSet: Array<{ name: string; value: string; options: any }> = [];
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder',
@@ -26,13 +64,12 @@ export async function GET(request: Request) {
       cookies: {
         getAll: () => cookieStore.getAll(),
         setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Safe to ignore in route handlers
-          }
+          cookiesToSet.forEach(({ name, value, options }) => {
+            try {
+              cookieStore.set(name, value, options);
+            } catch {}
+            supabaseCookiesToSet.push({ name, value, options });
+          });
         },
       },
     }
@@ -105,13 +142,26 @@ export async function GET(request: Request) {
   });
 
   // Xác định URL điều hướng tiếp theo:
-  // Nếu next là external URL an toàn (như http://localhost:3001 từ admin) thì chuyển hướng tới đó
-  let destination = `${origin}${next}`;
+  let destination = `${origin}${next.startsWith('/') ? next : `/${next}`}`;
   if (next.startsWith('http://') || next.startsWith('https://')) {
-    destination = next;
+    if (next.includes('0.0.0.0')) {
+      try {
+        const nextUrlObj = new URL(next);
+        destination = `${origin}${nextUrlObj.pathname}${nextUrlObj.search}${nextUrlObj.hash}`;
+      } catch {
+        destination = `${origin}/`;
+      }
+    } else {
+      destination = next;
+    }
   }
 
   const response = NextResponse.redirect(destination);
+
+  // Gắn cookies từ Supabase vào response để supabase.auth.getUser() hoạt động
+  supabaseCookiesToSet.forEach(({ name, value, options }) => {
+    response.cookies.set(name, value, options);
+  });
 
   const cookieDomain = process.env.COOKIE_DOMAIN || undefined;
 

@@ -11,6 +11,7 @@ import { NhanDauModal } from './nhan-dau-modal';
 
 import { usePassportData } from '@/hooks/usePassportData';
 import { supabase } from '@/lib/supabase';
+import { getCurrentJwtUser } from '@/lib/auth';
 import { isFeatureEnabled, FEATURES } from '@/config/features';
 import UnderConstruction from '@/components/UnderConstruction';
 
@@ -45,49 +46,40 @@ export default function SoTayHanhTrinhPage() {
       try {
         console.log('🔐 [Handbook] Đang kiểm tra đăng nhập...');
 
-        const {
-          data: { user },
-          error,
-        } = await supabase.auth.getUser();
+        let activeUserId: string | null = null;
+
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user?.id) {
+            activeUserId = user.id;
+          }
+        } catch {
+          // Ignore supabase get user error, fallback to JWT
+        }
+
+        if (!activeUserId) {
+          const jwtUser = await getCurrentJwtUser();
+          if (jwtUser?.id) {
+            activeUserId = jwtUser.id;
+          }
+        }
 
         if (!mounted) return;
 
-        if (error) {
-          console.error(
-            '❌ [Handbook] Lỗi kiểm tra auth:',
-            error
-          );
-
+        if (!activeUserId) {
+          console.log('🚫 [Handbook] Chưa đăng nhập → chuyển sang login');
           setIsAuthenticated(false);
-          router.replace('/login');
+          router.replace('/login?next=/hoat-dong/so-tay-hanh-trinh');
           return;
         }
 
-        if (!user) {
-          console.log(
-            '🚫 [Handbook] Chưa đăng nhập → chuyển sang login'
-          );
-
-          setIsAuthenticated(false);
-          router.replace('/login');
-          return;
-        }
-
-        console.log(
-          '✅ [Handbook] Đã đăng nhập:',
-          user.id
-        );
-
+        console.log('✅ [Handbook] Đã đăng nhập:', activeUserId);
         setIsAuthenticated(true);
       } catch (error) {
-        console.error(
-          '❌ [Handbook] Không thể kiểm tra đăng nhập:',
-          error
-        );
-
+        console.error('❌ [Handbook] Không thể kiểm tra đăng nhập:', error);
         if (mounted) {
           setIsAuthenticated(false);
-          router.replace('/login');
+          router.replace('/login?next=/hoat-dong/so-tay-hanh-trinh');
         }
       } finally {
         if (mounted) {

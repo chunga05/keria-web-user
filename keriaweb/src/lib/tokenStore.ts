@@ -15,6 +15,10 @@ export const tokenStore = {
 
   clear(): void {
     _token = null;
+    if (typeof document !== 'undefined') {
+      document.cookie = 'dkvn_at=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'dkvn_admin_at=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
   },
 
   /**

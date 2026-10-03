@@ -8,8 +8,16 @@ const REFRESH_TTL_SEC = 7 * 24 * 60 * 60;
 const GRACE_PERIOD_SEC = 30;
 
 function clearAuthCookies(res: NextResponse) {
-  res.cookies.delete(AT_COOKIE);
-  res.cookies.delete(RT_COOKIE);
+  const cookieDomain = process.env.COOKIE_DOMAIN || undefined;
+  const names = [AT_COOKIE, RT_COOKIE, 'dkvn_admin_at', 'dkvn_admin_rt'];
+  names.forEach((name) => {
+    res.cookies.set(name, '', { path: '/', maxAge: 0, expires: new Date(0) });
+    res.cookies.delete(name);
+    if (cookieDomain) {
+      res.cookies.set(name, '', { path: '/', domain: cookieDomain, maxAge: 0, expires: new Date(0) });
+      res.cookies.delete({ name, domain: cookieDomain, path: '/' });
+    }
+  });
   return res;
 }
 

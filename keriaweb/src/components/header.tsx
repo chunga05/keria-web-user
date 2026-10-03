@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import ActiveIndicator from "@/components/ui/ActiveIndicator";
 import { getCurrentJwtUser, getJwtAccessToken } from "@/lib/auth";
+import { tokenStore } from "@/lib/tokenStore";
 import { supabase } from "@/lib/supabase";
 
 // ============================================================
@@ -171,7 +172,20 @@ export default function Header() {
         credentials: 'include',
       });
     } catch (error) {
-      console.error("Lỗi đăng xuất:", error);
+      console.error("Lỗi đăng xuất server:", error);
+    }
+
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Lỗi Supabase signOut:", error);
+    }
+
+    tokenStore.clear();
+
+    if (typeof document !== 'undefined') {
+      document.cookie = 'dkvn_at=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'dkvn_admin_at=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
 
     setUserData(null);

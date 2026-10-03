@@ -10,6 +10,31 @@ function getSecret(): Uint8Array {
   return new TextEncoder().encode(s);
 }
 
+function buildLoginUrl(request: NextRequest, pathname: string): URL {
+  const forwardedHost = request.headers.get('x-forwarded-host');
+  const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
+  const host = forwardedHost || request.headers.get('host');
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL;
+
+  let loginUrl: URL;
+  if (envUrl && !envUrl.includes('0.0.0.0')) {
+    loginUrl = new URL('/login', envUrl);
+  } else if (host && !host.includes('0.0.0.0')) {
+    loginUrl = new URL('/login', `${forwardedProto}://${host}`);
+  } else {
+    loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = '/login';
+    loginUrl.search = '';
+    if (loginUrl.host.includes('0.0.0.0')) {
+      loginUrl.host = 'localhost:3000';
+      loginUrl.protocol = 'http:';
+    }
+  }
+
+  loginUrl.searchParams.set('next', pathname);
+  return loginUrl;
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -22,8 +47,7 @@ export async function proxy(request: NextRequest) {
 
   // Nếu hoàn toàn không có token nào -> Chuyển hướng sang Login
   if (!token && !refreshToken) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('next', pathname);
+    const loginUrl = buildLoginUrl(request, pathname);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -45,8 +69,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const loginUrl = new URL('/login', request.url);
-  loginUrl.searchParams.set('next', pathname);
+  const loginUrl = buildLoginUrl(request, pathname);
   const res = NextResponse.redirect(loginUrl);
   res.cookies.delete(AT_COOKIE);
   return res;
