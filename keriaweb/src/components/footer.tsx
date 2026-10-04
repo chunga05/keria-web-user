@@ -25,42 +25,42 @@ export default function Footer() {
             DearKeriaVN
           </h2>
           <p className="text-gray-500 text-sm mt-1">
-            Liên hệ: dearkeriavn@gmail.com
+            Liên hệ: <a href="mailto:dearkeriavn@gmail.com" className="hover:text-[#FF76C3] transition-colors">dearkeriavn@gmail.com</a>
           </p>
 
           {/* ICON MẠNG XÃ HỘI */}
           <div className="flex items-center gap-3 mt-5">
             {/* Facebook */}
-            <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-[#1877F2] cursor-pointer hover:bg-blue-100 transition-colors">
+            <a href="https://www.facebook.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-[#1877F2] cursor-pointer hover:bg-blue-100 transition-colors">
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                 <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
               </svg>
-            </div>
+            </a>
 
             {/* Threads */}
-            <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden">
+            <a href="https://www.threads.com/@dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden">
               <img 
                 src="/images/threadicon2.png" 
                 alt="Threads Icon" 
                 className="w-5 h-5 object-contain" 
               />
-            </div>
+            </a>
 
             {/* Instagram */}
-            <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-[#E1306C] cursor-pointer hover:bg-gray-200 transition-colors">
+            <a href="https://www.instagram.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-[#E1306C] cursor-pointer hover:bg-gray-200 transition-colors">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
               </svg>
-            </div>
+            </a>
 
             {/* X (Twitter) */}
-            <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-black cursor-pointer hover:bg-gray-200 transition-colors">
+            <a href="https://x.com/dearkeriavn" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-black cursor-pointer hover:bg-gray-200 transition-colors">
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
-            </div>
+            </a>
           </div>
         </div>
 

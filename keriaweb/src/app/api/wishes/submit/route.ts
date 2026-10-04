@@ -78,9 +78,16 @@ export async function POST(request: Request) {
     if (userId) {
       const { data: profile } = await supabaseAdmin
         .from("users")
-        .select("display_name, username")
+        .select("display_name, username, status")
         .eq("id", userId)
         .maybeSingle();
+
+      if (profile && (profile.status === 'banned' || profile.status === 'rejected')) {
+        return NextResponse.json(
+          { error: "Tài khoản của bạn đã bị khóa hoặc từ chối." },
+          { status: 403 }
+        );
+      }
 
       userNick = profile?.display_name || profile?.username || null;
     }
@@ -154,56 +161,32 @@ export async function POST(request: Request) {
       bannedWordsData &&
       bannedWordsData.length > 0
     ) {
-      const fullText =
-        `${finalAuthorName} ${trimmedContent}`
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/đ/g, "d");
+      const fullText = `${finalAuthorName} ${trimmedContent}`.toLowerCase();
 
-      const hasBannedWord =
-        bannedWordsData.some((item) => {
-          if (
-            !item ||
-            typeof item.word !== "string"
-          ) {
-            return false;
-          }
+      const hasBannedWord = bannedWordsData.some((item) => {
+        if (!item || typeof item.word !== "string") {
+          return false;
+        }
 
-          const cleanWord =
-            item.word
-              .trim()
-              .toLowerCase()
-              .normalize("NFD")
-              .replace(
-                /[\u0300-\u036f]/g,
-                ""
-              )
-              .replace(/đ/g, "d");
+        const cleanWord = item.word.trim().toLowerCase();
 
-          if (!cleanWord) {
-            return false;
-          }
+        if (!cleanWord) {
+          return false;
+        }
 
-          const escapedWord =
-            cleanWord.replace(
-              /[.*+?^${}()|[\]\\]/g,
-              "\\$&"
-            );
+        const escapedWord = cleanWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-          if (cleanWord.length <= 3) {
-            const regex = new RegExp(
-              `(^|[^a-z0-9])${escapedWord}([^a-z0-9]|$)`,
-              "i"
-            );
-
-            return regex.test(fullText);
-          }
-
-          return fullText.includes(
-            cleanWord
+        if (cleanWord.length <= 3) {
+          const regex = new RegExp(
+            `(^|[^\\p{L}\\p{N}])${escapedWord}([^\\p{L}\\p{N}]|$)`,
+            "iu"
           );
-        });
+
+          return regex.test(fullText);
+        }
+
+        return fullText.includes(cleanWord);
+      });
 
       // ==========================================================
       // 6. PHÁT HIỆN TỪ CẤM

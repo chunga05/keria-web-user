@@ -100,6 +100,8 @@ export default function ToMyDearestPage() {
     setModal({ isOpen: false, message: "" });
   };
 
+  const [selectedWish, setSelectedWish] = useState<any>(null);
+
   // ==========================================================
   // HOOK WISH
   // ==========================================================
@@ -736,6 +738,10 @@ export default function ToMyDearestPage() {
                 <option value="Cũ nhất">
                   Cũ nhất
                 </option>
+
+                <option value="Nhiều lượt wish nhất">
+                  Nhiều lượt wish nhất
+                </option>
               </select>
 
               {/* ================================================= */}
@@ -802,26 +808,21 @@ export default function ToMyDearestPage() {
    * ==========================================================
    */
   <div className="mx-auto w-full lg:w-[90%] xl:w-[1080px]">
-    <div className="columns-1 md:columns-2 lg:columns-3 gap-5">
+    <div className="columns-1 md:columns-2 lg:columns-3 gap-3 md:gap-4">
       {messages.map((msg, index) => {
-        // Tạo hiệu ứng lệch chiều cao (masonry so le) để tránh đơn điệu khi chữ quá ngắn
-        const minHeights = ["min-h-[200px]", "min-h-[280px]", "min-h-[240px]", "min-h-[300px]"];
-        const minHClass = minHeights[index % minHeights.length];
-
         return (
           <div
             key={msg.id}
             className={`
               relative
-              mb-5
+              mb-3 md:mb-4
               break-inside-avoid
               flex
               flex-col
-              justify-between
+              justify-start
               transition-transform
               hover:-translate-y-1
-              p-5 lg:p-6
-              ${minHClass}
+              px-4 py-3 md:px-5 lg:px-6
               ${
                 msg.bgColor === "blue"
                   ? "bg-[#9CE2FF]"
@@ -876,7 +877,7 @@ export default function ToMyDearestPage() {
             className="
               flex
               items-center
-              mb-3 lg:mb-4
+              mb-2
               gap-2 lg:gap-3
             "
           >
@@ -996,19 +997,28 @@ export default function ToMyDearestPage() {
           {/* CONTENT */}
           {/* ================================================= */}
 
-          <p
-            className="
-              flex-grow
-              break-words
-              font-medium
-              leading-relaxed
-              text-black
-              mb-5 lg:mb-6
-              text-[12px] lg:text-[14px]
-            "
-          >
-            {msg.content}
-          </p>
+          <div className="flex-grow mb-2 flex flex-col">
+            <p
+              className={`
+                break-words
+                font-medium
+                leading-relaxed
+                text-black
+                text-[12px] lg:text-[14px]
+                ${msg.content?.length > 250 ? 'line-clamp-6' : ''}
+              `}
+            >
+              {msg.content}
+            </p>
+            {msg.content?.length > 250 && (
+              <button
+                onClick={() => setSelectedWish(msg)}
+                className="text-gray-600 hover:text-black hover:underline text-[12px] lg:text-[13px] self-start mt-1 font-bold transition-colors"
+              >
+                Xem thêm...
+              </button>
+            )}
+          </div>
 
           {/* ================================================= */}
           {/* REACTIONS */}
@@ -1038,7 +1048,8 @@ export default function ToMyDearestPage() {
                       handleReact(
                         msg.id,
                         reaction.type,
-                        reaction.count
+                        reaction.count,
+                        hasReacted
                       )
                     }
                     className={`
@@ -1330,6 +1341,53 @@ export default function ToMyDearestPage() {
             >
               OK
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ====================================================== */}
+      {/* WISH DETAILS MODAL                                     */}
+      {/* ====================================================== */}
+      {selectedWish && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+          onClick={() => setSelectedWish(null)}
+        >
+          <div
+            className="relative flex flex-col w-full max-w-lg max-h-[85vh] overflow-hidden rounded-2xl bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6 overflow-y-auto">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="overflow-hidden rounded-full bg-[#FDE2EC] text-[#FF76C3] font-bold flex items-center justify-center w-12 h-12 shrink-0">
+                  {selectedWish.avatar ? (
+                    <Image src={selectedWish.avatar} alt={selectedWish.author} width={48} height={48} className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="text-sm uppercase">{selectedWish.author?.trim()?.charAt(0) || "K"}</span>
+                  )}
+                </div>
+                <div>
+                  <div className="flex items-center gap-1">
+                    <span className="font-bold text-gray-900 text-[15px]">{selectedWish.author}</span>
+                    {selectedWish.hasGoldStar && <span className="text-yellow-400 text-[14px]">⭐</span>}
+                  </div>
+                  <span className="block text-gray-500 text-[12px]">{selectedWish.date}</span>
+                </div>
+              </div>
+              <p className="whitespace-pre-wrap font-medium leading-relaxed text-black text-[14px] lg:text-[15px]">
+                {selectedWish.content}
+              </p>
+            </div>
+            
+            <div className="p-4 border-t flex justify-end bg-gray-50">
+              <button
+                onClick={() => setSelectedWish(null)}
+                className="rounded-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-6 py-2 transition-colors text-[14px]"
+              >
+                Đóng
+              </button>
+            </div>
           </div>
         </div>
       )}

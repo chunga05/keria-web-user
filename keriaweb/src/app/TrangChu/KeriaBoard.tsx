@@ -10,6 +10,7 @@ import { getMediaUrl } from "@/lib/utils";
 export default function KeriaBoard() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   // =========================================================
   // LOAD POSTS VỚI REDIS CACHE
@@ -83,6 +84,7 @@ export default function KeriaBoard() {
               return (
                 <motion.article
                   key={post.id}
+                  onClick={() => setSelectedPost(post)}
                   initial={{
                     opacity: 0,
                     y: 30,
@@ -102,6 +104,7 @@ export default function KeriaBoard() {
                   }}
                   className="
                     group
+                    cursor-pointer
                     bg-white
                     rounded-[18px]
                     p-[16px] md:px-[28px] md:py-[22px]
@@ -206,13 +209,13 @@ export default function KeriaBoard() {
                   >
                     {/* Left: Interactions */}
                     <div className="flex items-center gap-[20px]">
-                      <button className="flex items-center gap-[6px] hover:text-pink-500 transition-colors">
+                      <button onClick={(e) => e.stopPropagation()} className="flex items-center gap-[6px] hover:text-pink-500 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-[22px] h-[22px]">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                         </svg>
                         <span className="text-[14px] font-medium text-gray-600">1000</span>
                       </button>
-                      <button className="flex items-center gap-[6px] hover:text-pink-500 transition-colors">
+                      <button onClick={(e) => e.stopPropagation()} className="flex items-center gap-[6px] hover:text-pink-500 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-[22px] h-[22px]">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
                         </svg>
@@ -223,6 +226,7 @@ export default function KeriaBoard() {
                     {/* Right: Share */}
                     <button
                       type="button"
+                      onClick={(e) => e.stopPropagation()}
                       className="
                         hover:text-pink-500
                         transition-colors
@@ -259,6 +263,69 @@ export default function KeriaBoard() {
           "
         />
       </div>
+
+      {/* ========================================================= */}
+      {/* POST DETAILS MODAL */}
+      {/* ========================================================= */}
+      {selectedPost && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
+          style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+          onClick={() => setSelectedPost(null)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="relative flex flex-col w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="overflow-y-auto w-full h-full flex flex-col">
+              {/* IMAGE */}
+              <div className="relative w-full h-[300px] md:h-[450px] shrink-0 bg-gray-100">
+                <Image
+                  src={
+                    selectedPost.image_urls && selectedPost.image_urls.length > 0
+                      ? getMediaUrl(selectedPost.image_urls[0])
+                      : "/images/Frame 1495 (2).png"
+                  }
+                  alt="Post Image"
+                  fill
+                  className="object-contain"
+                />
+                <button
+                  onClick={() => setSelectedPost(null)}
+                  className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors z-10 shadow-sm"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              {/* CONTENT */}
+              <div className="p-5 md:p-8 shrink-0">
+                <div className="flex items-center justify-between mb-4 text-[13px] text-gray-500">
+                  <div className="flex items-center gap-[10px]">
+                    <div className="w-[32px] h-[32px] rounded-full bg-pink-100 flex items-center justify-center overflow-hidden">
+                      <span className="text-[13px] font-bold text-pink-500">D</span>
+                    </div>
+                    <span className="font-semibold text-gray-800 text-[15px]">DearKeriaVN</span>
+                  </div>
+                  <span>
+                    {selectedPost.created_at ? new Date(selectedPost.created_at).toLocaleDateString("vi-VN") : ""}
+                  </span>
+                </div>
+                
+                <p className="text-gray-700 text-[14px] md:text-[15px] leading-relaxed whitespace-pre-line">
+                  {selectedPost.content || "Không có nội dung."}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }

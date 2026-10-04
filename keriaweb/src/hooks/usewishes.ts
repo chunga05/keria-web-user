@@ -4,6 +4,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
 } from "react";
 
 export function useWishes(
@@ -209,126 +210,66 @@ export function useWishes(
   // HANDLE REACTION
   // =========================================================
 
+  const reactingRefs = useRef<Set<string>>(new Set());
+
   const handleReact = useCallback(
     async (
       messageId: number,
       reactionType: string,
-      currentCount: number
+      currentCount: number,
+      hasReacted: boolean
     ) => {
       if (!visitorId) {
-        console.warn(
-          "⚠️ Chưa có visitorId, chưa thể reaction"
-        );
-
+        console.warn("⚠️ Chưa có visitorId, chưa thể reaction");
         return;
       }
 
+      const lockKey = `${messageId}-${reactionType}`;
+      if (reactingRefs.current.has(lockKey)) {
+        // Chặn click liên tục
+        return;
+      }
+
+      reactingRefs.current.add(lockKey);
+
       // =====================================================
-      // LẤY TRẠNG THÁI HIỆN TẠI
+      // OPTIMISTIC UPDATE
       // =====================================================
 
-      let wasReacted = false;
-
-      setUserReactions(
-        (previous) => {
-          const current =
-            previous[messageId] || [];
-
-          wasReacted =
-            current.includes(
-              reactionType
-            );
-
-          const next = {
-            ...previous,
-          };
-
-          if (wasReacted) {
-            const filtered =
-              current.filter(
-                (type) =>
-                  type !==
-                  reactionType
-              );
-
-            if (
-              filtered.length > 0
-            ) {
-              next[messageId] =
-                filtered;
-            } else {
-              delete next[
-                messageId
-              ];
-            }
-          } else {
-            next[messageId] = [
-              ...current,
-              reactionType,
-            ];
-          }
-
+      setUserReactions((previous) => {
+        const current = previous[messageId] || [];
+        if (hasReacted) {
+          const filtered = current.filter((t) => t !== reactionType);
+          if (filtered.length > 0) return { ...previous, [messageId]: filtered };
+          const next = { ...previous };
+          delete next[messageId];
           return next;
+        } else {
+          if (current.includes(reactionType)) return previous;
+          return {
+            ...previous,
+            [messageId]: [...current, reactionType],
+          };
         }
-      );
+      });
 
-      // =====================================================
-      // OPTIMISTIC UPDATE COUNT
-      // =====================================================
-
-      setMessages(
-        (previousMessages) =>
-          previousMessages.map(
-            (msg) => {
-              if (
-                msg.id !==
-                messageId
-              ) {
-                return msg;
-              }
-
-              return {
-                ...msg,
-
-                reactions:
-                  Array.isArray(
-                    msg.reactions
-                  )
-                    ? msg.reactions.map(
-                        (
-                          reaction: any
-                        ) => {
-                          if (
-                            reaction.type !==
-                            reactionType
-                          ) {
-                            return reaction;
-                          }
-
-                          const oldCount =
-                            Number(
-                              reaction.count ??
-                                currentCount ??
-                                0
-                            );
-
-                          return {
-                            ...reaction,
-                            count:
-                              Math.max(
-                                0,
-                                oldCount +
-                                  (wasReacted
-                                    ? -1
-                                    : 1)
-                              ),
-                          };
-                        }
-                      )
-                    : msg.reactions,
-              };
-            }
-          )
+      setMessages((previousMessages) =>
+        previousMessages.map((msg) => {
+          if (msg.id !== messageId) return msg;
+          return {
+            ...msg,
+            reactions: Array.isArray(msg.reactions)
+              ? msg.reactions.map((reaction: any) => {
+                  if (reaction.type !== reactionType) return reaction;
+                  const oldCount = Number(reaction.count ?? currentCount ?? 0);
+                  return {
+                    ...reaction,
+                    count: Math.max(0, oldCount + (hasReacted ? -1 : 1)),
+                  };
+                })
+              : msg.reactions,
+          };
+        })
       );
 
       // =====================================================
@@ -336,165 +277,109 @@ export function useWishes(
       // =====================================================
 
       try {
-        const res =
-          await fetch(
-            "/api/wishes/react",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
-              body: JSON.stringify({
-                wishId: messageId,
-                visitorId,
-                reactionType,
-              }),
-            }
-          );
+        const res = await fetch("/api/wishes/react", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            wishId: messageId,
+            visitorId,
+            reactionType,
+          }),
+        });
 
-        const result =
-          await res.json();
-
-        console.log(
-          "✅ Reaction API:",
-          result
-        );
+        const result = await res.json();
+        console.log("✅ Reaction API:", result);
 
         if (!res.ok) {
-          throw new Error(
-            result?.error ||
-              "Reaction thất bại"
-          );
+          throw new Error(result?.error || "Reaction thất bại");
         }
 
         // ===================================================
-        // DATABASE LÀ SOURCE OF TRUTH
+        // CẬP NHẬT COUNT TỪ BACKEND
         // ===================================================
-
-        setMessages(
-          (previousMessages) =>
-            previousMessages.map(
-              (msg) => {
-                if (
-                  msg.id !==
-                  messageId
-                ) {
-                  return msg;
-                }
-
-                return {
-                  ...msg,
-
-                  reactions:
-                    Array.isArray(
-                      msg.reactions
-                    )
-                      ? msg.reactions.map(
-                          (
-                            reaction: any
-                          ) => {
-                            if (
-                              reaction.type !==
-                              reactionType
-                            ) {
-                              return reaction;
-                            }
-
-                            return {
-                              ...reaction,
-                              count:
-                                Number(
-                                  result.reactionCount ??
-                                    0
-                                ),
-                            };
-                          }
-                        )
-                      : msg.reactions,
-                };
-              }
-            )
-        );
-
-        // ===================================================
-        // ĐỒNG BỘ USER REACTION
-        // ===================================================
-
-        setUserReactions(
-          (previous) => {
-            const next = {
-              ...previous,
+        setMessages((previousMessages) =>
+          previousMessages.map((msg) => {
+            if (msg.id !== messageId) return msg;
+            return {
+              ...msg,
+              reactions: Array.isArray(msg.reactions)
+                ? msg.reactions.map((reaction: any) => {
+                    if (reaction.type !== reactionType) return reaction;
+                    return {
+                      ...reaction,
+                      count: Number(result.reactionCount ?? 0),
+                    };
+                  })
+                : msg.reactions,
             };
-
-            if (
-              result.reacted
-            ) {
-              next[messageId] =
-                Array.from(
-                  new Set([
-                    ...(next[
-                      messageId
-                    ] || []),
-                    reactionType,
-                  ])
-                );
-            } else {
-              const filtered =
-                (
-                  next[
-                    messageId
-                  ] || []
-                ).filter(
-                  (type) =>
-                    type !==
-                    reactionType
-                );
-
-              if (
-                filtered.length > 0
-              ) {
-                next[messageId] =
-                  filtered;
+          })
+        );
+        
+        // Đồng bộ lại state userReactions theo kết quả từ backend
+        if (result.reacted !== !hasReacted) {
+           setUserReactions((prev) => {
+              const current = prev[messageId] || [];
+              if (result.reacted) {
+                 if (current.includes(reactionType)) return prev;
+                 return { ...prev, [messageId]: [...current, reactionType] };
               } else {
-                delete next[
-                  messageId
-                ];
+                 const filtered = current.filter((t) => t !== reactionType);
+                 if (filtered.length > 0) return { ...prev, [messageId]: filtered };
+                 const next = { ...prev };
+                 delete next[messageId];
+                 return next;
               }
-            }
-
-            return next;
-          }
-        );
+           });
+        }
       } catch (error) {
-        console.error(
-          "❌ Lỗi reaction:",
-          error
+        console.error("❌ Lỗi reaction:", error);
+        
+        // Hoàn tác optimistic update nếu lỗi
+        setUserReactions((prev) => {
+           const current = prev[messageId] || [];
+           if (hasReacted) {
+              // Lỗi khi unreact => khôi phục trạng thái đã react
+              if (current.includes(reactionType)) return prev;
+              return { ...prev, [messageId]: [...current, reactionType] };
+           } else {
+              // Lỗi khi react => khôi phục trạng thái chưa react
+              const filtered = current.filter((t) => t !== reactionType);
+              if (filtered.length > 0) return { ...prev, [messageId]: filtered };
+              const next = { ...prev };
+              delete next[messageId];
+              return next;
+           }
+        });
+        
+        setMessages((previousMessages) =>
+          previousMessages.map((msg) => {
+            if (msg.id !== messageId) return msg;
+            return {
+              ...msg,
+              reactions: Array.isArray(msg.reactions)
+                ? msg.reactions.map((reaction: any) => {
+                    if (reaction.type !== reactionType) return reaction;
+                    const oldCount = Number(reaction.count ?? currentCount ?? 0);
+                    return {
+                      ...reaction,
+                      count: Math.max(0, oldCount + (hasReacted ? 1 : -1)),
+                    };
+                  })
+                : msg.reactions,
+            };
+          })
         );
 
-        // ===================================================
-        // API LỖI
-        // LOAD LẠI DATABASE ĐỂ KHÔI PHỤC CHÍNH XÁC
-        // ===================================================
-
-        await loadUserReactions();
-
-        // Fetch lại wishes để lấy counter thật
-        // nếu API reaction thất bại
-        console.warn(
-          "⚠️ Reaction thất bại, trạng thái UI sẽ được đồng bộ lại."
-        );
-
-        (onAlert ?? alert)(
-          "Không thể lưu reaction. Vui lòng thử lại."
-        );
+        (onAlert ?? alert)("Không thể lưu reaction. Vui lòng thử lại.");
+      } finally {
+        reactingRefs.current.delete(lockKey);
       }
     },
-    [
-      visitorId,
-      loadUserReactions,
-    ]
+    [visitorId, onAlert]
   );
+
 
   // =========================================================
   // RETURN

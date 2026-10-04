@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyAccessToken } from '@/lib/jwt';
 import { createClient } from '@/utils/supabase/server';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB giới hạn cho User
 const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
@@ -47,6 +48,19 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: 'Vui lòng đăng nhập trước khi tải ảnh lên!' },
         { status: 401 }
+      );
+    }
+
+    const { data: profile } = await supabaseAdmin
+      .from('users')
+      .select('status')
+      .eq('id', userId)
+      .maybeSingle();
+
+    if (profile && (profile.status === 'banned' || profile.status === 'rejected')) {
+      return NextResponse.json(
+        { error: 'Tài khoản của bạn đã bị khóa hoặc từ chối.' },
+        { status: 403 }
       );
     }
 

@@ -121,6 +121,10 @@ export async function GET(request: Request) {
   const role = profile?.role ?? 'user';
   const status = profile?.status ?? 'pending';
 
+  if (status === 'banned' || status === 'rejected') {
+    return NextResponse.redirect(`${origin}/?error=account_${status}`);
+  }
+
   // Issue custom stateless Access Token (15 min)
   const accessToken = await signAccessToken({
     sub: userId,

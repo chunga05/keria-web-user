@@ -14,8 +14,10 @@ export async function GET(request: Request) {
     // ============================================================
     // 2. TẠO CACHE KEY DUY NHẤT VÀ KIỂM TRA REDIS
     // ============================================================
+    const isTop = filter === "Nhiều lượt wish nhất";
     const isAscending = filter === "Cũ nhất";
-    const CACHE_KEY = `wishes_api_i${idolId}_p${page}_s${pageSize}_${isAscending ? "old" : "new"}`;
+    const cacheSuffix = isTop ? "top" : isAscending ? "old" : "new";
+    const CACHE_KEY = `wishes_api_i${idolId}_p${page}_s${pageSize}_${cacheSuffix}`;
 
     const cachedData = await redis.get(CACHE_KEY);
     if (cachedData) {
@@ -32,7 +34,7 @@ export async function GET(request: Request) {
 
     const supabase = await createClient();
 
-    const { data, error, count } = await supabase
+    let query = supabase
       .from("fan_wishes")
       .select(
         `
@@ -49,9 +51,15 @@ export async function GET(request: Request) {
       )
       .eq("idol_id", idolId)
       .eq("is_hidden", false)
-      .is("deleted_at", null)
-      .order("created_at", { ascending: isAscending })
-      .range(from, to);
+      .is("deleted_at", null);
+
+    if (isTop) {
+      query = query.order("total_reactions", { ascending: false }).order("created_at", { ascending: false });
+    } else {
+      query = query.order("created_at", { ascending: isAscending });
+    }
+
+    const { data, error, count } = await query.range(from, to);
 
     if (error) {
       console.error("Lỗi query fan_wishes:", error.message);

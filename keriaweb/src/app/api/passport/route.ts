@@ -57,9 +57,16 @@ export async function GET() {
     // =========================================================
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('display_name, username, address')
+      .select('display_name, username, address, status')
       .eq('id', user.id)
       .maybeSingle();
+
+    if (userData && (userData.status === 'banned' || userData.status === 'rejected')) {
+      return NextResponse.json(
+        { error: 'Tài khoản của bạn đã bị khóa hoặc từ chối.' },
+        { status: 403 }
+      );
+    }
 
     if (userError) {
       console.warn(

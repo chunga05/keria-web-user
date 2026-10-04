@@ -103,6 +103,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ user: null });
     }
 
+    if (profile.status === 'banned' || profile.status === 'rejected') {
+      const response = NextResponse.json({ user: null });
+      response.cookies.delete(AT_COOKIE);
+      response.cookies.delete(RT_COOKIE);
+      return response;
+    }
+
     const response = NextResponse.json({
       user: profile,
       access_token: newAccessToken || accessToken,
