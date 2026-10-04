@@ -257,6 +257,7 @@ export async function POST(request: Request) {
         {
           error:
             "Không thể gửi lời nhắn. Vui lòng thử lại.",
+          details: error.message || error,
         },
         {
           status: 500,
@@ -290,6 +291,7 @@ export async function POST(request: Request) {
       {
         error:
           "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.",
+        details: error instanceof Error ? error.message : String(error),
       },
       {
         status: 500,
