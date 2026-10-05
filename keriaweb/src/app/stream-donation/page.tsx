@@ -292,6 +292,117 @@ export default function StreamDonations() {
             ~ <AnimatedAmount targetString="432.000.000" stopDelay={2500} /> VNĐ
           </div>
         </div>
+
+        {/* === SECTION 4: SOOP LINK === */}
+        <div className="mt-16 flex flex-col items-center">
+          <a
+            href="https://www.sooplive.com/station/fbalstjr1234"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative transition-all duration-300 hover:scale-[1.02]"
+          >
+            {/* Pin Icon */}
+            <div className="absolute -top-6 -right-2 z-20 transition-transform duration-300 group-hover:-translate-y-1">
+              <Image
+                src="/images/stream-donate/pin.png"
+                alt="Pin"
+                width={100}
+                height={100}
+                className="object-contain drop-shadow-md"
+              />
+            </div>
+
+            {/* Banner Image */}
+            <div className="relative z-10 transition-all duration-300 group-hover:drop-shadow-lg">
+              <Image
+                src="/images/stream-donate/soop_banner.png"
+                alt="SOOP Channel"
+                width={700}
+                height={416}
+                className="h-auto w-full max-w-[700px] object-contain"
+              />
+            </div>
+          </a>
+        </div>
+
+        {/* === SECTION 5: CONVERSATION === */}
+        <div className="mt-16 w-full flex flex-col lg:flex-row gap-8 border-t border-gray-100 pt-16 pb-8">
+          {/* Left: Stream Screenshot */}
+          <div className="w-full lg:w-[45%] flex-shrink-0">
+            <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden shadow-sm ring-1 ring-black/5">
+              <Image
+                src="/images/stream-donate/stream_screenshot.png"
+                alt="Stream Moment"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
+          
+          {/* Right: Conversation */}
+          <div className="w-full lg:w-[55%] flex flex-col justify-center gap-5">
+            {/* Date and Amount */}
+            <div className="flex items-center gap-4 text-sm font-medium text-gray-500 mb-1">
+              <span>14/05/2025</span>
+              <span className="flex items-center gap-1.5"><span className="text-red-500 text-base">🎈</span> 30.000</span>
+            </div>
+
+            {/* Pink Bubble */}
+            <div className="bg-[#FF61B6] rounded-[24px] rounded-tl-sm p-6 shadow-sm text-white text-[15px] leading-relaxed">
+              <div className="font-bold text-[#102652] text-lg mb-2">Nội dung Donate</div>
+              “Các fan Việt Nam đến mua đồ ăn cho Minseokie nè~ Trên thế giới này có rất nhiều người luôn yêu thương và ủng hộ em đó. Keria là tuyệt vời nhất! Keria cố lên! Dù chưa mua được nhà ở L.A cho em nhưng nhà ở Việt Nam thì lúc nào cũng sẵn sàng!”
+            </div>
+
+            {/* Blue Bubble */}
+            <div className="bg-[#9CE2FF] rounded-[24px] rounded-tr-sm p-6 shadow-sm text-[#102652] text-[15px] leading-relaxed">
+              <div className="font-bold text-lg mb-2">Phản hồi của Keria</div>
+              <div className="flex flex-col gap-1.5">
+                <p>- “Hả? Em cảm ơn ạ~ Cám ơn! Nhà ở LA ấy ạ? Nhà ở LA nhiều đây hình như là đủ rồi đó ạ!”</p>
+                <p>- “Nhưng đây có phải là mơ không vậy? Ôi... Em cảm ơn nhiều lắm ạ. Em muốn làm gì đó cho các chị mà em không biết phải làm gì bây giờ.”</p>
+                <p>- “Woa Cám ơn Cám ơn! Em muốn tới Việt Nam lắm lắm luôn!”</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* === SECTION 6: CONVERSATION 2 === */}
+        <div className="w-full flex flex-col lg:flex-row-reverse gap-8 border-t border-gray-100 pt-12 pb-8">
+          {/* Right: Stream Screenshot */}
+          <div className="w-full lg:w-[45%] flex-shrink-0">
+            <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden shadow-sm ring-1 ring-black/5">
+              <Image
+                src="/images/stream-donate/stream_screenshot_2.jpg"
+                alt="Stream Moment 2"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
+          
+          {/* Left: Conversation */}
+          <div className="w-full lg:w-[55%] flex flex-col justify-center gap-5">
+            {/* Date and Amount */}
+            <div className="flex items-center gap-4 text-sm font-medium text-gray-500 mb-1">
+              <span>14/05/2025</span>
+              <span className="flex items-center gap-1.5"><span className="text-red-500 text-base">🎈</span> 30.000</span>
+            </div>
+
+            {/* Pink Bubble */}
+            <div className="bg-[#FF61B6] rounded-[24px] rounded-tl-sm p-6 shadow-sm text-white text-[15px] leading-relaxed">
+              <div className="font-bold text-[#102652] text-lg mb-2">Nội dung Donate</div>
+              “Minseok ơi, fan Việt Nam lại đến mua đồ ăn ngon cho em nè~ Mình nghĩ thế giới sẽ trở nên đẹp đẽ hơn trong những bức ảnh mà Minseokie đã chụp cho chúng mình. Mong em luôn khoẻ mạnh và tiếp tục đưa chúng mình đi xem thế giới bên ngoài nhé. Chúc em có một mùa giải thật suôn sẻ! Keria cố lên!”
+            </div>
+
+            {/* Blue Bubble */}
+            <div className="bg-[#9CE2FF] rounded-[24px] rounded-tr-sm p-6 shadow-sm text-[#102652] text-[15px] leading-relaxed">
+              <div className="font-bold text-lg mb-2">Phản hồi của Keria</div>
+              <div className="flex flex-col gap-1.5">
+                <p>• “Ôi Cám ơn Cám ơn Cám ơn Cám ơn”</p>
+                <p>• “Phở ngon lắm ạ, em cần đến Việt Nam ngay thôi!”</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </FeatureFlag>
