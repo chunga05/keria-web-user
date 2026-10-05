@@ -125,6 +125,17 @@ export async function POST(request: Request) {
       );
     }
 
+    if (typeof content === "string" && content.trim().length > 500) {
+      return NextResponse.json(
+        {
+          error: "Lời chúc không được vượt quá 500 kí tự!",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     // ============================================================
     // 4. LẤY DANH SÁCH TỪ CẤM
     // ============================================================

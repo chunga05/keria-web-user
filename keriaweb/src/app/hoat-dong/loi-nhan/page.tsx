@@ -384,6 +384,11 @@ export default function ToMyDearestPage() {
       return;
     }
 
+    if (wishContent.length > 500) {
+      showModal("Lời chúc không được vượt quá 500 kí tự.");
+      return;
+    }
+
     // --------------------------------------------------------
     // SUBMIT
     // --------------------------------------------------------
@@ -628,31 +633,41 @@ export default function ToMyDearestPage() {
                 tới Keria
               </label>
 
-              <textarea
-                rows={5}
-                placeholder="Nhập lời chúc..."
-                value={wishContent}
-                onChange={(e) =>
-                  setWishContent(
-                    e.target.value
-                  )
-                }
-                className="
-                  w-full
-                  resize-none
-                  rounded-lg
-                  border
-                  border-gray-100
-                  bg-[#FAFAFA]
-                  px-4
-                  py-3
-                  outline-none
-                  focus:border-[#FF76C3]
-                  focus:ring-1
-                  focus:ring-[#FF76C3]
-                  text-sm lg:text-[14px]
-                "
-              />
+              <div className="relative">
+                <textarea
+                  rows={5}
+                  placeholder="Nhập lời chúc..."
+                  value={wishContent}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val.length <= 500) {
+                      setWishContent(val);
+                    }
+                  }}
+                  maxLength={500}
+                  className="
+                    w-full
+                    resize-none
+                    rounded-lg
+                    border
+                    border-gray-100
+                    bg-[#FAFAFA]
+                    px-4
+                    pt-3
+                    pb-8
+                    outline-none
+                    focus:border-[#FF76C3]
+                    focus:ring-1
+                    focus:ring-[#FF76C3]
+                    text-sm lg:text-[14px]
+                  "
+                />
+                <div 
+                  className={`absolute bottom-3 right-4 text-xs font-bold ${wishContent.length >= 500 ? 'text-red-400' : 'text-gray-400'}`}
+                >
+                  {wishContent.length}/500
+                </div>
+              </div>
             </div>
 
             {/* ================================================= */}
