@@ -82,14 +82,19 @@ export async function POST(request: Request) {
         .eq("id", userId)
         .maybeSingle();
 
-      if (profile && (profile.status === 'banned' || profile.status === 'rejected')) {
-        return NextResponse.json(
-          { error: "Tài khoản của bạn đã bị khóa hoặc từ chối." },
-          { status: 403 }
-        );
-      }
+      if (!profile) {
+        // Tài khoản không tồn tại trong DB (bị xóa nhưng cookie còn), ép thành guest để không bị lỗi khóa ngoại
+        userId = null;
+      } else {
+        if (profile.status === 'banned' || profile.status === 'rejected') {
+          return NextResponse.json(
+            { error: "Tài khoản của bạn đã bị khóa hoặc từ chối." },
+            { status: 403 }
+          );
+        }
 
-      userNick = profile?.display_name || profile?.username || null;
+        userNick = profile.display_name || profile.username || null;
+      }
     }
 
     // Xác định tên người gửi:

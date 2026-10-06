@@ -100,7 +100,10 @@ export async function GET(request: NextRequest) {
       .maybeSingle();
 
     if (!profile) {
-      return NextResponse.json({ user: null });
+      const response = NextResponse.json({ user: null });
+      response.cookies.delete(AT_COOKIE);
+      response.cookies.delete(RT_COOKIE);
+      return response;
     }
 
     if (profile.status === 'banned' || profile.status === 'rejected') {
