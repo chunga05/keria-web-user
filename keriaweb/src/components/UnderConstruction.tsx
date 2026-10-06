@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Construction, Sparkles, Clock, ArrowLeft, Home, Hammer } from "lucide-react";
+import { Construction, Sparkles, Clock, ArrowLeft, Home, Hammer, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface UnderConstructionProps {
@@ -16,7 +16,7 @@ export interface UnderConstructionProps {
   showBackButton?: boolean;
   /** Custom label for back button */
   backButtonText?: string;
-  /** Target href for back button (defaults to '/') */
+  /** Target href for back button (defaults to '/hoat-dong/loi-nhan') */
   backButtonHref?: string;
   /** Optional estimated launch text (e.g. "Dự kiến ra mắt: Q4/2026") */
   estimatedRelease?: string;
@@ -32,13 +32,15 @@ export default function UnderConstruction({
   featureName,
   variant = "page",
   showBackButton,
-  backButtonText = "Quay về Trang chủ",
-  backButtonHref = "/",
+  backButtonText = "Đến trang Lời chúc",
+  backButtonHref = "/hoat-dong/loi-nhan",
   estimatedRelease,
   className,
   children,
 }: UnderConstructionProps) {
   const shouldShowBack = showBackButton ?? (variant === "page");
+  const resolvedHref = !backButtonHref || backButtonHref === "/" ? "/hoat-dong/loi-nhan" : backButtonHref;
+  const resolvedButtonText = !backButtonText || backButtonText === "Quay về Trang chủ" ? "Đến trang Lời chúc" : backButtonText;
 
   // 1. INLINE VARIANT (Non-blocking compact placeholder)
   if (variant === "inline") {
@@ -96,11 +98,11 @@ export default function UnderConstruction({
           </div>
           {shouldShowBack && (
             <Link
-              href={backButtonHref}
+              href={resolvedHref}
               className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors"
             >
               <ArrowLeft className="h-3 w-3" />
-              <span>{backButtonText}</span>
+              <span>{resolvedButtonText}</span>
             </Link>
           )}
         </div>
@@ -149,11 +151,11 @@ export default function UnderConstruction({
 
         {shouldShowBack && (
           <Link
-            href={backButtonHref}
+            href={resolvedHref}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white bg-white/10 hover:bg-white/20 border border-white/10 transition-all hover:scale-[1.02]"
           >
             <ArrowLeft className="h-4 w-4" />
-            {backButtonText}
+            {resolvedButtonText}
           </Link>
         )}
 
@@ -218,15 +220,15 @@ export default function UnderConstruction({
           </div>
         )}
 
-        {/* Back to Home Button & Custom Actions */}
+        {/* Back to Wishes Button & Custom Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
           {shouldShowBack && (
             <Link
-              href={backButtonHref}
+              href={resolvedHref}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-sm text-white bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 shadow-lg shadow-sky-500/25 transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
             >
-              <Home className="h-4 w-4" />
-              <span>{backButtonText}</span>
+              <Heart className="h-4 w-4" />
+              <span>{resolvedButtonText}</span>
             </Link>
           )}
 
@@ -235,7 +237,7 @@ export default function UnderConstruction({
 
         {/* Small subtle footer note */}
         <p className="mt-8 text-xs text-neutral-500">
-          Dear Keria VN · Cùng nhau đồng hành cùng Ryu &quot;Keria&quot; Minseok
+          DearKeriaVN · Cùng nhau đồng hành cùng Ryu &quot;Keria&quot; Minseok
         </p>
       </div>
     </div>

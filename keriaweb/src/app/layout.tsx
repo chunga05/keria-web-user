@@ -14,9 +14,45 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const siteDescription =
+  "DearKeriaVN tồn tại với mục tiêu ủng hộ Support xuất sắc nhất lịch sử Liên Minh Huyền Thoại - Ryu 'Keria' Minseok, cùng đồng hành và lưu giữ lại những dấu ấn rực rỡ theo từng cột mốc sự nghiệp, dõi theo mỗi bước chân nỗ lực trên hành trình vĩ đại của Quái vật Thiên tài.";
+
 export const metadata: Metadata = {
-  title: "DEAR KERIA VN",
-  description: "DEAR KERIA VN",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "DEARKERIAVN",
+    template: "%s | DEARKERIAVN",
+  },
+  description: siteDescription,
+  applicationName: "DEARKERIAVN",
+  openGraph: {
+    title: "DEARKERIAVN",
+    description: siteDescription,
+    url: "/",
+    siteName: "DEARKERIAVN",
+    locale: "vi_VN",
+    type: "website",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1024,
+        height: 728,
+        alt: "DEARKERIAVN",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DEARKERIAVN",
+    description: siteDescription,
+    images: ["/opengraph-image.png"],
+  },
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -34,93 +70,6 @@ export default function RootLayout({
       lang="vi"
       className={`${montserrat.variable} font-sans`}
     >
-      <head>
-        {/* =====================================================
-            VIEWPORT
-        ====================================================== */}
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-        />
-
-        {/* =====================================================
-            OPEN GRAPH
-        ====================================================== */}
-
-        <meta
-          property="og:title"
-          content="DEAR KERIA VN"
-        />
-
-        <meta
-          property="og:description"
-          content="DEAR KERIA VN"
-        />
-
-        <meta
-          property="og:url"
-          content="https://xc5kf3vh-3000.asse.devtunnels.ms"
-        />
-
-        <meta
-          property="og:type"
-          content="website"
-        />
-
-        <meta
-          property="og:site_name"
-          content="DEAR KERIA VN"
-        />
-
-        <meta
-          property="og:image"
-          content="https://xc5kf3vh-3000.asse.devtunnels.ms/opengraph-image.png"
-        />
-
-        <meta
-          property="og:image:type"
-          content="image/png"
-        />
-
-        <meta
-          property="og:image:width"
-          content="1024"
-        />
-
-        <meta
-          property="og:image:height"
-          content="728"
-        />
-
-        <meta
-          property="og:image:alt"
-          content="DEAR KERIA VN"
-        />
-
-        {/* =====================================================
-            TWITTER / X
-        ====================================================== */}
-
-        <meta
-          name="twitter:card"
-          content="summary_large_image"
-        />
-
-        <meta
-          name="twitter:title"
-          content="DEAR KERIA VN"
-        />
-
-        <meta
-          name="twitter:description"
-          content="DEAR KERIA VN"
-        />
-
-        <meta
-          name="twitter:image"
-          content="https://xc5kf3vh-3000.asse.devtunnels.ms/opengraph-image.png"
-        />
-      </head>
 
       <body className="min-h-screen w-full relative font-sans touch-manipulation overflow-x-clip bg-[#0a0a0a]">
 

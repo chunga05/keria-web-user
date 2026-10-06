@@ -53,7 +53,7 @@ export default function LockerHero() {
       <div className="relative md:hidden w-full">
         <Image
           src="/images/locker-hero-mobile.png"
-          alt="Dear Keria VN"
+          alt="DearKeriaVN"
           width={600}
           height={1024}
           priority

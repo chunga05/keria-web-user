@@ -42,6 +42,8 @@ export function parseBooleanEnv(value: string | undefined | null, defaultValue =
  * Feature Flag Registry - String Keys
  */
 export const FEATURES = {
+  // Trang chủ (/)
+  HOME: "home",
   // Lịch trình Keria (/kerias/lich-trinh)
   SCHEDULE: "schedule",
   // 'Welcome to Vietnam' Project (/project/welcome-to-vietnam)
@@ -66,6 +68,12 @@ export type FeatureKey = (typeof FEATURES)[keyof typeof FEATURES];
  * Metadata definition and safe defaults for each feature flag
  */
 export const FEATURE_DEFINITIONS: Record<FeatureKey, FeatureFlagDefinition> = {
+  [FEATURES.HOME]: {
+    name: "Trang chủ",
+    envVar: "NEXT_PUBLIC_ENABLE_HOME",
+    defaultValue: false,
+    description: "Trang chủ DearKeriaVN (/)",
+  },
   [FEATURES.SCHEDULE]: {
     name: "Lịch trình Keria",
     envVar: "NEXT_PUBLIC_ENABLE_SCHEDULE",
@@ -132,6 +140,9 @@ export function isFeatureEnabled(key: FeatureKey | string): boolean {
   let rawEnvValue: string | undefined;
 
   switch (key) {
+    case FEATURES.HOME:
+      rawEnvValue = process.env.NEXT_PUBLIC_ENABLE_HOME;
+      break;
     case FEATURES.SCHEDULE:
       rawEnvValue = process.env.NEXT_PUBLIC_ENABLE_SCHEDULE;
       break;
@@ -167,6 +178,9 @@ export function isFeatureEnabled(key: FeatureKey | string): boolean {
  * Access object for all current feature flag states
  */
 export const featureFlags = {
+  get home() {
+    return isFeatureEnabled(FEATURES.HOME);
+  },
   get schedule() {
     return isFeatureEnabled(FEATURES.SCHEDULE);
   },

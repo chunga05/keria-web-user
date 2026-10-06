@@ -4,7 +4,7 @@ import UnderConstruction from "@/components/UnderConstruction";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Thành tích Keria | Dear Keria VN",
+  title: "Thành tích Keria | DearKeriaVN",
   description: "Bảng thành tích và các danh hiệu của Ryu 'Keria' Minseok",
 };
 
@@ -18,7 +18,7 @@ export default function KeriaAchievements() {
         featureName="Thành tích"
         estimatedRelease="Dự kiến cập nhật trong thời gian tới"
         showBackButton={true}
-        backButtonHref="/"
+        backButtonHref="/hoat-dong/loi-nhan"
       />
     );
   }

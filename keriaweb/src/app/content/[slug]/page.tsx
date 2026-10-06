@@ -372,7 +372,7 @@ export default function ContentDetailPage() {
         description="Chuyên mục các dự án tiếp sức đang được cập nhật. Chúng mình sẽ sớm mang đến cho các bạn những hoạt động thú vị nhất!"
         estimatedRelease="Dự kiến cập nhật trong thời gian tới"
         showBackButton={true}
-        backButtonHref="/"
+        backButtonHref="/hoat-dong/loi-nhan"
       />
     );
   }

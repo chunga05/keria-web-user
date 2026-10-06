@@ -223,7 +223,7 @@ export default function SoTayHanhTrinhPage() {
         featureName="Sổ tay hành trình"
         estimatedRelease="Dự kiến cập nhật trong thời gian tới"
         showBackButton={true}
-        backButtonHref="/"
+        backButtonHref="/hoat-dong/loi-nhan"
       />
     );
   }
