@@ -15,7 +15,7 @@ export default function Footer() {
           <Link href="/">
             <Image 
               src="/images/DEARKERIAVN LOGO 1.png" 
-              alt="Dear Keria Logo" 
+              alt="DearKeriaLogo" 
               width={160} 
               height={70} 
               className="object-contain -ml-2"

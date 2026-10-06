@@ -14,7 +14,6 @@ const nextConfig: NextConfig = {
       allowedOrigins: [
         "localhost:3000",
         "*.devtunnels.ms",
-        "xc5kf3vh-3000.asse.devtunnels.ms",
         ...allowedOriginsEnv,
       ],
     },

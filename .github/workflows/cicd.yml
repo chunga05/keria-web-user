@@ -139,9 +139,7 @@ jobs:
           envs: TARGET_TAG,REPO_LOWER
           script: |
             set -e
-            APP_DIR="$HOME/dkvn/user"
-            mkdir -p "$APP_DIR"
-            cd "$APP_DIR"
+            cd "$HOME/dkvn"
 
             # Authenticate with GHCR if needed
             echo "${{ secrets.GHCR_PAT || secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
@@ -151,39 +149,8 @@ jobs:
             echo "Pulling $IMAGE_URI..."
             docker pull "$IMAGE_URI"
 
-            # Create or update docker-compose.yml if not existing
-            cat << 'EOF' > docker-compose.yml
-            services:
-              user-web:
-                image: IMAGE_PLACEHOLDER
-                container_name: keria-web-user
-                restart: always
-                ports:
-                  - "3000:3000"
-                env_file:
-                  - .env
-                environment:
-                  - NODE_ENV=production
-                  - PORT=3000
-                  - HOSTNAME=0.0.0.0
-                  - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-}
-                  - NEXT_PUBLIC_ENABLE_SCHEDULE=false
-                  - NEXT_PUBLIC_ENABLE_WELCOME_PROJECT=false
-                  - NEXT_PUBLIC_ENABLE_STREAM_DONATION=true
-                  - NEXT_PUBLIC_ENABLE_HANDBOOK=false
-                  - NEXT_PUBLIC_ENABLE_ACHIEVEMENTS=false
-                  - NEXT_PUBLIC_ENABLE_SUPPORTING_PROJECT=false
-                  - NEXT_PUBLIC_ENABLE_WISHES=true
-            EOF
-
-            sed -i "s|IMAGE_PLACEHOLDER|$IMAGE_URI|g" docker-compose.yml
-
-            # Ensure .env exists so docker compose doesn't throw an error
-            touch .env
-
             # Restart containers
-            docker compose down || true
-            docker compose up -d --remove-orphans
+            docker compose up -d --no-deps user-web
 
             # Clean up old unused images
             docker image prune -af --filter "until=72h"

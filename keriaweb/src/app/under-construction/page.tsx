@@ -17,7 +17,7 @@ async function UnderConstructionContent({ searchParams }: UnderConstructionPageP
         featureName={featureName}
         title={customTitle}
         showBackButton={true}
-        backButtonHref="/"
+        backButtonHref="/hoat-dong/loi-nhan"
       />
     </div>
   );

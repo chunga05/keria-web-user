@@ -5,7 +5,7 @@ import UnderConstruction from "@/components/UnderConstruction";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lịch trình Keria | Dear Keria VN",
+  title: "Lịch trình Keria | DearKeriaVN",
   description: "Lịch trình thi đấu và hoạt động của Ryu 'Keria' Minseok",
 };
 
@@ -32,7 +32,7 @@ export default function SchedulePage() {
         featureName="Lịch trình Keria"
         estimatedRelease="Dự kiến cập nhật trong thời gian tới"
         showBackButton={true}
-        backButtonHref="/"
+        backButtonHref="/hoat-dong/loi-nhan"
       />
     );
   }

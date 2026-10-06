@@ -19,7 +19,7 @@ export default function WIPWelcomeProjectView() {
           &apos;Welcome to Vietnam&apos; Project
         </h1>
         <p className="text-neutral-300 max-w-xl mx-auto text-sm sm:text-base">
-          Dự án đặc biệt do Dear Keria VN tổ chức nhằm chào đón và thể hiện tình cảm của người hâm mộ Việt Nam dành cho Keria.
+          Dự án đặc biệt do DearKeriaVN tổ chức nhằm chào đón và thể hiện tình cảm của người hâm mộ Việt Nam dành cho Keria.
         </p>
       </div>
 

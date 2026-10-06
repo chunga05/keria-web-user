@@ -5,8 +5,8 @@ import UnderConstruction from "@/components/UnderConstruction";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "'Welcome to Vietnam' Project | Dear Keria VN",
-  description: "Dự án chào đón Keria đến Việt Nam cùng cộng đồng Dear Keria VN",
+  title: "'Welcome to Vietnam' Project | DearKeriaVN",
+  description: "Dự án chào đón Keria đến Việt Nam cùng cộng đồng DearKeriaVN",
 };
 
 /**
@@ -33,7 +33,7 @@ export default function WelcomeToVietnamPage() {
         description="Dự án đang trong giai đoạn lên kế hoạch và chuẩn bị các hoạt động đặc biệt. Chúng mình sẽ sớm công bố chi tiết!"
         estimatedRelease="Dự kiến công bố trong thời gian tới"
         showBackButton={true}
-        backButtonHref="/"
+        backButtonHref="/hoat-dong/loi-nhan"
       />
     );
   }
