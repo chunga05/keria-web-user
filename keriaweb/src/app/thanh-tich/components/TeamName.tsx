@@ -39,21 +39,20 @@ const TEAM_REGEX = new RegExp(`\\b(${TEAM_NAMES.join("|")})\\b`, "g");
 export default function TeamName({ text }: { text: string }) {
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
-  let match: RegExpExecArray | null;
   let key = 0;
 
-  TEAM_REGEX.lastIndex = 0;
-  while ((match = TEAM_REGEX.exec(text)) !== null) {
+  for (const match of text.matchAll(TEAM_REGEX)) {
     const [full, team] = match;
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index));
+    const index = match.index ?? 0;
+    if (index > lastIndex) {
+      parts.push(text.slice(lastIndex, index));
     }
     parts.push(
       <span key={key++} className="font-black" style={{ color: TEAM_COLORS[team] }}>
         {full}
       </span>
     );
-    lastIndex = match.index + full.length;
+    lastIndex = index + full.length;
   }
   if (lastIndex < text.length) {
     parts.push(text.slice(lastIndex));
@@ -66,13 +65,12 @@ export default function TeamName({ text }: { text: string }) {
 export function splitByTeam(text: string): { text: string; color?: string }[] {
   const out: { text: string; color?: string }[] = [];
   let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  TEAM_REGEX.lastIndex = 0;
-  while ((match = TEAM_REGEX.exec(text)) !== null) {
+  for (const match of text.matchAll(TEAM_REGEX)) {
     const [full, team] = match;
-    if (match.index > lastIndex) out.push({ text: text.slice(lastIndex, match.index) });
+    const index = match.index ?? 0;
+    if (index > lastIndex) out.push({ text: text.slice(lastIndex, index) });
     out.push({ text: full, color: TEAM_COLORS[team] });
-    lastIndex = match.index + full.length;
+    lastIndex = index + full.length;
   }
   if (lastIndex < text.length) out.push({ text: text.slice(lastIndex) });
   return out;
