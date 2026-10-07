@@ -165,10 +165,7 @@
     @apply font-sans;
   }
 }
-html {
-  /* Luôn hiển thị thanh cuộn dọc để giữ khung giao diện luôn ở chính giữa cố định, không bị lệch khi chuyển trang */
-  overflow-y: scroll; 
-}
+
 /* app/globals.css */
 
 @font-face {

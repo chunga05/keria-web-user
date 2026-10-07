@@ -462,7 +462,6 @@ export default function ToMyDearestPage() {
         className="
           mx-auto
           w-[92%]
-          lg:w-[60%]
           max-w-[1200px]
         "
       >
@@ -484,7 +483,7 @@ export default function ToMyDearestPage() {
             className="
               relative
               mx-auto
-              w-full lg:w-[80%]
+              w-full lg:w-[70%] xl:max-w-[800px]
               rounded-[16px] lg:rounded-1xl
               bg-white
               shadow-sm

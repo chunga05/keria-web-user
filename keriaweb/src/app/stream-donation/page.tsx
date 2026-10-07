@@ -235,9 +235,8 @@ export default function StreamDonations() {
             >
               MÃ QR QUỸ STREAM
             </div>
-            <div className="relative h-48 w-48 rounded-sm bg-[#D9D9D9]">
-              {/* Ảnh QR thực tế thay vào thẻ img/Image này */}
-              {/* <Image src="/qr-code.png" alt="QR Code" fill className="object-cover" /> */}
+            <div className="relative mt-2 h-72 w-72 md:h-80 md:w-80">
+              <Image src="/images/stream-donate/qr_code.png" alt="QR Code Quỹ Stream" fill className="object-contain" priority />
               <HandDrawnArrow />
             </div>
           </div>
