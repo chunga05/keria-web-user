@@ -28,6 +28,23 @@ function LoginPageContent() {
       if (!mounted) return;
 
       if (currentUser) {
+        if (next.startsWith('http://') || next.startsWith('https://')) {
+          try {
+            const nextUrlObj = new URL(next);
+            if (nextUrlObj.origin !== window.location.origin) {
+              // Import động getJwtAccessToken để tránh vòng lặp nếu có, nhưng đã import ở trên
+              const { getJwtAccessToken } = await import("@/lib/auth");
+              const accessToken = await getJwtAccessToken();
+              if (accessToken) {
+                const params = new URLSearchParams({ access_token: accessToken });
+                window.location.href = `${nextUrlObj.origin}/auth/receive#${params.toString()}`;
+                return;
+              }
+            }
+          } catch (e) {
+            console.error("Invalid next URL:", e);
+          }
+        }
         router.replace(next);
       }
     };

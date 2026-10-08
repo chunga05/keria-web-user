@@ -156,7 +156,17 @@ export async function GET(request: Request) {
         destination = `${origin}/`;
       }
     } else {
-      destination = next;
+      try {
+        const nextUrlObj = new URL(next);
+        if (nextUrlObj.origin !== origin) {
+          const params = new URLSearchParams({ access_token: accessToken });
+          destination = `${nextUrlObj.origin}/auth/receive#${params.toString()}`;
+        } else {
+          destination = next;
+        }
+      } catch {
+        destination = next;
+      }
     }
   }
 
