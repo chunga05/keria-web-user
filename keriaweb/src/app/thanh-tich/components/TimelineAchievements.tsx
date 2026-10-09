@@ -26,7 +26,7 @@ const MILESTONES: Milestone[] = [
     layout: "top-bottom",
     title: "Vô địch KeG President's Cup",
     subtitles: ["(phòng PC Doksan-dong)"],
-    achievements: ["Vô địch KeG President's Cup"],
+    achievements: [],
     awards: [],
     personal: [],
   },
@@ -43,7 +43,7 @@ const MILESTONES: Milestone[] = [
     ],
     achievements: [],
     awards: [],
-    personal: ["Gia nhập KeG Gyeongsang/Gyeonggi"],
+    personal: [],
   },
   {
     year: 2019,
@@ -58,7 +58,7 @@ const MILESTONES: Milestone[] = [
     ],
     achievements: [],
     awards: [],
-    personal: ["Gia nhập DRX Academy"],
+    personal: [],
   },
   {
     year: 2020,
@@ -75,9 +75,10 @@ const MILESTONES: Milestone[] = [
       "Tứ kết CKTG",
     ],
     awards: [
-      "LCK Award: Support Of The Year",
+      "LCK Spring Young Player",
+      "Esports PC Rookie Of The Year",
       "All LCK First Team (Spring)",
-      "All LCK First Team (Summer)",
+      "All LCK Second Team (Summer)",
     ],
     personal: ["1000 điểm POG (LCK Xuân)", "800 điểm POG (LCK Hè)"],
   },
@@ -89,9 +90,17 @@ const MILESTONES: Milestone[] = [
     layout: "bottom-top",
     title: "",
     subtitles: [],
-    achievements: ["Bán kết CKTG 2021", "Á quân LCK Mùa Hè 2021"],
-    awards: ["All LCK Second Team (Spring)", "All LCK First Team (Summer)"],
-    personal: ["Gia nhập T1"],
+    achievements: [
+      "Hạng 4 LCK Mùa Xuân",
+      "Á quân LCK Mùa Hè",
+      "Bán kết CKTG",
+    ],
+    awards: [
+      "LCK Award: Support Of The Year",
+      "All LCK First Team (Spring)",
+      "All LCK First Team (Summer)",
+    ],
+    personal: ["900 điểm POG (LCK Xuân)"],
   },
   {
     year: 2022,
@@ -101,9 +110,21 @@ const MILESTONES: Milestone[] = [
     layout: "left",
     title: "",
     subtitles: [],
-    achievements: ["Vô địch LCK Mùa Xuân 2022 (Bất bại 18-0)", "Á quân CKTG 2022"],
-    awards: ["LCK Spring MVP", "All LCK First Team (Spring)"],
-    personal: ["Kỷ lục hỗ trợ có nhiều mạng hỗ trợ nhất vòng bảng LCK"],
+    achievements: [
+      "Vô địch LCK Mùa Xuân",
+      "Á quân MSI",
+      "Á quân LCK Mùa Hè",
+      "Á quân CKTG",
+    ],
+    awards: [
+      "Support Of The Year",
+      "Regular Season MVP (Spring)",
+      "All LCK First Team (Spring)",
+      "All LCK Second Team (Summer)",
+      "Secretlab Assist King",
+      "Esports Hall of Fame Hero 2022",
+    ],
+    personal: ["600 điểm POG (LCK Xuân)"],
   },
   {
     year: 2023,
@@ -113,9 +134,20 @@ const MILESTONES: Milestone[] = [
     layout: "bottom-top",
     title: "",
     subtitles: [],
-    achievements: ["Vô địch CKTG 2023", "Huy chương vàng ASIAD 19"],
-    awards: ["SOTY", "All LCK First Team"],
-    personal: ["Nâng cúp vô địch thế giới tại sân nhà"],
+    achievements: [
+      "Vô địch CKTG 2023",
+      "Huy chương Vàng Asian Games 2022",
+      "Á quân LCK Mùa Xuân & Mùa Hè",
+      "Hạng 3 MSI",
+    ],
+    awards: [
+      "Support Of The Year",
+      "Regular Season MVP (Spring)",
+      "Player of the Split (Spring)",
+      "All LCK First Team (Spring)",
+      "Esports Hall of Fame Star 2023",
+    ],
+    personal: ["Top 1 POG (1300 điểm - LCK Xuân)"],
   },
   {
     year: 2024,
@@ -125,9 +157,20 @@ const MILESTONES: Milestone[] = [
     layout: "right",
     title: "",
     subtitles: [],
-    achievements: ["Vô địch EWC 2024"],
-    awards: [],
-    personal: [],
+    achievements: [
+      "Vô địch CKTG 2024",
+      "Vô địch EWC",
+      "Á quân LCK Mùa Xuân",
+      "Hạng 3 LCK Mùa Hè",
+      "Hạng 3 MSI",
+    ],
+    awards: [
+      "Support Of The Year",
+      "All LCK First Team (Spring)",
+      "All LCK Third Team (Summer)",
+      "Esports Hall of Fame Star 2024",
+    ],
+    personal: ["600 điểm POG (LCK Xuân)", "400 điểm POG (LCK Hè)"],
   },
   {
     year: 2025,
@@ -137,9 +180,20 @@ const MILESTONES: Milestone[] = [
     layout: "bottom-top",
     title: "",
     subtitles: [],
-    achievements: ["Vô địch LCK (Dự kiến)"],
-    awards: [],
-    personal: [],
+    achievements: [
+      "Vô địch CKTG 2025",
+      "Vô địch KeSPA Cup",
+      "Á quân MSI",
+      "Hạng 3 LCK R1-2 & EWC",
+      "Hạng 4 LCK R3-5",
+      "Hạng 6 LCK Cup",
+    ],
+    awards: [
+      "Support Of The Year",
+      "All LCK Second Team",
+      "Esports Hall of Fame Star 2025",
+    ],
+    personal: ["200 điểm POM (LCK R1-2)", "600 điểm POM (LCK R3-5)"],
   },
   {
     year: 2026,
@@ -149,9 +203,13 @@ const MILESTONES: Milestone[] = [
     layout: "left",
     title: "",
     subtitles: [],
-    achievements: ["Kỷ lục mới"],
+    achievements: [
+      "Hạng 2 LCK R1-2",
+      "Hạng 4 LCK Cup",
+      "Hạng 5-6 MSI 2026",
+    ],
     awards: [],
-    personal: [],
+    personal: ["300 (?) điểm POM (LCK R1-2)"],
   },
 ];
 
@@ -230,10 +288,10 @@ export default function TimelineAchievements() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="absolute left-[41px] top-12 bottom-12 w-1 rounded-full bg-gradient-to-b from-[#0084FF] to-[#FF61B6]"
+          className="absolute left-[49px] top-12 bottom-12 w-1 rounded-full bg-gradient-to-b from-[#0084FF] to-[#FF61B6] z-0"
         ></motion.div>
 
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 relative z-10">
           {MILESTONES.map((m, index) => (
             <motion.div 
               key={m.year} 
@@ -245,7 +303,7 @@ export default function TimelineAchievements() {
             >
               {/* Branch Line (Phân nhánh) */}
               <div 
-                className="absolute left-[44px] top-[34px] w-[30px] h-1 rounded-r-full"
+                className="absolute left-[43px] top-[34px] w-[37px] h-1 rounded-r-full -z-10"
                 style={{ backgroundColor: m.color }}
               />
 
@@ -256,7 +314,7 @@ export default function TimelineAchievements() {
               />
               
               {/* Card Container */}
-              <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 p-5 relative">
+              <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 p-5 relative z-20">
                 {/* Year Badge */}
                 <div 
                   className="absolute -top-4 -left-2 px-3 py-1 bg-white rounded-lg border-2 font-black text-lg shadow-sm"

@@ -328,14 +328,19 @@ export default function StreamDonations() {
         <div className="mt-16 w-full flex flex-col lg:flex-row gap-8 border-t border-gray-100 pt-16 pb-8">
           {/* Left: Stream Screenshot */}
           <div className="w-full lg:w-[45%] flex-shrink-0">
-            <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden shadow-sm ring-1 ring-black/5">
+            <a 
+              href="https://www.facebook.com/share/v/1biuSMDMg7/?mibextid=wwXIfr" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative block w-full aspect-[16/10] rounded-xl overflow-hidden shadow-sm ring-1 ring-black/5 hover:opacity-90 transition-opacity cursor-pointer"
+            >
               <Image
                 src="/images/stream-donate/stream_screenshot.png"
                 alt="Stream Moment"
                 fill
                 className="object-cover"
               />
-            </div>
+            </a>
           </div>
           
           {/* Right: Conversation */}
@@ -368,14 +373,19 @@ export default function StreamDonations() {
         <div className="w-full flex flex-col lg:flex-row-reverse gap-8 border-t border-gray-100 pt-12 pb-8">
           {/* Right: Stream Screenshot */}
           <div className="w-full lg:w-[45%] flex-shrink-0">
-            <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden shadow-sm ring-1 ring-black/5">
+            <a 
+              href="https://www.facebook.com/share/v/1BcUSookYf/?mibextid=wwXIfr" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="relative block w-full aspect-[16/10] rounded-xl overflow-hidden shadow-sm ring-1 ring-black/5 hover:opacity-90 transition-opacity cursor-pointer"
+            >
               <Image
                 src="/images/stream-donate/stream_screenshot_2.jpg"
                 alt="Stream Moment 2"
                 fill
                 className="object-cover"
               />
-            </div>
+            </a>
           </div>
           
           {/* Left: Conversation */}

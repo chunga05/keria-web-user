@@ -403,7 +403,7 @@ export default function SoTayHanhTrinhPage() {
                 <div className="absolute top-[8%] left-[13%] w-[35%] h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm pointer-events-none z-10">
                   <Image src="/images/handbook/page1.png" alt="Page 1" fill className="w-full h-full object-contain" />
                   <div className="absolute top-[40%] left-[12%] w-[76%] aspect-[430/190]">
-                    <Image src="/images/handbook/title.png" alt="Theo Dấu Chân Cún" fill className="w-full h-full object-contain drop-shadow" />
+                    <Image src="/images/handbook/title_new.png" alt="Theo Dấu Chân Cún" fill className="w-full h-full object-contain drop-shadow" />
                   </div>
                 </div>
 
@@ -411,9 +411,9 @@ export default function SoTayHanhTrinhPage() {
                   <Image src="/images/handbook/page2.png" alt="Page 2" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative w-full h-[54%]">
-                    <div className="absolute top-[15%] -left-[12%] w-[65%] aspect-[3/4] bg-white p-[3%] rounded shadow-md -rotate-5">
-                      <div className="relative w-full h-full overflow-hidden rounded-[2px]">
-                        <Image src="/images/handbook/anhbia.jpg" alt="Anime Character" fill className="w-full h-full object-cover" />
+                    <div className="absolute top-[15%] -left-[12%] w-[65%] aspect-[3/4]">
+                      <div className="relative w-full h-full">
+                        <Image src="/images/handbook/anhbia_inner_new.png" alt="Anime Character" fill className="w-full h-full object-contain" />
                       </div>
                     </div>
                     <div className="absolute top-[5%] left-[34%] w-[18%] aspect-square pointer-events-none z-20 rotate-6">
@@ -422,14 +422,14 @@ export default function SoTayHanhTrinhPage() {
                     <div className="absolute -top-[7%] -left-[27%] w-[30%] aspect-[1/2] pointer-events-none z-20">
                       <Image src="/images/handbook/ghim.png" alt="Clip Star" fill className="w-full h-full object-contain drop-shadow-sm" />
                     </div>
-                    <div className="absolute bottom-[3%] -left-[18%] w-[17%] aspect-square pointer-events-none z-20">
+                    <div className="absolute bottom-[8%] -left-[17%] w-[17%] aspect-square pointer-events-none z-20">
                       <Image src="/images/handbook/heart.png" alt="Heart sticker" fill className="w-full h-full object-contain drop-shadow-sm" />
                     </div>
                     <div className="absolute top-[15%] right-[-29%] w-[22%] aspect-square pointer-events-none z-20 rotate-12 drop-shadow-sm">
                       <Image src="/images/handbook/vientrang.png" alt="Star White Border" fill className="w-full h-full object-contain" />
                     </div>
                     
-                    <div className="absolute top-[34%] right-[-10%] w-[65%] flex flex-col items-start gap-[2%] z-10">
+                    <div className="absolute top-[34%] right-[-7%] w-[65%] flex flex-col items-start gap-[2%] z-10">
                       <div className="relative w-full aspect-[260/100]">
                         <Image src="/images/handbook/smalltitle.png" alt="KERIA" fill className="w-full h-full object-contain" />
                       </div>
@@ -444,7 +444,7 @@ export default function SoTayHanhTrinhPage() {
                   </div>
 
                   {/* THÔNG TIN USER */}
-                  <div className="absolute left-[13%] bottom-[17%] w-[75%] flex flex-col gap-[6%] px-[2%] pb-[2%]">
+                  <div className="absolute left-[13%] bottom-[12%] w-[75%] flex flex-col gap-[6%] px-[2%] pb-[2%]">
                     <div className="flex flex-col">
                       <span className="text-[0.8vw] text-gray-700 tracking-tight">Tên/Nickname</span>
                       <div className="w-full bg-white/80 rounded px-[4%] py-[2%] text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
@@ -612,28 +612,24 @@ export default function SoTayHanhTrinhPage() {
               }
             `}
           >
-            <div className="absolute top-[33%] right-[-14%] w-[47%] aspect-[360/600] pointer-events-none z-0">
-              <Image src="/images/handbook/mockhoa.png" alt="Keychain" fill className="w-full h-full object-contain" />
-            </div>
-
             <div className="relative z-10 w-full h-full">
               <Image src="/images/handbook/handbook.png" alt="Handbook Cover" fill priority className="w-full h-full object-contain pointer-events-none" />
             </div>
 
             <div className="absolute top-[17%] left-[18%] w-[50%] aspect-square z-20 pointer-events-none">
               <div className="absolute inset-[15%] rounded-[16px] overflow-hidden">
-                <Image src="/images/handbook/anhbia.jpg" alt="Idol Cover" fill className="w-full h-full object-cover object-top" />
+                <Image src="/images/handbook/anhbia_new.png" alt="Idol Cover" fill className="w-full h-full object-cover object-top" />
               </div>
               <div className="absolute inset-0 pointer-events-none">
                 <Image src="/images/handbook/khunganh.png" alt="Photo Frame" fill className="w-full h-full object-contain" />
               </div>
-              <div className="absolute top-[-30%] left-[-25%] w-[75%] aspect-[320/560] pointer-events-none z-30 -rotate-6">
-                <Image src="/images/handbook/ruybang.png" alt="Ribbon" fill className="w-full h-full object-contain" />
+              <div className="absolute -top-[70%] left-[-35%] w-[85%] aspect-[320/560] pointer-events-none z-30 -rotate-6">
+                <Image src="/images/handbook/ruybang_new.png" alt="Ribbon" fill className="w-full h-full object-contain" />
               </div>
             </div>
 
             <div className="absolute bottom-[30%] left-[20%] w-[60%] aspect-[430/190] z-20 cursor-pointer transition-transform duration-300 ease-out hover:scale-105 active:scale-95">
-              <Image src="/images/handbook/title.png" alt="Theo Dấu Chân Cún Title" fill className="w-full h-full object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.2)] hover:drop-shadow-[0_8px_16px_rgba(0,0,0,0.3)] transition-all duration-300" />
+              <Image src="/images/handbook/title_new.png" alt="Theo Dấu Chân Cún Title" fill className="w-full h-full object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.2)] hover:drop-shadow-[0_8px_16px_rgba(0,0,0,0.3)] transition-all duration-300" />
             </div>
           </div>
 
