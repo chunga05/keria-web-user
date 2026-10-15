@@ -424,20 +424,22 @@ export default function ToMyDearestPage() {
   // PAGINATION
   // ==========================================================
 
-  const safeTotalPages =
-    Math.max(
-      1,
-      totalPages
-    );
+  const safeTotalPages = Math.max(1, totalPages);
 
-  const pagesArray =
-    Array.from(
-      {
-        length:
-          safeTotalPages,
-      },
-      (_, i) => i + 1
-    );
+  const getPaginationItems = (current: number, total: number) => {
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+    if (current <= 4) {
+      return [1, 2, 3, 4, 5, "...", total];
+    }
+    if (current >= total - 3) {
+      return [1, "...", total - 4, total - 3, total - 2, total - 1, total];
+    }
+    return [1, "...", current - 1, current, current + 1, "...", total];
+  };
+
+  const paginationItems = getPaginationItems(currentPage, safeTotalPages);
 
   // ==========================================================
   // RENDER
@@ -448,6 +450,8 @@ export default function ToMyDearestPage() {
       className="
         min-h-screen
         w-full
+        max-w-full
+        overflow-x-clip
         bg-[#F4F5F7]
         font-sans
         pt-[100px] lg:pt-[150px]
@@ -463,6 +467,7 @@ export default function ToMyDearestPage() {
           mx-auto
           w-[92%]
           max-w-[1200px]
+          overflow-x-clip
         "
       >
         {/* ==================================================== */}
@@ -473,6 +478,7 @@ export default function ToMyDearestPage() {
           className="
             relative
             w-full
+            max-w-full
           "
         >
           {/* ================================================= */}
@@ -488,9 +494,9 @@ export default function ToMyDearestPage() {
               bg-white
               shadow-sm
               mb-8 lg:mb-12
-              px-5 sm:px-8 lg:px-[60px]
-              pt-14 lg:pt-[72px]
-              pb-8 lg:pb-[48px]
+              px-4 sm:px-8 lg:px-[60px]
+              pt-12 sm:pt-14 lg:pt-[72px]
+              pb-6 sm:pb-8 lg:pb-[48px]
             "
           >
             {/* ================================================= */}
@@ -503,8 +509,9 @@ export default function ToMyDearestPage() {
                 left-1/2
                 -translate-x-1/2
                 drop-shadow-md
-                w-[220px] sm:w-[280px] lg:w-[384px]
-                -top-[22px] sm:-top-[28px] lg:-top-[38px]
+                w-[200px] sm:w-[280px] lg:w-[384px]
+                max-w-[85%]
+                -top-[20px] sm:-top-[28px] lg:-top-[38px]
               "
             >
               <Image
@@ -855,12 +862,10 @@ export default function ToMyDearestPage() {
                 z-10
                 rotate-12
                 opacity-90
+                pointer-events-none
+                -right-2 -top-2.5 sm:-right-3.5 sm:-top-3.5
+                w-9 sm:w-11 lg:w-[54px]
               "
-              style={{
-                right: -14,
-                top: -14,
-                width: 54,
-              }}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -968,12 +973,13 @@ export default function ToMyDearestPage() {
 
             {/* USER INFO */}
 
-            <div>
+            <div className="min-w-0 flex-1">
               <div
                 className="
                   flex
                   items-center
                   gap-1
+                  min-w-0
                 "
               >
                 <span
@@ -981,14 +987,16 @@ export default function ToMyDearestPage() {
                     font-bold
                     text-gray-900
                     text-[13px] lg:text-[15px]
+                    truncate
                   "
+                  title={msg.author}
                 >
                   {msg.author}
                 </span>
 
                 {msg.hasGoldStar && (
                   <span
-                    className="text-yellow-400 text-[12px] lg:text-[14px]"
+                    className="text-yellow-400 text-[12px] lg:text-[14px] shrink-0"
                   >
                     ⭐
                   </span>
@@ -1011,10 +1019,11 @@ export default function ToMyDearestPage() {
           {/* CONTENT */}
           {/* ================================================= */}
 
-          <div className="flex-grow mb-2 flex flex-col">
+          <div className="flex-grow mb-2 flex flex-col min-w-0">
             <p
               className={`
                 break-words
+                [overflow-wrap:anywhere]
                 font-medium
                 leading-relaxed
                 text-black
@@ -1127,10 +1136,13 @@ export default function ToMyDearestPage() {
             <div
               className="
                 flex
+                flex-wrap
                 items-center
                 justify-center
                 mt-8 lg:mt-12
-                gap-4 lg:gap-6
+                gap-2 sm:gap-4 lg:gap-6
+                max-w-full
+                px-2
               "
             >
               {/* PREVIOUS */}
@@ -1158,6 +1170,7 @@ export default function ToMyDearestPage() {
                   shadow-sm
                   transition-all
                   w-8 h-8 lg:w-[32px] lg:h-[32px]
+                  shrink-0
                   ${
                     currentPage <= 1
                       ? "cursor-not-allowed opacity-50"
@@ -1187,12 +1200,37 @@ export default function ToMyDearestPage() {
               <div
                 className="
                   flex
-                  gap-1 lg:gap-2
-                  mx-1 lg:mx-2
+                  flex-wrap
+                  items-center
+                  justify-center
+                  gap-1 sm:gap-1.5 lg:gap-2
+                  max-w-full
                 "
               >
-                {pagesArray.map(
-                  (pageNum) => (
+                {paginationItems.map((item, idx) => {
+                  if (item === "...") {
+                    return (
+                      <span
+                        key={`ellipsis-${idx}`}
+                        className="
+                          flex
+                          items-center
+                          justify-center
+                          w-6 h-8 sm:w-8 sm:h-8
+                          text-gray-400
+                          font-bold
+                          text-xs sm:text-sm
+                          select-none
+                        "
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+
+                  const pageNum = Number(item);
+
+                  return (
                     <button
                       key={pageNum}
                       onClick={() =>
@@ -1208,8 +1246,9 @@ export default function ToMyDearestPage() {
                         font-bold
                         shadow-sm
                         transition-all
-                        w-8 h-8 lg:w-[32px] lg:h-[32px]
-                        text-sm lg:text-[14px]
+                        w-7 h-7 sm:w-8 sm:h-8 lg:w-[32px] lg:h-[32px]
+                        text-xs sm:text-sm lg:text-[14px]
+                        shrink-0
                         ${
                           currentPage ===
                           pageNum
@@ -1220,8 +1259,8 @@ export default function ToMyDearestPage() {
                     >
                       {pageNum}
                     </button>
-                  )
-                )}
+                  );
+                })}
               </div>
 
               {/* NEXT */}
@@ -1250,6 +1289,7 @@ export default function ToMyDearestPage() {
                   shadow-sm
                   transition-all
                   w-8 h-8 lg:w-[32px] lg:h-[32px]
+                  shrink-0
                   ${
                     currentPage >=
                     safeTotalPages
@@ -1284,18 +1324,17 @@ export default function ToMyDearestPage() {
 
       {modal.isOpen && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
           style={{ backgroundColor: "rgba(0,0,0,0.35)" }}
           onClick={closeModal}
         >
           <div
-            className="relative flex flex-col items-center rounded-2xl bg-white shadow-2xl"
+            className="relative flex flex-col items-center rounded-2xl bg-white shadow-2xl w-[90vw] max-w-[340px]"
             style={{
-              width: 340,
               paddingTop: 36,
               paddingBottom: 32,
-              paddingLeft: 32,
-              paddingRight: 32,
+              paddingLeft: 24,
+              paddingRight: 24,
               gap: 0,
             }}
             onClick={(e) => e.stopPropagation()}

@@ -68,10 +68,10 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
-      className={`${montserrat.variable} font-sans`}
+      className={`${montserrat.variable} font-sans max-w-full overflow-x-clip`}
     >
 
-      <body className="min-h-screen w-full relative font-sans touch-manipulation overflow-x-clip bg-[#0a0a0a]">
+      <body className="min-h-screen w-full max-w-full relative font-sans touch-manipulation overflow-x-clip bg-[#0a0a0a]">
 
         {/* =====================================================
             BACKGROUND
@@ -90,12 +90,12 @@ export default function RootLayout({
         {/* =====================================================
             MAIN CONTENT
         ====================================================== */}
-        <div className="relative z-10 w-full min-h-screen flex flex-col">
+        <div className="relative z-10 w-full max-w-full overflow-x-clip min-h-screen flex flex-col">
 
           <Header />
 
           {/* Nội dung từng trang */}
-          <div className="flex-grow flex flex-col w-full relative">
+          <div className="flex-grow flex flex-col w-full max-w-full overflow-x-clip relative">
             {children}
           </div>
 
