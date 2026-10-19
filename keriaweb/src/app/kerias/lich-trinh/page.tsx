@@ -10,13 +10,12 @@ export const metadata: Metadata = {
 };
 
 /**
- * Dynamically import WIP component so unfinished code is split into an on-demand chunk
- * and never loaded by clients when the feature flag is disabled.
+ * Dynamically import ScheduleView so code is split into an on-demand chunk
  */
-const LazyScheduleView = dynamic(() => import("./WIPScheduleView"), {
+const LazyScheduleView = dynamic(() => import("./ScheduleView"), {
   loading: () => (
     <div className="w-full min-h-[60vh] flex items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-sky-400 border-t-transparent" />
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF76C3] border-t-transparent" />
     </div>
   ),
 });

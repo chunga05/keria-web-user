@@ -77,7 +77,7 @@ export const FEATURE_DEFINITIONS: Record<FeatureKey, FeatureFlagDefinition> = {
   [FEATURES.SCHEDULE]: {
     name: "Lịch trình Keria",
     envVar: "NEXT_PUBLIC_ENABLE_SCHEDULE",
-    defaultValue: false,
+    defaultValue: true,
     description: "Trang hiển thị lịch thi đấu và hoạt động của Keria",
   },
   [FEATURES.WELCOME_PROJECT]: {
