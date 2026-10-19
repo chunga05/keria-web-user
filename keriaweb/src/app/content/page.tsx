@@ -228,12 +228,34 @@ export default function ProjectPage() {
   const [loading, setLoading] = useState(true);
 
   // ==========================================================
-  // CAROUSEL INDEX
+  // CAROUSEL REFS & SCROLL
   // ==========================================================
 
-  const [sectionIndexes, setSectionIndexes] = useState<
-    Record<string, number>
-  >({});
+  const carouselRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const scrollSection = (category: string, direction: "prev" | "next") => {
+    const el = carouselRefs.current[category];
+    if (!el) return;
+
+    const firstCard = el.querySelector<HTMLElement>(":scope > div");
+    const cardWidth = firstCard ? firstCard.offsetWidth : 280;
+    const gap = 20;
+    const scrollAmount = cardWidth + gap;
+
+    if (direction === "next") {
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 15) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      }
+    } else {
+      if (el.scrollLeft <= 15) {
+        el.scrollTo({ left: el.scrollWidth, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      }
+    }
+  };
 
   // ==========================================================
   // LOAD CONTENT
@@ -297,62 +319,6 @@ export default function ProjectPage() {
   };
 
   // ==========================================================
-  // NEXT SLIDE
-  // ==========================================================
-
-  const handleNext = (
-    category: string,
-    total: number
-  ) => {
-    if (total <= 4) return;
-
-    setSectionIndexes((prev) => {
-      const current = prev[category] || 0;
-
-      const maxIndex = Math.max(
-        0,
-        total - 4
-      );
-
-      return {
-        ...prev,
-        [category]:
-          current >= maxIndex
-            ? 0
-            : current + 1,
-      };
-    });
-  };
-
-  // ==========================================================
-  // PREVIOUS SLIDE
-  // ==========================================================
-
-  const handlePrevious = (
-    category: string,
-    total: number
-  ) => {
-    if (total <= 4) return;
-
-    setSectionIndexes((prev) => {
-      const current = prev[category] || 0;
-
-      const maxIndex = Math.max(
-        0,
-        total - 4
-      );
-
-      return {
-        ...prev,
-        [category]:
-          current <= 0
-            ? maxIndex
-            : current - 1,
-      };
-    });
-  };
-
-  // ==========================================================
   // OPEN ARTICLE
   // ==========================================================
 
@@ -401,7 +367,8 @@ export default function ProjectPage() {
           w-full
           cursor-pointer
           flex-col
-          gap-3 lg:gap-[16px]
+          gap-2.5 sm:gap-3 lg:gap-[16px]
+          select-none
         "
       >
         {/* ================================================= */}
@@ -463,13 +430,13 @@ export default function ProjectPage() {
                     shadow-lg
                     transition-transform
                     group-hover/card:scale-110
-                    w-10 lg:w-[55px]
+                    w-9 h-9 sm:w-10 sm:h-10 lg:w-[55px] lg:h-[55px]
                   "
                 >
                   <Play
                     className="
                       fill-current
-                      w-5 h-5 lg:w-[30px] lg:h-[30px]
+                      w-4 h-4 sm:w-5 sm:h-5 lg:w-[30px] lg:h-[30px]
                     "
                   />
                 </div>
@@ -480,16 +447,16 @@ export default function ProjectPage() {
               <div
                 className="
                   absolute
-                  left-2 lg:left-4
-                  top-2 lg:top-4
+                  left-2 sm:left-2.5 lg:left-4
+                  top-2 sm:top-2.5 lg:top-4
                   rounded-full
                   bg-red-600
-                  px-2 lg:px-4
-                  py-1 lg:py-2
+                  px-2 sm:px-2.5 lg:px-4
+                  py-0.5 sm:py-1 lg:py-2
                   font-semibold
                   text-white
                   shadow-md
-                  text-[10px] lg:text-[12px]
+                  text-[9px] sm:text-[10px] lg:text-[12px]
                 "
               >
                 YOUTUBE
@@ -519,7 +486,7 @@ export default function ProjectPage() {
               src={item.media_url}
               alt={item.title}
               fill
-              sizes="300px"
+              sizes="(max-width: 640px) 76vw, (max-width: 1024px) 45vw, 300px"
               className="
                 object-cover
                 transition-transform
@@ -534,7 +501,7 @@ export default function ProjectPage() {
               src="/images/placeholder-banner.jpg"
               alt={item.title}
               fill
-              sizes="300px"
+              sizes="(max-width: 640px) 76vw, (max-width: 1024px) 45vw, 300px"
               className="
                 object-cover
                 transition-transform
@@ -552,16 +519,16 @@ export default function ProjectPage() {
             <div
               className="
                 absolute
-                left-2 lg:left-4
-                top-2 lg:top-4
+                left-2 sm:left-2.5 lg:left-4
+                top-2 sm:top-2.5 lg:top-4
                 rounded-full
                 bg-black/65
-                px-2 lg:px-4
-                py-1 lg:py-2
+                px-2 sm:px-2.5 lg:px-4
+                py-0.5 sm:py-1 lg:py-2
                 font-semibold
                 text-white
                 backdrop-blur-sm
-                text-[10px] lg:text-[12px]
+                text-[9px] sm:text-[10px] lg:text-[12px]
               "
             >
               VIDEO
@@ -577,11 +544,11 @@ export default function ProjectPage() {
           className="
             line-clamp-2
             font-semibold
-            leading-[1.45]
+            leading-[1.4] sm:leading-[1.45]
             text-gray-800
             transition-colors
             group-hover/card:text-[#FF76C3]
-            text-sm lg:text-[15px]
+            text-[13px] sm:text-sm lg:text-[15px]
           "
         >
           {item.title}
@@ -597,12 +564,12 @@ export default function ProjectPage() {
               flex
               items-center
               text-gray-400
-              gap-2 lg:gap-[8px]
-              text-[10px] lg:text-[11px]
+              gap-1.5 sm:gap-2 lg:gap-[8px]
+              text-[10px] sm:text-[11px] lg:text-[12px]
             "
           >
             <CalendarDays
-              className="w-3.5 h-3.5 lg:w-[16px] lg:h-[16px]"
+              className="w-3.5 h-3.5 lg:w-[16px] lg:h-[16px] shrink-0"
             />
 
             <span>
@@ -641,11 +608,9 @@ export default function ProjectPage() {
         min-h-screen
         w-full
         bg-[#F8F9FC]
+        pt-6 sm:pt-8 md:pt-10 lg:pt-12
+        pb-12 sm:pb-16 md:pb-20
       "
-      style={{
-        paddingTop: 36,
-        paddingBottom: 72,
-      }}
     >
       {/* ====================================================== */}
       {/* OUTER SCALE CONTAINER                                  */}
@@ -655,7 +620,9 @@ export default function ProjectPage() {
         className="
           mx-auto
           w-[92%]
-          lg:w-[60%]
+          sm:w-[90%]
+          lg:w-[92%]
+          xl:w-full
           max-w-[1200px]
         "
       >
@@ -676,7 +643,8 @@ export default function ProjectPage() {
           <section
             className="
               relative
-              aspect-[4/3] sm:aspect-[2.4/1]
+              aspect-[4/5] min-h-[440px]
+              sm:aspect-[16/9] sm:min-h-0
               w-full
               overflow-hidden
               bg-gray-900
@@ -685,14 +653,15 @@ export default function ProjectPage() {
             "
           >
             <Image
-              src="/images/placeholder-banner.jpg"
+              src="/images/banner-project.jpg"
               alt="Project Banner"
               fill
               priority
-              sizes="1200px"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 95vw, 1200px"
               className="
                 object-cover
-                opacity-80
+                object-[54%_20%] sm:object-center
+                opacity-95
               "
             />
 
@@ -702,10 +671,10 @@ export default function ProjectPage() {
               className="
                 absolute
                 inset-0
-                bg-gradient-to-r
-                from-black/80 sm:from-black/75
-                via-black/50 sm:via-black/35
-                to-transparent
+                bg-gradient-to-t sm:bg-gradient-to-r
+                from-black/90 sm:from-black/85
+                via-black/50 sm:via-black/45
+                to-black/10 sm:to-transparent
               "
             />
 
@@ -717,18 +686,19 @@ export default function ProjectPage() {
                 inset-0
                 flex
                 flex-col
-                justify-center
-                pl-5 sm:pl-10 lg:pl-[84px]
+                justify-end sm:justify-center
+                px-5 sm:px-10 lg:px-[84px]
+                pb-6 sm:pb-0
               "
             >
               <p
                 className="
                   font-semibold
                   uppercase
-                  tracking-[0.2em]
+                  tracking-[0.15em] sm:tracking-[0.2em]
                   text-[#FF76C3]
-                  mb-2 lg:mb-[12px]
-                  text-xs lg:text-[14px]
+                  mb-1.5 sm:mb-2 lg:mb-[12px]
+                  text-[11px] sm:text-xs lg:text-[14px]
                 "
               >
                 KERIA'S PROJECT
@@ -736,12 +706,12 @@ export default function ProjectPage() {
 
               <h1
                 className="
-                  max-w-[90%] lg:max-w-[65%]
+                  max-w-[95%] sm:max-w-[85%] lg:max-w-[65%]
                   font-extrabold
-                  leading-[1.1]
+                  leading-[1.15] sm:leading-[1.1]
                   text-white
-                  mb-3 lg:mb-[18px]
-                  text-2xl sm:text-3xl lg:text-[48px]
+                  mb-2 sm:mb-3 lg:mb-[18px]
+                  text-xl sm:text-2xl md:text-3xl lg:text-[42px] xl:text-[48px]
                 "
               >
                 Các dự án dành cho KERIA
@@ -749,11 +719,12 @@ export default function ProjectPage() {
 
               <p
                 className="
-                  max-w-[90%] sm:max-w-[80%] lg:max-w-[55%]
-                  leading-[1.6]
-                  text-white/80
-                  mb-5 lg:mb-[24px]
-                  text-sm lg:text-[15px]
+                  max-w-[95%] sm:max-w-[80%] lg:max-w-[55%]
+                  leading-[1.5] sm:leading-[1.6]
+                  text-white/85 sm:text-white/80
+                  mb-3.5 sm:mb-5 lg:mb-[24px]
+                  text-xs sm:text-sm lg:text-[15px]
+                  line-clamp-2 sm:line-clamp-none
                 "
               >
                 Cùng nhìn lại những hoạt động,
@@ -780,10 +751,11 @@ export default function ProjectPage() {
                   shadow-md
                   transition-all
                   hover:scale-105
+                  active:scale-95
                   hover:bg-[#FF4D91]
                   rounded-lg
-                  px-6 py-2.5 lg:px-[36px] lg:py-[12px]
-                  text-sm lg:text-[14px]
+                  px-4 py-2 sm:px-6 sm:py-2.5 lg:px-[36px] lg:py-[12px]
+                  text-xs sm:text-sm lg:text-[14px]
                 "
               >
                 Xem Chi Tiết
@@ -798,11 +770,16 @@ export default function ProjectPage() {
           <section
             className="
               flex
-              flex-wrap
               items-center
-              mt-8 lg:mt-[60px]
-              mb-8 lg:mb-[60px]
-              gap-2 lg:gap-[14px]
+              mt-6 sm:mt-8 lg:mt-[50px]
+              mb-6 sm:mb-8 lg:mb-[50px]
+              gap-2 sm:gap-2.5 lg:gap-[14px]
+              overflow-x-auto
+              pb-1 sm:pb-0
+              sm:flex-wrap
+              [&::-webkit-scrollbar]:hidden
+              [-ms-overflow-style:none]
+              [scrollbar-width:none]
             "
           >
             {TABS.map((tab) => (
@@ -816,8 +793,10 @@ export default function ProjectPage() {
                   rounded-full
                   font-bold
                   transition-all
-                  px-4 py-2 lg:px-[24px] lg:py-[10px]
-                  text-xs lg:text-[14px]
+                  px-3.5 py-1.5 sm:px-5 sm:py-2 lg:px-[24px] lg:py-[10px]
+                  text-xs sm:text-[13px] lg:text-[14px]
+                  shrink-0
+                  active:scale-95
                   ${
                     activeTab === tab.value
                       ? "bg-[#FF76C3] text-white shadow-md"
@@ -839,7 +818,7 @@ export default function ProjectPage() {
             className="
               flex
               flex-col
-              gap-12 lg:gap-[78px]
+              gap-8 sm:gap-10 lg:gap-[78px]
             "
           >
             {/* ================================================= */}
@@ -930,25 +909,10 @@ export default function ProjectPage() {
                     return null;
                   }
 
-                  // --------------------------------------------
-                  // CAROUSEL
-                  // --------------------------------------------
-
-                  const currentIndex =
-                    sectionIndexes[
-                      section.category
-                    ] || 0;
-
-                  const visibleContents =
-                    sectionContents.slice(
-                      currentIndex,
-                      currentIndex + 4
-                    );
-
                   const isBlueArrow =
                     index % 2 === 0;
 
-                  const canSlide =
+                  const canSlideDesktop =
                     sectionContents.length > 4;
 
                   return (
@@ -960,7 +924,7 @@ export default function ProjectPage() {
                       "
                     >
                       {/* ====================================== */}
-                      {/* SECTION TITLE */}
+                      {/* SECTION TITLE & MOBILE CONTROLS */}
                       {/* ====================================== */}
 
                       <div
@@ -968,72 +932,138 @@ export default function ProjectPage() {
                           flex
                           items-center
                           justify-between
-                          mb-4 lg:mb-[24px]
+                          mb-3 sm:mb-4 lg:mb-[24px]
                         "
                       >
                         <h2
                           className="
                             font-bold
                             text-gray-700
-                            text-lg lg:text-[21px]
+                            text-base sm:text-lg lg:text-[21px]
                           "
                         >
                           {section.title}
                         </h2>
 
-                        <span
-                          className="
-                            font-medium
-                            text-gray-400
-                            text-xs lg:text-[12px]
-                          "
-                        >
-                          {sectionContents.length}{" "}
-                          bài viết
-                        </span>
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <span
+                            className="
+                              font-medium
+                              text-gray-400
+                              text-xs lg:text-[12px]
+                            "
+                          >
+                            {sectionContents.length}{" "}
+                            bài viết
+                          </span>
+
+                          {/* MOBILE / IPAD CONTROLS (hiện khi có từ 2 bài viết) */}
+                          {sectionContents.length > 1 && (
+                            <div className="flex lg:hidden items-center gap-1.5 ml-1">
+                              <button
+                                type="button"
+                                aria-label="Xem bài trước"
+                                onClick={() =>
+                                  scrollSection(
+                                    section.category,
+                                    "prev"
+                                  )
+                                }
+                                className={`
+                                  flex
+                                  aspect-square
+                                  items-center
+                                  justify-center
+                                  rounded-full
+                                  text-white
+                                  shadow-sm
+                                  transition-all
+                                  active:scale-95
+                                  w-7 h-7 sm:w-8 sm:h-8
+                                  ${
+                                    isBlueArrow
+                                      ? "bg-[#38bdf8]"
+                                      : "bg-[#FF76C3]"
+                                  }
+                                `}
+                              >
+                                <ChevronLeft className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                              </button>
+                              <button
+                                type="button"
+                                aria-label="Xem bài tiếp theo"
+                                onClick={() =>
+                                  scrollSection(
+                                    section.category,
+                                    "next"
+                                  )
+                                }
+                                className={`
+                                  flex
+                                  aspect-square
+                                  items-center
+                                  justify-center
+                                  rounded-full
+                                  text-white
+                                  shadow-sm
+                                  transition-all
+                                  active:scale-95
+                                  w-7 h-7 sm:w-8 sm:h-8
+                                  ${
+                                    isBlueArrow
+                                      ? "bg-[#38bdf8]"
+                                      : "bg-[#FF76C3]"
+                                  }
+                                `}
+                              >
+                                <ChevronRight className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
                       {/* ====================================== */}
-                      {/* CAROUSEL */}
+                      {/* CAROUSEL WRAPPER */}
                       {/* ====================================== */}
 
                       <div
                         className="
                           group
                           relative
-                          flex
-                          items-center
+                          w-full
                         "
                       >
                         {/* ==================================== */}
-                        {/* LEFT ARROW */}
+                        {/* DESKTOP LEFT ARROW */}
                         {/* ==================================== */}
 
-                        {canSlide && (
+                        {canSlideDesktop && (
                           <button
                             type="button"
                             aria-label="Xem bài trước"
                             onClick={() =>
-                              handlePrevious(
+                              scrollSection(
                                 section.category,
-                                sectionContents.length
+                                "prev"
                               )
                             }
                             className={`
+                              hidden lg:flex
                               absolute
                               z-10
-                              flex
                               aspect-square
                               items-center
                               justify-center
                               rounded-full lg:rounded-[18%]
-                              -translate-y-1/2 lg:translate-y-[-70%]
+                              top-[35%] -translate-y-1/2
                               text-white
-                              shadow-sm
+                              shadow-md
                               transition-all
-                              hover:scale-105
-                              -left-3 lg:-left-[48px]
-                              w-8 lg:w-[38px]
+                              hover:scale-110
+                              active:scale-95
+                              -left-4 xl:-left-[48px]
+                              w-9 xl:w-[38px]
                               ${
                                 isBlueArrow
                                   ? "bg-[#38bdf8]"
@@ -1042,57 +1072,81 @@ export default function ProjectPage() {
                             `}
                           >
                             <ChevronLeft
-                              className="w-5 h-5 lg:w-[23px] lg:h-[23px]"
+                              className="w-5 h-5 xl:w-[23px] xl:h-[23px]"
                             />
                           </button>
                         )}
 
                         {/* ==================================== */}
-                        {/* GRID */}
+                        {/* HORIZONTAL SCROLL / SNAP CAROUSEL */}
                         {/* ==================================== */}
 
                         <div
+                          ref={(el) => {
+                            carouselRefs.current[
+                              section.category
+                            ] = el;
+                          }}
                           className="
-                            grid
+                            flex
                             w-full
-                            grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
-                            gap-4 lg:gap-[24px]
+                            gap-3.5 sm:gap-4 lg:gap-[24px]
+                            overflow-x-auto
+                            scroll-smooth
+                            snap-x snap-mandatory
+                            [&::-webkit-scrollbar]:hidden
+                            [-ms-overflow-style:none]
+                            [scrollbar-width:none]
+                            touch-pan-x
+                            py-1
                           "
                         >
-                          {visibleContents.map(
-                            renderCard
-                          )}
+                          {sectionContents.map((item) => (
+                            <div
+                              key={item.id}
+                              className="
+                                w-[76vw] max-w-[280px]
+                                sm:w-[calc(50%-10px)] sm:max-w-none
+                                lg:w-[calc(25%-18px)] lg:max-w-none
+                                shrink-0
+                                snap-start
+                              "
+                            >
+                              {renderCard(item)}
+                            </div>
+                          ))}
                         </div>
 
                         {/* ==================================== */}
-                        {/* RIGHT ARROW */}
+                        {/* DESKTOP RIGHT ARROW */}
                         {/* ==================================== */}
 
-                        {canSlide && (
+                        {canSlideDesktop && (
                           <button
                             type="button"
                             aria-label="Xem bài tiếp theo"
                             onClick={() =>
-                              handleNext(
+                              scrollSection(
                                 section.category,
-                                sectionContents.length
+                                "next"
                               )
                             }
                             className={`
+                              hidden lg:flex
                               absolute
                               z-10
-                              flex
                               aspect-square
                               items-center
                               justify-center
-                              -translate-y-1/2 lg:translate-y-[-70%]
+                              top-[35%] -translate-y-1/2
                               rounded-full lg:rounded-[18%]
                               text-white
-                              shadow-sm
+                              shadow-md
                               transition-all
-                              hover:scale-105
-                              -right-3 lg:-right-[48px]
-                              w-8 lg:w-[38px]
+                              hover:scale-110
+                              active:scale-95
+                              -right-4 xl:-right-[48px]
+                              w-9 xl:w-[38px]
                               ${
                                 isBlueArrow
                                   ? "bg-[#38bdf8]"
@@ -1101,7 +1155,7 @@ export default function ProjectPage() {
                             `}
                           >
                             <ChevronRight
-                              className="w-5 h-5 lg:w-[23px] lg:h-[23px]"
+                              className="w-5 h-5 xl:w-[23px] xl:h-[23px]"
                             />
                           </button>
                         )}

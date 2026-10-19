@@ -263,6 +263,22 @@
   margin: 1.2em 0;
 }
 
+.rich-content video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 1.2em 0;
+}
+
+.rich-content iframe {
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 1.2em 0;
+}
+
 .rich-content table {
   width: 100%;
   border-collapse: collapse;
@@ -270,6 +286,7 @@
   font-size: 0.95em;
   overflow-x: auto;
   display: block;
+  -webkit-overflow-scrolling: touch;
 }
 
 .rich-content th,
