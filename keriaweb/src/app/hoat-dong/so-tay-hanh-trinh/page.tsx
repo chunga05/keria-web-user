@@ -598,7 +598,7 @@ export default function SoTayHanhTrinhPage() {
                     )}
                   </div>
                   <div className="relative z-10 w-full text-center border-t border-pink-200 pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
-                    <span className="text-[5.5px] sm:text-[6.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-pink-400 uppercase tracking-widest inline-block leading-normal">★ Pawport Collection ★</span>
+                    <span className="text-[4px] sm:text-[5.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-pink-400 uppercase tracking-wider sm:tracking-widest inline-block leading-normal">★ Pawport Collection ★</span>
                   </div>
                 </div>
 
@@ -659,7 +659,7 @@ export default function SoTayHanhTrinhPage() {
                     )}
                   </div>
                   <div className="relative z-10 w-full text-center border-t border-blue-200 pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
-                    <span className="text-[5.5px] sm:text-[6.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-blue-400 uppercase tracking-widest inline-block leading-normal">★ Pawport Collection ★</span>
+                    <span className="text-[4px] sm:text-[5.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-blue-400 uppercase tracking-wider sm:tracking-widest inline-block leading-normal">★ Pawport Collection ★</span>
                   </div>
                 </div>
               </>
