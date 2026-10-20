@@ -474,14 +474,14 @@ export default function SoTayHanhTrinhPage() {
             {/* LƯỢT 0: 2 TRANG ĐẦU GỐC */}
             {turnIndex === 0 && (
               <>
-                <div className="absolute top-[8%] left-[13%] w-[35%] h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm pointer-events-none z-10">
+                <div className="absolute top-[8%] left-[13%] w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm pointer-events-none z-10">
                   <Image src="/images/handbook/page1.png" alt="Page 1" fill className="w-full h-full object-contain" />
                   <div className="absolute top-[40%] left-[12%] w-[76%] aspect-[430/190]">
                     <Image src="/images/handbook/title_new.png" alt="Theo Dấu Chân Cún" fill className="w-full h-full object-contain drop-shadow" />
                   </div>
                 </div>
 
-                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page2.png" alt="Page 2" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative w-full h-[50%] md:h-[52%] lg:h-[54%]">
@@ -549,7 +549,7 @@ export default function SoTayHanhTrinhPage() {
             {turnIndex > 0 && (
               <>
                 {/* TRANG TRÁI */}
-                <div className="absolute top-[8%] left-[13%] w-[35%] h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] left-[13%] w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page3.png" alt="Left Page Pink" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative z-10 text-center border-b border-pink-300/60 pb-[2%] mt-[12%] md:mt-[14%] xl:mt-[15%]">
@@ -597,13 +597,13 @@ export default function SoTayHanhTrinhPage() {
                       </div>
                     )}
                   </div>
-                  <div className="relative z-10 w-full text-center border-t border-pink-200 pt-[1.5%] md:pt-[1.8%] xl:pt-[2%] mb-0.5 md:mb-1 xl:mb-[2%]">
-                    <span className="text-[5px] sm:text-[6px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-medium text-pink-400 uppercase tracking-widest">★ Pawport Collection ★</span>
+                  <div className="relative z-10 w-full text-center border-t border-pink-200 pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
+                    <span className="text-[5.5px] sm:text-[6.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-pink-400 uppercase tracking-widest inline-block leading-normal">★ Pawport Collection ★</span>
                   </div>
                 </div>
 
                 {/* TRANG PHẢI */}
-                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page4.png" alt="Right Page Blue" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative z-10 text-center border-b border-blue-300/60 pb-[2%] mt-[12%] md:mt-[14%] xl:mt-[15%]">
@@ -658,8 +658,8 @@ export default function SoTayHanhTrinhPage() {
                       </div>
                     )}
                   </div>
-                  <div className="relative z-10 w-full text-center border-t border-blue-200 pt-[1.5%] md:pt-[1.8%] xl:pt-[2%] mb-0.5 md:mb-1 xl:mb-[2%]">
-                    <span className="text-[5px] sm:text-[6px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-medium text-blue-400 uppercase tracking-widest">★ Pawport Collection ★</span>
+                  <div className="relative z-10 w-full text-center border-t border-blue-200 pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
+                    <span className="text-[5.5px] sm:text-[6.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-blue-400 uppercase tracking-widest inline-block leading-normal">★ Pawport Collection ★</span>
                   </div>
                 </div>
               </>
