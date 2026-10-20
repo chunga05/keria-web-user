@@ -37,6 +37,13 @@ function buildLoginUrl(request: NextRequest, pathname: string): URL {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  // Tự động điều hướng sang trang Lời chúc khi tính năng Trang chủ bị tắt
+  if (pathname === '/' && !isFeatureEnabled(FEATURES.HOME)) {
+    const wishesUrl = request.nextUrl.clone();
+    wishesUrl.pathname = '/hoat-dong/loi-nhan';
+    return NextResponse.redirect(wishesUrl);
+  }
+
 
   const isHandbookProtected = isFeatureEnabled(FEATURES.HANDBOOK) && pathname.startsWith('/hoat-dong/so-tay-hanh-trinh');
   const isProtected = pathname.startsWith('/userProfile') || isHandbookProtected;

@@ -1,17 +1,19 @@
-
 import LockerHero from "@/app/TrangChu/LockerHero";
 import KeriaDetails from "@/app/TrangChu/KeriaDetails";
 import KeriaBoard from "@/app/TrangChu/KeriaBoard";
 import VideoYoutube from "@/app/TrangChu/videoYoutube";
 import { Metadata, Viewport } from "next";
 import FacebookFeed from "@/app/TrangChu/facebookfeed";
+import { isFeatureEnabled, FEATURES } from "@/config/features";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-
+  if (!isFeatureEnabled(FEATURES.HOME)) {
+    redirect("/hoat-dong/loi-nhan");
+  }
 
   return (
     <main className="w-full bg-transparent flex flex-col items-center">
-      
       {/* Phần 1: Tủ đồ và khung giấy chính */}
       <LockerHero />
 
@@ -28,7 +30,6 @@ export default function Home() {
 
       {/* Phần 4: Facebook Feed */}
       <FacebookFeed />
-      
-      </main>
+    </main>
   );
 }
