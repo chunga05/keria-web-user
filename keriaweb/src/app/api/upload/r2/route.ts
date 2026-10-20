@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { verifyAccessToken } from '@/lib/jwt';
+import { verifyAccessToken, signAccessToken } from '@/lib/jwt';
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
@@ -8,12 +8,36 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB giới hạn cho User
 const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
 
 /**
+ * Đọc thông báo lỗi từ Admin Service một cách an toàn
+ */
+async function parseAdminError(response: Response, defaultMsg: string): Promise<string> {
+  try {
+    const text = await response.text();
+    try {
+      const json = JSON.parse(text);
+      if (json?.error && typeof json.error === 'string') {
+        return json.error;
+      }
+    } catch {
+      // Trường hợp phản hồi HTML hoặc chuỗi text
+      if (text) {
+        const cleanText = text.replace(/<[^>]*>?/gm, '').trim();
+        if (cleanText) {
+          return `Admin Service phản hồi (${response.status}): ${cleanText.slice(0, 150)}`;
+        }
+      }
+    }
+  } catch {}
+  return defaultMsg;
+}
+
+/**
  * POST /api/upload/r2
  *
  * Route trung gian tại User Web:
  * - Xác thực người dùng (Authentication)
  * - Gọi Admin API (/api/upload/presign) để nhận Presigned URL
- * - User Web hoàn toàn KHÔNG cần lưu trữ R2_ACCESS_KEY_ID hay R2_SECRET_ACCESS_KEY!
+ * - Tải file lên Cloudflare R2 thông qua Presigned URL nhận được
  */
 export async function POST(request: Request) {
   try {
@@ -33,7 +57,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // Fallback sang Supabase auth nếu không có custom JWT
+    // Fallback sang Supabase auth nếu không có custom JWT hoặc JWT đã hết hạn
     if (!userId) {
       const supabaseUser = await createClient();
       const {
@@ -53,7 +77,7 @@ export async function POST(request: Request) {
 
     const { data: profile } = await supabaseAdmin
       .from('users')
-      .select('status')
+      .select('status, role')
       .eq('id', userId)
       .maybeSingle();
 
@@ -64,10 +88,17 @@ export async function POST(request: Request) {
       );
     }
 
+    // Sinh token xác thực hợp lệ để gửi sang Admin API (đảm bảo không bị thiếu hoặc expired)
+    const serviceToken = await signAccessToken({
+      sub: userId,
+      role: profile?.role || 'user',
+      status: profile?.status || 'approved',
+    });
+
     const adminBaseUrl = (
       process.env.ADMIN_URL ||
       process.env.NEXT_PUBLIC_ADMIN_URL ||
-      'http://localhost:3001'
+      'https://admin.dearkeriavn.com'
     ).replace(/\/$/, '');
 
     const contentTypeHeader = request.headers.get('content-type') || '';
@@ -106,8 +137,9 @@ export async function POST(request: Request) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          Authorization: `Bearer ${serviceToken}`,
         },
+        redirect: 'manual',
         body: JSON.stringify({
           filename,
           contentType: contentType || 'image/jpeg',
@@ -116,10 +148,20 @@ export async function POST(request: Request) {
         }),
       });
 
-      if (!presignRes.ok) {
-        const errorData = await presignRes.json().catch(() => ({}));
+      if (presignRes.status >= 300 && presignRes.status < 400) {
         return NextResponse.json(
-          { error: errorData.error || 'Không thể tạo Presigned URL từ Admin Service.' },
+          { error: `Admin Service chuyển hướng không hợp lệ (HTTP ${presignRes.status}).` },
+          { status: 502 }
+        );
+      }
+
+      if (!presignRes.ok) {
+        const errorMsg = await parseAdminError(
+          presignRes,
+          'Không thể tạo Presigned URL từ Admin Service.'
+        );
+        return NextResponse.json(
+          { error: errorMsg },
           { status: presignRes.status }
         );
       }
@@ -156,25 +198,38 @@ export async function POST(request: Request) {
       );
     }
 
+    const fileType = file.type || (ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg');
+
     // 1. Xin Presigned URL từ Admin API
     const presignRes = await fetch(`${adminBaseUrl}/api/upload/presign`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        Authorization: `Bearer ${serviceToken}`,
       },
+      redirect: 'manual',
       body: JSON.stringify({
         filename: file.name,
-        contentType: file.type,
+        contentType: fileType,
         folder: 'proofs',
         size: file.size,
       }),
     });
 
-    if (!presignRes.ok) {
-      const errorData = await presignRes.json().catch(() => ({}));
+    if (presignRes.status >= 300 && presignRes.status < 400) {
       return NextResponse.json(
-        { error: errorData.error || 'Lỗi khi yêu cầu cấp phép tải ảnh từ Admin Service.' },
+        { error: `Admin Service chuyển hướng không hợp lệ (HTTP ${presignRes.status}).` },
+        { status: 502 }
+      );
+    }
+
+    if (!presignRes.ok) {
+      const errorMsg = await parseAdminError(
+        presignRes,
+        'Lỗi khi yêu cầu cấp phép tải ảnh từ Admin Service.'
+      );
+      return NextResponse.json(
+        { error: errorMsg },
         { status: presignRes.status }
       );
     }
@@ -186,7 +241,7 @@ export async function POST(request: Request) {
     const r2UploadRes = await fetch(uploadUrl, {
       method: 'PUT',
       headers: {
-        'Content-Type': file.type,
+        'Content-Type': fileType,
       },
       body: fileBuffer,
     });
