@@ -30,7 +30,7 @@ export function InstructionModal({ isOpen, onClose }: InstructionModalProps) {
   return (
     <div
       className={`
-        fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6
+        fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 sm:p-4 md:p-6 pt-[68px] sm:pt-3
         transition-all duration-200
         ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
       `}
@@ -44,7 +44,7 @@ export function InstructionModal({ isOpen, onClose }: InstructionModalProps) {
       {/* Modal Container */}
       <div
         className={`
-          relative z-10 w-full max-w-lg md:max-w-xl max-h-[85vh] sm:max-h-[88vh] flex flex-col rounded-[22px] sm:rounded-[28px] bg-white
+          relative z-10 w-full max-w-lg md:max-w-xl max-h-[82vh] sm:max-h-[88vh] flex flex-col rounded-t-[22px] sm:rounded-[28px] bg-white
           shadow-[0_20px_50px_rgba(0,0,0,0.25)]
           transition-transform duration-200
           ${isOpen ? 'scale-100' : 'scale-95'}

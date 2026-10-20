@@ -481,7 +481,7 @@ export default function SoTayHanhTrinhPage() {
                   </div>
                 </div>
 
-                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm z-10 p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page2.png" alt="Page 2" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative w-full h-[50%] md:h-[52%] lg:h-[54%]">
@@ -518,27 +518,27 @@ export default function SoTayHanhTrinhPage() {
                   </div>
 
                   {/* THÔNG TIN USER */}
-                  <div className="absolute left-[13%] bottom-[4%] md:bottom-[7%] lg:bottom-[9%] xl:bottom-[12%] w-[75%] flex flex-col gap-1 md:gap-2 lg:gap-2.5 xl:gap-[6%] px-[2%] pb-[1%]">
+                  <div className="absolute left-[13%] bottom-[2%] sm:bottom-[4%] md:bottom-[7%] lg:bottom-[9%] xl:bottom-[12%] w-[75%] flex flex-col gap-[2px] sm:gap-1 md:gap-2 lg:gap-2.5 xl:gap-[6%] px-[2%] pb-[1%]">
                     <div className="flex flex-col">
-                      <span className="text-[5px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1">Tên/Nickname</span>
-                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[6.5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[13px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <span className="text-[4px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-[1px] md:mb-1">Tên/Nickname</span>
+                      <div className="w-full bg-white/80 rounded-[2px] md:rounded-md px-1 md:px-2.5 text-[5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[9px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.nickname}
                       </div>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[5px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1">Ngày khởi hành</span>
-                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[6.5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[13px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <span className="text-[4px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-[1px] md:mb-1">Ngày khởi hành</span>
+                      <div className="w-full bg-white/80 rounded-[2px] md:rounded-md px-1 md:px-2.5 text-[5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[9px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.departureDate}
                       </div>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[5px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1">Địa bàn hoạt động</span>
-                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[6.5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[13px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <span className="text-[4px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-[1px] md:mb-1">Địa bàn hoạt động</span>
+                      <div className="w-full bg-white/80 rounded-[2px] md:rounded-md px-1 md:px-2.5 text-[5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[9px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.location}
                       </div>
                     </div>
                     <div className="w-full text-center mt-0.5 md:mt-1 xl:mt-[2%]">
-                      <span className="text-[4.5px] sm:text-[5.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-medium text-gray-400">Passport by: DearKeriaVN</span>
+                      <span className="text-[3px] sm:text-[5.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-medium text-gray-400">Passport by: DearKeriaVN</span>
                     </div>
                   </div>
                 </div>
@@ -549,7 +549,7 @@ export default function SoTayHanhTrinhPage() {
             {turnIndex > 0 && (
               <>
                 {/* TRANG TRÁI */}
-                <div className="absolute top-[8%] left-[13%] w-[35%] h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm z-10 p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] left-[13%] w-[35%] h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page3.png" alt="Left Page Pink" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative z-10 text-center border-b border-pink-300/60 pb-[2%] mt-[12%] md:mt-[14%] xl:mt-[15%]">
@@ -603,7 +603,7 @@ export default function SoTayHanhTrinhPage() {
                 </div>
 
                 {/* TRANG PHẢI */}
-                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm z-10 p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page4.png" alt="Right Page Blue" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative z-10 text-center border-b border-blue-300/60 pb-[2%] mt-[12%] md:mt-[14%] xl:mt-[15%]">
