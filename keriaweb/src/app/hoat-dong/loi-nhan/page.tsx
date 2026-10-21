@@ -32,14 +32,41 @@ export default function ToMyDearestPage() {
     const [visitorId, setVisitorId] = useState<string | null>(null);
 
     useEffect(() => {
-      // Khởi tạo và lấy ID thiết bị khi load trang
+      // 1. Lấy ngay từ localStorage nếu đã lưu để có visitorId tức thì (0ms)
+      let cachedVisitorId = null;
+      try {
+        cachedVisitorId = localStorage.getItem("keria_visitor_id");
+        if (cachedVisitorId) {
+          setVisitorId(cachedVisitorId);
+        }
+      } catch {
+        // ignore
+      }
+
+      // 2. Khởi tạo và đồng bộ Fingerprint thiết bị trong background
       const initFingerprint = async () => {
         try {
           const fp = await fpPromise.load();
           const result = await fp.get();
-          setVisitorId(result.visitorId);
+          if (result?.visitorId) {
+            setVisitorId(result.visitorId);
+            try {
+              localStorage.setItem("keria_visitor_id", result.visitorId);
+            } catch {
+              // ignore
+            }
+          }
         } catch (error) {
           console.error("Lỗi khi lấy fingerprint:", error);
+          if (!cachedVisitorId) {
+            const fallbackId = "v_" + Date.now() + "_" + Math.random().toString(36).slice(2, 9);
+            setVisitorId(fallbackId);
+            try {
+              localStorage.setItem("keria_visitor_id", fallbackId);
+            } catch {
+              // ignore
+            }
+          }
         }
       };
       initFingerprint();
