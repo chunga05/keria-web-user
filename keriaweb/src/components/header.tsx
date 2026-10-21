@@ -982,7 +982,7 @@ export default function Header() {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-7 py-4">
           {/* TRANG CHỦ */}
-          <div className="flex justify-center my-3">
+          <div className="my-2.5">
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -990,12 +990,9 @@ export default function Header() {
                 relative
                 inline-flex
                 items-center
-                justify-center
-                px-6
-                py-1.5
                 text-base
-                font-bold
-                tracking-wide
+                font-extrabold
+                tracking-wider
                 transition-colors
                 ${
                   pathname === "/"
@@ -1004,8 +1001,10 @@ export default function Header() {
                 }
               `}
             >
-              {pathname === "/" && <ActiveIndicator />}
-              <span className="relative z-10">TRANG CHỦ</span>
+              <span className="relative inline-flex items-center justify-center">
+                {pathname === "/" && <ActiveIndicator />}
+                <span className="relative z-10 px-3 py-0.5">TRANG CHỦ</span>
+              </span>
             </Link>
           </div>
 
