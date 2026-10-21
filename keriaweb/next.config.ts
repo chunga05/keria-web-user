@@ -26,6 +26,20 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 86400,
 
     remotePatterns: [
+      // DearKeriaVN Media Domain
+      {
+        protocol: "https",
+        hostname: "media.dearkeriavn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.dearkeriavn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "dearkeriavn.com",
+      },
+
       // Ảnh avatar mẫu
       {
         protocol: "https",
