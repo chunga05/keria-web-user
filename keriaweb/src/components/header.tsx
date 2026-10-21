@@ -992,6 +992,7 @@ export default function Header() {
                 items-center
                 text-base
                 font-extrabold
+                uppercase
                 tracking-wider
                 transition-colors
                 ${
@@ -1001,9 +1002,9 @@ export default function Header() {
                 }
               `}
             >
-              <span className="relative inline-flex items-center justify-center">
+              <span className="relative inline-flex items-center">
                 {pathname === "/" && <ActiveIndicator />}
-                <span className="relative z-10 px-3 py-0.5">TRANG CHỦ</span>
+                <span className="relative z-10 py-0.5">TRANG CHỦ</span>
               </span>
             </Link>
           </div>
