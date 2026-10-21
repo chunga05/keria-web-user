@@ -57,7 +57,7 @@ const NAV_LINKS = [
     // Chuyển sang dạng subLinks theo thiết kế trong image_af07c6.png
     subLinks: [
       {
-        name: "'Welcome to Vietnam' Project",
+        name: "‘Welcome to Vietnam’ Project",
         href: "/project/welcome-to-vietnam",
       },
       {
@@ -98,7 +98,6 @@ export default function Header() {
   // MOBILE MENU
   // ============================================================
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mobileOpenSection, setMobileOpenSection] = useState<string | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // ============================================================
@@ -140,7 +139,6 @@ export default function Header() {
   // ============================================================
   useEffect(() => {
     setIsMobileMenuOpen(false);
-    setMobileOpenSection(null);
   }, [pathname]);
 
   // ============================================================
@@ -159,6 +157,32 @@ export default function Header() {
       mediaQuery.removeEventListener("change", handleMediaChange);
     };
   }, []);
+
+  // ============================================================
+  // KHOÁ CUỘN TRANG KHI MỞ MOBILE MENU & ĐÓNG BẰNG ESCAPE
+  // ============================================================
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMobileMenuOpen]);
 
   // ============================================================
   // ĐĂNG XUẤT
@@ -845,241 +869,287 @@ export default function Header() {
 
         </div>
       </header>
+    </div>
 
       {/* ================================================== */}
-      {/* MOBILE MENU PANEL */}
+      {/* MOBILE SIDEBAR (SLIDE IN FROM RIGHT)               */}
       {/* ================================================== */}
 
       {/* Backdrop */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-[90] xl:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Drawer */}
       <div
-        ref={mobileMenuRef}
         className={`
           fixed
-          left-0
-          right-0
-          top-[clamp(68px,5.56vw,80px)]
-          z-[95]
-          xl:hidden
-          overflow-hidden
-          bg-white/98
-          backdrop-blur-md
-          shadow-lg
-          border-t border-gray-100
-          transition-all
+          inset-0
+          z-[140]
+          bg-black/40
+          backdrop-blur-[2px]
+          transition-opacity
           duration-300
           ease-in-out
-          ${isMobileMenuOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"}
+          xl:hidden
+          ${
+            isMobileMenuOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }
+        `}
+        onClick={() => setIsMobileMenuOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* Drawer Sidebar Panel from right */}
+      <aside
+        ref={mobileMenuRef}
+        aria-label="Menu điều hướng"
+        className={`
+          fixed
+          top-0
+          right-0
+          bottom-0
+          z-[150]
+          flex
+          h-screen
+          h-[100dvh]
+          w-[310px]
+          sm:w-[340px]
+          max-w-[85vw]
+          flex-col
+          bg-white
+          shadow-[-8px_0_30px_rgba(0,0,0,0.15)]
+          transition-transform
+          duration-300
+          ease-in-out
+          xl:hidden
+          ${
+            isMobileMenuOpen
+              ? "translate-x-0"
+              : "translate-x-full"
+          }
         `}
       >
-        <nav className="flex flex-col py-2 overflow-y-auto max-h-[80vh]">
-          {NAV_LINKS.map((link) => {
-            const isActive = isLinkActive(link);
+        {/* Header inside sidebar: Logo & Close Button */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-2">
+          <Link
+            href="/"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block"
+          >
+            <Image
+              src="/images/DEARKERIAVN LOGO 1.png"
+              alt="DearKeriaVN Logo"
+              width={120}
+              height={50}
+              priority
+              className="h-auto w-[110px] object-contain"
+            />
+          </Link>
 
-            // Có sub-links → accordion
-            if ("subLinks" in link && link.subLinks) {
-              const isOpen = mobileOpenSection === link.name;
+          <button
+            type="button"
+            aria-label="Đóng menu"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              rounded-full
+              text-gray-400
+              transition-colors
+              hover:bg-gray-100
+              hover:text-gray-700
+              focus:outline-none
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
 
-              return (
-                <div key={link.name} className="border-b border-gray-50 last:border-b-0">
-                  {/* Accordion header */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setMobileOpenSection(isOpen ? null : link.name)
-                    }
-                    className={`
-                      flex
-                      w-full
-                      items-center
-                      justify-between
-                      px-6
-                      py-4
-                      text-left
-                      text-sm
-                      font-bold
-                      tracking-wide
-                      transition-colors
-                      ${isActive ? "text-[#FF76C3]" : "text-[#0070F3] hover:text-[#FF76C3]"}
-                    `}
-                  >
-                    <span>{link.name}</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2.5}
-                      stroke="currentColor"
-                      className={`h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                  </button>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto px-7 py-4">
+          {/* TRANG CHỦ */}
+          <div className="flex justify-center my-3">
+            <Link
+              href="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`
+                relative
+                inline-flex
+                items-center
+                justify-center
+                px-6
+                py-1.5
+                text-base
+                font-bold
+                tracking-wide
+                transition-colors
+                ${
+                  pathname === "/"
+                    ? "text-[#FF76C3]"
+                    : "text-[#0070F3] hover:text-[#FF76C3]"
+                }
+              `}
+            >
+              {pathname === "/" && <ActiveIndicator />}
+              <span className="relative z-10">TRANG CHỦ</span>
+            </Link>
+          </div>
 
-                  {/* Sub-links */}
-                  <div
-                    className={`
-                      overflow-hidden
-                      transition-all
-                      duration-200
-                      ease-in-out
-                      ${isOpen ? "max-h-96" : "max-h-0"}
-                    `}
-                  >
-                    <div className="flex flex-col bg-blue-50/30 pb-1">
-                      {link.subLinks.map((subLink) => {
-                        const isSubActive = pathname === subLink.href;
+          {/* Divider after TRANG CHỦ */}
+          <div className="my-4 h-[1.5px] w-full bg-[#BAE6FD]" />
 
-                        return (
-                          <Link
-                            key={subLink.href}
-                            href={subLink.href}
-                            onClick={() => setIsMobileMenuOpen(false)}
-                            className={`
-                              block
-                              px-10
-                              py-3
-                              text-sm
-                              font-medium
-                              transition-colors
-                              border-l-2
-                              ml-6
-                              ${
-                                isSubActive
-                                  ? "border-[#FF76C3] text-[#FF76C3] bg-pink-50/40"
-                                  : "border-transparent text-gray-600 hover:border-[#FF76C3] hover:text-[#FF76C3] hover:bg-pink-50/20"
-                              }
-                            `}
-                          >
-                            {subLink.name}
-                          </Link>
-                        );
-                      })}
-                    </div>
+          {/* NAV SECTIONS */}
+          <div className="space-y-4">
+            {NAV_LINKS.filter((l) => "subLinks" in l && l.subLinks).map(
+              (section, idx, arr) => (
+                <div key={section.name} className="space-y-2.5">
+                  <h3 className="text-base font-extrabold uppercase tracking-wider text-[#0070F3]">
+                    {section.name}
+                  </h3>
+
+                  <div className="flex flex-col space-y-2.5">
+                    {section.subLinks?.map((subLink) => {
+                      const isSubActive = pathname === subLink.href;
+
+                      return (
+                        <Link
+                          key={subLink.href}
+                          href={subLink.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`
+                            text-[15px]
+                            font-semibold
+                            transition-colors
+                            ${
+                              isSubActive
+                                ? "text-[#FF76C3] font-bold"
+                                : "text-gray-700 hover:text-[#FF76C3]"
+                            }
+                          `}
+                        >
+                          {subLink.name}
+                        </Link>
+                      );
+                    })}
                   </div>
-                </div>
-              );
-            }
 
-            // Không có sub-links → link thẳng
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`
-                  block
-                  border-b border-gray-50
-                  last:border-b-0
-                  px-6
-                  py-4
-                  text-sm
-                  font-bold
-                  tracking-wide
-                  transition-colors
-                  ${isActive ? "text-[#FF76C3]" : "text-[#0070F3] hover:text-[#FF76C3]"}
-                `}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
-
-          {/* ================================================ */}
-          {/* NÚT ĐĂNG NHẬP / TÀI KHOẢN CÁ NHÂN (Mobile)         */}
-          {/* ================================================ */}
-
-          {!isAuthChecking && !userData && (
-            <div className="border-t border-gray-100 px-6 py-4">
-              <Link
-                href={loginUrl}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="
-                  flex
-                  w-full
-                  items-center
-                  justify-center
-                  rounded-md
-                  bg-[#FF76C3]
-                  py-3
-                  text-sm
-                  font-bold
-                  text-white
-                  shadow-md
-                  transition-colors
-                  hover:bg-[#FF4D91]
-                "
-              >
-                ĐĂNG NHẬP
-              </Link>
-            </div>
-          )}
-
-          {!isAuthChecking && userData && (
-            <div className="border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-[#FF76C3]">
-                  {userData.avatar_url ? (
-                    <Image
-                      src={userData.avatar_url}
-                      alt="User Avatar"
-                      width={40}
-                      height={40}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-pink-100 font-bold text-pink-500">
-                      {userData.display_name?.charAt(0) || "U"}
+                  {/* Divider between sections (not after the last one) */}
+                  {idx < arr.length - 1 && (
+                    <div className="pt-2">
+                      <div className="h-[1.5px] w-full bg-[#BAE6FD]" />
                     </div>
                   )}
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-gray-800 line-clamp-1">
-                    {userData.display_name || "Người dùng"}
-                  </span>
-                  <span className="text-xs text-gray-500 line-clamp-1">
-                    {userData.role === "admin" ? "Quản trị viên" : "Thành viên"}
-                  </span>
-                </div>
-              </div>
+              )
+            )}
+          </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  handleLogout();
-                }}
-                className="
-                  flex
-                  w-full
-                  items-center
-                  justify-center
-                  rounded-md
-                  border-2 border-[#FF76C3]
-                  bg-white
-                  py-2.5
-                  text-sm
-                  font-bold
-                  text-[#FF76C3]
-                  shadow-sm
-                  transition-colors
-                  hover:bg-pink-50
-                "
-              >
-                ĐĂNG XUẤT
-              </button>
-            </div>
-          )}
-        </nav>
-      </div>
-    </div>
+          {/* USER / AUTH SECTION */}
+          <div className="mt-8 mb-6">
+            {!isAuthChecking && !userData && (
+              <div className="flex justify-end">
+                <Link
+                  href={loginUrl}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="
+                    inline-flex
+                    items-center
+                    justify-center
+                    rounded-[4px]
+                    bg-[#FF76C3]
+                    px-6
+                    py-2.5
+                    text-sm
+                    font-bold
+                    tracking-wide
+                    text-white
+                    shadow-sm
+                    transition-colors
+                    hover:bg-[#FF4D91]
+                  "
+                >
+                  ĐĂNG NHẬP
+                </Link>
+              </div>
+            )}
+
+            {!isAuthChecking && userData && (
+              <div className="flex flex-col gap-3 rounded-lg border border-pink-100 bg-pink-50/40 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-[#FF76C3]">
+                    {userData.avatar_url ? (
+                      <img
+                        src={userData.avatar_url}
+                        alt="User Avatar"
+                        referrerPolicy="no-referrer"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-pink-100 font-bold text-pink-500">
+                        {userData.display_name?.charAt(0) || "U"}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-gray-800 line-clamp-1">
+                      {userData.display_name || "Người dùng"}
+                    </span>
+                    <span className="text-xs text-gray-500 line-clamp-1">
+                      {isAdmin ? "Quản trị viên" : "Thành viên"}
+                    </span>
+                  </div>
+                </div>
+
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleGoToAdmin();
+                    }}
+                    className="flex w-full items-center justify-center rounded-md bg-blue-50 py-2 text-xs font-bold text-[#0070F3] hover:bg-blue-100 transition-colors"
+                  >
+                    Quản trị Admin
+                  </button>
+                )}
+
+                <Link
+                  href="/userProfile"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex w-full items-center justify-center rounded-md border border-gray-200 bg-white py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Thông tin cá nhân
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                  className="flex w-full items-center justify-center rounded-md bg-red-50 py-2 text-xs font-bold text-red-600 hover:bg-red-100 transition-colors"
+                >
+                  Đăng xuất
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
     </>
   );
 }
