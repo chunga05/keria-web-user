@@ -986,24 +986,28 @@ export default function Header() {
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="
+              className={`
                 relative
                 inline-flex
                 items-center
-                justify-center
-                px-5
-                py-1
                 text-base
                 font-extrabold
                 uppercase
                 tracking-wider
-                text-[#FF76C3]
                 transition-colors
-                hover:opacity-90
-              "
+                ${
+                  pathname === "/"
+                    ? "text-[#FF76C3]"
+                    : "text-[#0070F3] hover:text-[#FF76C3]"
+                }
+              `}
             >
-              <ActiveIndicator />
-              <span className="relative z-10">TRANG CHỦ</span>
+              <span className="relative inline-flex items-center justify-center">
+                {pathname === "/" && <ActiveIndicator />}
+                <span className={`relative z-10 ${pathname === "/" ? "px-3.5 py-0.5" : "py-0.5"}`}>
+                  TRANG CHỦ
+                </span>
+              </span>
             </Link>
           </div>
 
@@ -1029,17 +1033,26 @@ export default function Header() {
                           href={subLink.href}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className={`
+                            relative
+                            inline-flex
+                            items-center
+                            self-start
                             text-[15px]
                             font-semibold
                             transition-colors
                             ${
                               isSubActive
-                                ? "text-[#FF76C3] font-bold"
+                                ? "text-[#FF76C3]"
                                 : "text-gray-700 hover:text-[#FF76C3]"
                             }
                           `}
                         >
-                          {subLink.name}
+                          <span className="relative inline-flex items-center justify-center">
+                            {isSubActive && <ActiveIndicator />}
+                            <span className={`relative z-10 ${isSubActive ? "px-3.5 py-0.5" : "py-0.5"}`}>
+                              {subLink.name}
+                            </span>
+                          </span>
                         </Link>
                       );
                     })}
