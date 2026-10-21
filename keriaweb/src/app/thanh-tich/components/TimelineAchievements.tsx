@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import TeamName from "./TeamName";
 
@@ -213,18 +214,86 @@ const MILESTONES: Milestone[] = [
   },
 ];
 
+// Helper tính toán vị trí nhãn năm và team badge chuẩn xác 100% theo toạ độ SVG
+function getMilestoneTextPosition(m: Milestone) {
+  if (m.year === 2017) {
+    return { x: 800, y: 55, anchor: "middle" as const, badge: "KeG Cup 🏆" };
+  }
+  if (m.year === 2018) {
+    return { x: 155, y: 198, anchor: "start" as const, badge: "KeG Gyeonggi" };
+  }
+  if (m.year === 2019) {
+    return { x: 500, y: 255, anchor: "middle" as const, badge: "DRX Academy" };
+  }
+  if (m.year === 2020) {
+    return { x: 845, y: 398, anchor: "end" as const, badge: "DRX LCK" };
+  }
+  if (m.year === 2021) {
+    return { x: 500, y: 455, anchor: "middle" as const, badge: "T1 (LCK Debut)" };
+  }
+  if (m.year === 2022) {
+    return { x: 155, y: 598, anchor: "start" as const, badge: "T1 (Vô địch LCK)" };
+  }
+  if (m.year === 2023) {
+    return { x: 500, y: 655, anchor: "middle" as const, badge: "T1 (Vô địch CKTG)" };
+  }
+  if (m.year === 2024) {
+    return { x: 845, y: 798, anchor: "end" as const, badge: "T1 (Vô địch CKTG)" };
+  }
+  if (m.year === 2025) {
+    return { x: 500, y: 855, anchor: "middle" as const, badge: "T1 (Vô địch CKTG)" };
+  }
+  return { x: 155, y: 998, anchor: "start" as const, badge: "T1 (Hiện tại)" };
+}
+
 // Vệt sáng chạy dọc từ đầu đến cuối
 const RUN_DURATION = 12;
 
 export default function TimelineAchievements() {
   const [hoveredYear, setHoveredYear] = useState<number | null>(null);
+  const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null);
   const [pathLength, setPathLength] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const pathRef = useRef<SVGPathElement | null>(null);
 
   useEffect(() => {
+    setMounted(true);
     const len = pathRef.current?.getTotalLength();
     if (len) setPathLength(len);
   }, []);
+
+  const currentIndex = selectedMilestone
+    ? MILESTONES.findIndex((m) => m.year === selectedMilestone.year)
+    : -1;
+  const prevMilestone = currentIndex > 0 ? MILESTONES[currentIndex - 1] : null;
+  const nextMilestone =
+    currentIndex >= 0 && currentIndex < MILESTONES.length - 1
+      ? MILESTONES[currentIndex + 1]
+      : null;
+
+  // Khóa scroll khi mở popup và hỗ trợ phím Escape / Mũi tên
+  useEffect(() => {
+    if (!selectedMilestone) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedMilestone(null);
+      } else if (e.key === "ArrowLeft" && prevMilestone) {
+        setSelectedMilestone(prevMilestone);
+      } else if (e.key === "ArrowRight" && nextMilestone) {
+        setSelectedMilestone(nextMilestone);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [selectedMilestone, prevMilestone, nextMilestone]);
 
   const solidPath = `
     M 800 100
@@ -253,17 +322,23 @@ export default function TimelineAchievements() {
 
   const fullSvgPath = `${solidPath} L 1000 1100`;
 
+  const hoveredMilestone = MILESTONES.find((m) => m.year === hoveredYear);
+
   return (
-    <section className="w-full bg-[#FAFAFA] py-20 px-4 md:px-8 flex flex-col items-center relative z-10 overflow-hidden">
+    <section className="w-full bg-[#FAFAFA] py-14 sm:py-20 px-2 sm:px-6 md:px-8 flex flex-col items-center relative z-10 overflow-hidden">
       <motion.div 
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="text-center mb-16"
+        className="text-center mb-6 sm:mb-14"
       >
-        <h2 className="text-3xl md:text-4xl font-black text-[#102652] mb-4">HÀNH TRÌNH CỦA KERIA</h2>
-        <p className="text-gray-500 font-medium">Nhấn hoặc di chuột vào các mốc thời gian để xem chi tiết</p>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#102652] mb-2 sm:mb-4 tracking-tight">
+          HÀNH TRÌNH CỦA KERIA
+        </h2>
+        <p className="text-gray-500 font-medium text-xs sm:text-sm md:text-base px-2">
+          Bấm vào từng mốc năm trên sơ đồ để xem chi tiết thành tích
+        </p>
       </motion.div>
 
       <style>{`
@@ -280,314 +355,315 @@ export default function TimelineAchievements() {
         }
       `}</style>
 
-      {/* Mobile/Tablet Vertical Timeline (Dạng cột thẳng có phân nhánh) */}
-      <div className="lg:hidden w-full relative px-2 py-8 overflow-hidden">
-        {/* Main Vertical Line */}
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="absolute left-[49px] top-12 bottom-12 w-1 rounded-full bg-gradient-to-b from-[#0084FF] to-[#FF61B6] z-0"
-        ></motion.div>
-
-        <div className="flex flex-col gap-10 relative z-10">
-          {MILESTONES.map((m, index) => (
-            <motion.div 
-              key={m.year} 
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-              className="relative pl-[80px] pr-2 w-full"
-            >
-              {/* Branch Line (Phân nhánh) */}
-              <div 
-                className="absolute left-[43px] top-[34px] w-[37px] h-1 rounded-r-full -z-10"
-                style={{ backgroundColor: m.color }}
-              />
-
-              {/* Dot */}
-              <div 
-                className="absolute left-[31px] top-6 w-6 h-6 rounded-full bg-white border-[5px] shadow-[0_0_10px_rgba(0,0,0,0.15)] z-10"
-                style={{ borderColor: m.color }}
-              />
-              
-              {/* Card Container */}
-              <div className="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 p-5 relative z-20">
-                {/* Year Badge */}
-                <div 
-                  className="absolute -top-4 -left-2 px-3 py-1 bg-white rounded-lg border-2 font-black text-lg shadow-sm"
-                  style={{ borderColor: m.color, color: m.color }}
-                >
-                  {m.year}
-                </div>
-
-                {/* Subtitles (Static Info) */}
-                <div className="text-sm text-gray-700 font-medium mt-3 mb-2">
-                  {m.title && <div className="font-bold text-pink-500 mb-1"><TeamName text={m.title} /></div>}
-                  {m.subtitles?.map((s, i) => (
-                    <div key={i} className="mb-1"><TeamName text={s} /></div>
-                  ))}
-                </div>
-
-                {/* Detailed Cards (Expanded for mobile) */}
-                {(m.achievements.length > 0 || m.awards.length > 0 || m.personal.length > 0) && (
-                  <div className="mt-3 pt-3 border-t border-dashed border-gray-200">
-                    {m.achievements.length > 0 && (
-                      <div className="mb-3">
-                        <div className="flex items-center gap-1.5 text-[#0084FF] font-black text-[13px] mb-1.5 uppercase">
-                          <span className="text-base">👑</span> THÀNH TÍCH
-                        </div>
-                        <ul className="text-gray-700 text-[13px] leading-relaxed space-y-1">
-                          {m.achievements.map((item, idx) => (
-                            <li key={idx}>• <TeamName text={item} /></li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {m.awards.length > 0 && (
-                      <div className="mb-3">
-                        <div className="flex items-center gap-1.5 text-[#F59E0B] font-black text-[13px] mb-1.5 uppercase">
-                          <span className="text-base">🏆</span> GIẢI THƯỞNG
-                        </div>
-                        <ul className="text-gray-700 text-[13px] leading-relaxed space-y-1">
-                          {m.awards.map((item, idx) => (
-                            <li key={idx}>• <TeamName text={item} /></li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {m.personal.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-1.5 text-[#FF61B6] font-black text-[13px] mb-1.5 uppercase">
-                          <span className="text-base">🚩</span> CỘT MỐC
-                        </div>
-                        <ul className="text-gray-700 text-[13px] leading-relaxed space-y-1">
-                          {m.personal.map((item, idx) => (
-                            <li key={idx}>• <TeamName text={item} /></li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div className="hidden lg:block w-full overflow-x-auto overflow-y-hidden pb-10 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] touch-pan-x">
-        <div className="relative w-[1000px] h-[1200px] mx-auto">
-          {/* SVG Curve */}
-          <motion.svg
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+      {/* Sơ đồ hành trình dạng đường cong SVG (Đồng bộ chuẩn xác 100% trên cả Mobile và Laptop) */}
+      <div className="w-full flex justify-center py-2 sm:py-6 overflow-visible">
+        <div className="relative w-full max-w-[960px] aspect-[1000/1200] mx-auto select-none px-1 sm:px-4">
+          <svg
             viewBox="0 0 1000 1200"
-            className="absolute inset-0 w-full h-full drop-shadow-md pointer-events-none"
+            className="w-full h-full drop-shadow-md select-none overflow-visible"
             preserveAspectRatio="xMidYMid meet"
           >
-          <defs>
-            <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#0084FF" />
-              <stop offset="40%" stopColor="#0084FF" />
-              <stop offset="80%" stopColor="#FF61B6" />
-              <stop offset="100%" stopColor="#FF61B6" />
-            </linearGradient>
+            <defs>
+              <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#0084FF" />
+                <stop offset="40%" stopColor="#0084FF" />
+                <stop offset="80%" stopColor="#FF61B6" />
+                <stop offset="100%" stopColor="#FF61B6" />
+              </linearGradient>
 
-            <linearGradient id="fade-out-gradient" x1="500" y1="1100" x2="1000" y2="1100" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#FF61B6" stopOpacity="1" />
-              <stop offset="100%" stopColor="#FF61B6" stopOpacity="0" />
-            </linearGradient>
+              <linearGradient id="fade-out-gradient" x1="500" y1="1100" x2="1000" y2="1100" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FF61B6" stopOpacity="1" />
+                <stop offset="100%" stopColor="#FF61B6" stopOpacity="0" />
+              </linearGradient>
 
-            <linearGradient id="mask-fade-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="white" />
-              <stop offset="100%" stopColor="black" />
-            </linearGradient>
+              <linearGradient id="mask-fade-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="white" />
+                <stop offset="100%" stopColor="black" />
+              </linearGradient>
 
-            <mask id="fade-mask">
-              <rect x="0" y="0" width="1000" height="1050" fill="white" />
-              <rect x="0" y="1050" width="500" height="150" fill="white" />
-              <rect x="500" y="1050" width="500" height="150" fill="url(#mask-fade-gradient)" />
-            </mask>
-          </defs>
+              <mask id="fade-mask">
+                <rect x="0" y="0" width="1000" height="1050" fill="white" />
+                <rect x="0" y="1050" width="500" height="150" fill="white" />
+                <rect x="500" y="1050" width="500" height="150" fill="url(#mask-fade-gradient)" />
+              </mask>
+            </defs>
 
-          {/* Hidden path strictly to measure the full length */}
-          <path ref={pathRef} d={fullSvgPath} fill="none" stroke="none" />
+            {/* Hidden path strictly to measure the full length */}
+            <path ref={pathRef} d={fullSvgPath} fill="none" stroke="none" />
 
-          {/* Solid Base Path */}
-          <path
-            d={solidPath}
-            fill="none"
-            stroke="url(#timeline-gradient)"
-            strokeWidth="12"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Fading extension */}
-          <path
-            d={dottedPath}
-            fill="none"
-            stroke="url(#fade-out-gradient)"
-            strokeWidth="12"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {/* Vệt sáng chạy dọc toàn bộ timeline */}
-          {pathLength > 0 && (
+            {/* Solid Base Path */}
             <path
-              d={fullSvgPath}
+              d={solidPath}
               fill="none"
-              stroke="#FFFFFF"
+              stroke="url(#timeline-gradient)"
               strokeWidth="12"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="timeline-runner"
-              mask="url(#fade-mask)"
-              style={{
-                strokeDasharray: `40 ${pathLength + 100}`,
-                ["--run-from" as string]: `40`,
-                ["--run-to" as string]: `-${pathLength + 100}`,
-              }}
             />
-          )}
-        </motion.svg>
 
-        {/* Nodes and Tooltips */}
-        {MILESTONES.map((m, index) => {
-          const isHovered = hoveredYear === m.year;
-          const hasSubtitles = !!m.title || (m.subtitles && m.subtitles.length > 0);
-          
-          return (
-            <div
-              key={m.year}
-              className="absolute group z-20"
-              style={{
-                left: `${(m.x / 1000) * 100}%`,
-                top: `${(m.y / 1200) * 100}%`,
-                transform: "translate(-50%, -50%)",
-              }}
-              onMouseEnter={() => setHoveredYear(m.year)}
-              onMouseLeave={() => setHoveredYear(null)}
-              onClick={() => setHoveredYear(m.year)}
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, ease: "easeOut", delay: (index % 3) * 0.15 }}
-                className="relative flex items-center justify-center"
-              >
-                {/* Year Label */}
-                <div
-                className={`absolute font-bold text-2xl md:text-3xl transition-transform ${
-                  isHovered ? "scale-110" : ""
-                }`}
+            {/* Fading extension */}
+            <path
+              d={dottedPath}
+              fill="none"
+              stroke="url(#fade-out-gradient)"
+              strokeWidth="12"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+
+            {/* Vệt sáng chạy dọc toàn bộ timeline */}
+            {pathLength > 0 && (
+              <path
+                d={fullSvgPath}
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="12"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="timeline-runner"
+                mask="url(#fade-mask)"
                 style={{
-                  color: m.color,
-                  ...(m.layout === "left" && { right: "calc(100% + 15px)", top: "calc(50% - 2px)", transform: "translateY(-100%)" }),
-                  ...(m.layout === "right" && { left: "calc(100% + 15px)", top: "calc(50% - 2px)", transform: "translateY(-100%)" }),
-                  ...(m.layout === "top-bottom" && { bottom: "calc(100% + 12px)", left: "50%", transform: "translateX(-50%)" }),
-                  ...(m.layout === "bottom-top" && { top: "calc(100% + 12px)", left: "50%", transform: "translateX(-50%)" }),
+                  strokeDasharray: `40 ${pathLength + 100}`,
+                  ["--run-from" as string]: `40`,
+                  ["--run-to" as string]: `-${pathLength + 100}`,
                 }}
-              >
-                {m.year}
-              </div>
-
-              {/* Subtitles (Static) */}
-              {hasSubtitles && (
-                <div
-                  className="absolute text-xs md:text-[13px] text-gray-700 whitespace-nowrap font-medium w-max pointer-events-none"
-                  style={{
-                    ...(m.layout === "left" && { right: "calc(100% + 15px)", top: "calc(50% + 4px)", textAlign: "right" }),
-                    ...(m.layout === "right" && { left: "calc(100% + 15px)", top: "calc(50% + 4px)", textAlign: "left" }),
-                    ...(m.layout === "top-bottom" && { top: "calc(100% + 12px)", left: "50%", transform: "translateX(-50%)", textAlign: "center" }),
-                    ...(m.layout === "bottom-top" && { bottom: "calc(100% + 12px)", left: "50%", transform: "translateX(-50%)", textAlign: "center" }),
-                  }}
-                >
-                  {m.title && <div className="font-bold text-pink-500 mb-1"><TeamName text={m.title} /></div>}
-                  {m.subtitles?.map((s, i) => (
-                    <div key={i}><TeamName text={s} /></div>
-                  ))}
-                </div>
-              )}
-
-              {/* Dot - This is the only relative element establishing container size */}
-              <div
-                className="w-5 h-5 md:w-7 md:h-7 rounded-full bg-white border-4 md:border-[6px] cursor-pointer shadow-[0_0_10px_rgba(0,0,0,0.1)] transition-transform hover:scale-125"
-                style={{ borderColor: m.color }}
               />
+            )}
 
-              {/* Tooltip Card (Hover) */}
-              <AnimatePresence>
-                {isHovered && (m.achievements.length > 0 || m.awards.length > 0 || m.personal.length > 0) && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.15)] p-5 md:p-6 w-[280px] md:w-[320px] border border-gray-100 z-50 pointer-events-none"
+            {/* Toàn bộ điểm mốc (Điểm tròn + Nhãn năm + Badge) nằm trực tiếp bên trong SVG để đồng bộ toạ độ 100% */}
+            {MILESTONES.map((m) => {
+              const isHovered = hoveredYear === m.year;
+              const textPos = getMilestoneTextPosition(m);
+
+              return (
+                <g
+                  key={m.year}
+                  onClick={() => setSelectedMilestone(m)}
+                  onMouseEnter={() => setHoveredYear(m.year)}
+                  onMouseLeave={() => setHoveredYear(null)}
+                  className="cursor-pointer group"
+                >
+                  {/* Vùng chạm cảm ứng vô hình (bán kính 45px = đường kính 90px cực kỳ dễ chạm trên mobile) */}
+                  <circle
+                    cx={m.x}
+                    cy={m.y}
+                    r="45"
+                    fill="transparent"
+                    className="cursor-pointer"
+                  />
+
+                  {/* Vòng hào quang sáng khi hover */}
+                  <circle
+                    cx={m.x}
+                    cy={m.y}
+                    r={isHovered ? 26 : 0}
+                    fill={m.color}
+                    opacity="0.25"
+                    className="transition-all duration-200"
+                  />
+
+                  {/* Điểm tròn chính nằm chuẩn xác 100% ngay trên đường line */}
+                  <circle
+                    cx={m.x}
+                    cy={m.y}
+                    r={isHovered ? 17 : 13}
+                    fill="white"
+                    stroke={m.color}
+                    strokeWidth={isHovered ? 7 : 5}
+                    className="transition-all duration-200 drop-shadow-sm group-hover:scale-110"
+                  />
+
+                  {/* Tâm điểm tròn */}
+                  <circle
+                    cx={m.x}
+                    cy={m.y}
+                    r={isHovered ? 5.5 : 4}
+                    fill={m.color}
+                    className="transition-all duration-200"
+                  />
+
+                  {/* Nhãn năm */}
+                  <text
+                    x={textPos.x}
+                    y={textPos.y}
+                    textAnchor={textPos.anchor}
+                    fill={m.color}
+                    fontSize={isHovered ? "36" : "32"}
+                    fontWeight="900"
+                    letterSpacing="-0.5"
+                    className="transition-all duration-200 select-none cursor-pointer"
                     style={{
-                      ...(m.layout === "left" ? { left: "30px", top: "-50px" } : {}),
-                      ...(m.layout === "right" ? { right: "30px", top: "-50px" } : {}),
-                      ...(m.layout === "top-bottom" ? { left: "50%", top: "40px", transform: "translateX(-50%)" } : {}),
-                      ...(m.layout === "bottom-top" ? { left: "50%", bottom: "40px", transform: "translateX(-50%)" } : {}),
+                      fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
                     }}
                   >
-                    {m.achievements.length > 0 && (
-                      <div className="mb-4">
-                        <div className="flex items-center gap-2 text-[#0084FF] font-black text-lg mb-2 uppercase">
-                          <span className="text-2xl">👑</span> THÀNH TÍCH NỔI BẬT
-                        </div>
-                        <ul className="text-gray-700 text-sm md:text-[15px] leading-relaxed">
-                          {m.achievements.map((item, idx) => (
-                            <li key={idx}>• <TeamName text={item} /></li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                    {m.year}
+                    {[2023, 2024, 2025].includes(m.year) ? " 👑" : ""}
+                  </text>
 
-                    {m.awards.length > 0 && (
-                      <div className="mb-4">
-                        <div className="flex items-center gap-2 text-[#F59E0B] font-black text-lg mb-2 uppercase">
-                          <span className="text-2xl">🏆</span> GIẢI THƯỞNG CÁ NHÂN
-                        </div>
-                        <ul className="text-gray-700 text-sm md:text-[15px] leading-relaxed">
-                          {m.awards.map((item, idx) => (
-                            <li key={idx}>• <TeamName text={item} /></li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                  {/* Nhãn phụ đội tuyển / giải đấu */}
+                  <text
+                    x={textPos.x}
+                    y={textPos.y + 24}
+                    textAnchor={textPos.anchor}
+                    fill="#64748B"
+                    fontSize="18"
+                    fontWeight="700"
+                    className="transition-all duration-200 select-none cursor-pointer"
+                    style={{
+                      fontFamily: "var(--font-montserrat), Montserrat, sans-serif",
+                    }}
+                  >
+                    {textPos.badge}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
 
-                    {m.personal.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 text-[#FF61B6] font-black text-lg mb-2 uppercase">
-                          <span className="text-2xl">🚩</span> CỘT MỐC CÁ NHÂN
-                        </div>
-                        <ul className="text-gray-700 text-sm md:text-[15px] leading-relaxed">
-                          {m.personal.map((item, idx) => (
-                            <li key={idx}>• <TeamName text={item} /></li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </motion.div>
+          {/* Tooltip Hover cho Desktop (chỉ hiện khi rê chuột trên máy tính) */}
+          <AnimatePresence>
+            {hoveredMilestone && (hoveredMilestone.achievements.length > 0 || hoveredMilestone.awards.length > 0 || hoveredMilestone.personal.length > 0) && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                className="hidden md:block absolute bg-white rounded-2xl shadow-[0_12px_45px_rgba(0,0,0,0.18)] p-5 w-[290px] lg:w-[330px] border border-gray-100 z-50 pointer-events-none"
+                style={{
+                  left: `${(hoveredMilestone.x / 1000) * 100}%`,
+                  top: `${(hoveredMilestone.y / 1200) * 100}%`,
+                  transform: "translate(-50%, -115%)",
+                }}
+              >
+                {hoveredMilestone.achievements.length > 0 && (
+                  <div className="mb-2.5">
+                    <div className="flex items-center gap-1.5 text-[#0084FF] font-black text-xs uppercase mb-1">
+                      <span>👑</span> THÀNH TÍCH
+                    </div>
+                    <ul className="text-gray-700 text-xs leading-relaxed space-y-0.5">
+                      {hoveredMilestone.achievements.slice(0, 3).map((item, idx) => (
+                        <li key={idx} className="truncate">• <TeamName text={item} /></li>
+                      ))}
+                      {hoveredMilestone.achievements.length > 3 && (
+                        <li className="text-gray-400 font-medium text-[11px]">+ {hoveredMilestone.achievements.length - 3} thành tích khác...</li>
+                      )}
+                    </ul>
+                  </div>
                 )}
-              </AnimatePresence>
+
+                {hoveredMilestone.awards.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-1.5 text-[#F59E0B] font-black text-xs uppercase mb-1">
+                      <span>🏆</span> GIẢI THƯỞNG
+                    </div>
+                    <ul className="text-gray-700 text-xs leading-relaxed space-y-0.5">
+                      {hoveredMilestone.awards.slice(0, 2).map((item, idx) => (
+                        <li key={idx} className="truncate">• <TeamName text={item} /></li>
+                      ))}
+                      {hoveredMilestone.awards.length > 2 && (
+                        <li className="text-gray-400 font-medium text-[11px]">+ {hoveredMilestone.awards.length - 2} giải thưởng khác...</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
               </motion.div>
-            </div>
-          );
-        })}
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-      </div>
+
+      {/* Modal Popup Portal gắn thẳng vào document.body - Thiết kế chuẩn giống hệt Laptop, không bị bất kỳ layer nào che */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {selectedMilestone && (
+              <div
+                className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs cursor-pointer"
+                onClick={() => setSelectedMilestone(null)}
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.92, y: 15 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="w-full max-w-[340px] min-[420px]:max-w-[400px] sm:max-w-[460px] bg-white rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] border border-gray-100 p-5 sm:p-6 max-h-[85vh] overflow-y-auto cursor-default"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Body: Thiết kế chuẩn form trắng thanh thoát giống hệt Laptop */}
+                  <div className="space-y-4">
+                    {/* Subtitles (Static Info) */}
+                    {(selectedMilestone.title || (selectedMilestone.subtitles && selectedMilestone.subtitles.length > 0)) && (
+                      <div className="text-xs sm:text-[13px] text-gray-700 font-medium space-y-1 pb-1">
+                        {selectedMilestone.title && (
+                          <div className="font-bold text-pink-500 mb-1">
+                            <TeamName text={selectedMilestone.title} />
+                          </div>
+                        )}
+                        {selectedMilestone.subtitles?.map((s, idx) => (
+                          <div key={idx} className="leading-snug">
+                            <TeamName text={s} />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* 👑 THÀNH TÍCH NỔI BẬT */}
+                    {selectedMilestone.achievements.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 text-[#0084FF] font-black text-base sm:text-lg mb-2 uppercase">
+                          <span className="text-xl sm:text-2xl">👑</span> THÀNH TÍCH NỔI BẬT
+                        </div>
+                        <ul className="text-gray-700 text-xs sm:text-sm leading-relaxed space-y-1">
+                          {selectedMilestone.achievements.map((item, idx) => (
+                            <li key={idx}>• <TeamName text={item} /></li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* 🏆 GIẢI THƯỞNG CÁ NHÂN */}
+                    {selectedMilestone.awards.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 text-[#F59E0B] font-black text-base sm:text-lg mb-2 uppercase">
+                          <span className="text-xl sm:text-2xl">🏆</span> GIẢI THƯỞNG CÁ NHÂN
+                        </div>
+                        <ul className="text-gray-700 text-xs sm:text-sm leading-relaxed space-y-1">
+                          {selectedMilestone.awards.map((item, idx) => (
+                            <li key={idx}>• <TeamName text={item} /></li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* 🚩 CỘT MỐC CÁ NHÂN */}
+                    {selectedMilestone.personal.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 text-[#FF61B6] font-black text-base sm:text-lg mb-2 uppercase">
+                          <span className="text-xl sm:text-2xl">🚩</span> CỘT MỐC CÁ NHÂN
+                        </div>
+                        <ul className="text-gray-700 text-xs sm:text-sm leading-relaxed space-y-1">
+                          {selectedMilestone.personal.map((item, idx) => (
+                            <li key={idx}>• <TeamName text={item} /></li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Năm không có thành tích */}
+                    {selectedMilestone.achievements.length === 0 &&
+                      selectedMilestone.awards.length === 0 &&
+                      selectedMilestone.personal.length === 0 && (
+                        <div className="py-2 text-gray-500 text-xs sm:text-sm leading-relaxed">
+                          Giai đoạn khởi đầu sự nghiệp thi đấu của Ryu Minseok trước khi bước lên đấu trường chuyên nghiệp LCK.
+                        </div>
+                      )}
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
     </section>
   );
 }
