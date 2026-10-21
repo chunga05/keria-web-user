@@ -219,7 +219,20 @@ export function useWishes(
       currentCount: number,
       hasReacted: boolean
     ) => {
-      if (!visitorId) {
+      let activeVisitorId = visitorId;
+      if (!activeVisitorId && typeof window !== "undefined") {
+        try {
+          activeVisitorId = localStorage.getItem("keria_visitor_id");
+          if (!activeVisitorId) {
+            activeVisitorId = "v_" + Date.now() + "_" + Math.random().toString(36).slice(2, 9);
+            localStorage.setItem("keria_visitor_id", activeVisitorId);
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      if (!activeVisitorId) {
         console.warn("⚠️ Chưa có visitorId, chưa thể reaction");
         return;
       }
@@ -284,7 +297,7 @@ export function useWishes(
           },
           body: JSON.stringify({
             wishId: messageId,
-            visitorId,
+            visitorId: activeVisitorId,
             reactionType,
           }),
         });
@@ -318,21 +331,20 @@ export function useWishes(
         );
         
         // Đồng bộ lại state userReactions theo kết quả từ backend
-        if (result.reacted !== !hasReacted) {
-           setUserReactions((prev) => {
-              const current = prev[messageId] || [];
-              if (result.reacted) {
-                 if (current.includes(reactionType)) return prev;
-                 return { ...prev, [messageId]: [...current, reactionType] };
-              } else {
-                 const filtered = current.filter((t) => t !== reactionType);
-                 if (filtered.length > 0) return { ...prev, [messageId]: filtered };
-                 const next = { ...prev };
-                 delete next[messageId];
-                 return next;
-              }
-           });
-        }
+        setUserReactions((prev) => {
+          const current = prev[messageId] || [];
+          if (result.reacted) {
+            if (current.includes(reactionType)) return prev;
+            return { ...prev, [messageId]: [...current, reactionType] };
+          } else {
+            if (!current.includes(reactionType)) return prev;
+            const filtered = current.filter((t) => t !== reactionType);
+            if (filtered.length > 0) return { ...prev, [messageId]: filtered };
+            const next = { ...prev };
+            delete next[messageId];
+            return next;
+          }
+        });
       } catch (error) {
         console.error("❌ Lỗi reaction:", error);
         

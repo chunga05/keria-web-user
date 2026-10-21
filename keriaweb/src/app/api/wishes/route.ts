@@ -19,10 +19,14 @@ export async function GET(request: Request) {
     const cacheSuffix = isTop ? "top" : isAscending ? "old" : "new";
     const CACHE_KEY = `wishes_api_i${idolId}_p${page}_s${pageSize}_${cacheSuffix}`;
 
-    const cachedData = await redis.get(CACHE_KEY);
-    if (cachedData) {
-      console.log("⚡ [API WISHES GET] Phản hồi ngay từ Redis Cache:", CACHE_KEY);
-      return NextResponse.json(JSON.parse(cachedData));
+    try {
+      const cachedData = await redis.get(CACHE_KEY);
+      if (cachedData) {
+        console.log("⚡ [API WISHES GET] Phản hồi ngay từ Redis Cache:", CACHE_KEY);
+        return NextResponse.json(JSON.parse(cachedData));
+      }
+    } catch (redisGetError) {
+      console.warn("⚠️ [API WISHES GET] Không thể lấy cache từ Redis:", redisGetError);
     }
 
     // ============================================================
@@ -103,7 +107,11 @@ export async function GET(request: Request) {
     // 4. LƯU KẾT QUẢ VÀO REDIS CACHE (30 GIÂY)
     // ============================================================
     if (formattedMessages.length > 0) {
-      await redis.set(CACHE_KEY, JSON.stringify(responseData), "EX", 30);
+      try {
+        await redis.set(CACHE_KEY, JSON.stringify(responseData), "EX", 30);
+      } catch (redisSetError) {
+        console.warn("⚠️ [API WISHES GET] Không thể lưu cache Redis:", redisSetError);
+      }
     }
 
     return NextResponse.json(responseData);

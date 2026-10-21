@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { clearWishesCache } from "@/app/actions/wishes";
 
 const VALID_REACTIONS = [
   "heart",
@@ -94,6 +95,13 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    // ==========================================
+    // XÓA REDIS CACHE BẤT ĐỒNG BỘ
+    // ==========================================
+    clearWishesCache().catch((err) => {
+      console.error("❌ Lỗi xóa cache wishes sau reaction:", err);
+    });
 
     return NextResponse.json({
       success: true,
