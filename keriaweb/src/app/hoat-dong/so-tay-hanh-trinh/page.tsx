@@ -542,36 +542,36 @@ export default function SoTayHanhTrinhPage() {
             {/* LƯỢT 0: 2 TRANG ĐẦU GỐC */}
             {turnIndex === 0 && (
               <>
-                <div className="absolute top-[8%] left-[13%] w-[35.5%] md:w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm pointer-events-none z-10">
+                <div className="absolute top-[8%] left-[13%] w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] overflow-hidden drop-shadow-sm pointer-events-none z-10">
                   <Image src="/images/handbook/page1.png" alt="Page 1" fill className="w-full h-full object-contain" />
                   <div className="absolute top-[40%] left-[12%] w-[76%] aspect-[430/190]">
                     <Image src="/images/handbook/title_new.png" alt="Theo Dấu Chân Cún" fill className="w-full h-full object-contain drop-shadow" />
                   </div>
                 </div>
 
-                <div className="absolute top-[8%] right-[13.3%] w-[35.5%] md:w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page2.png" alt="Page 2" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative w-full h-[50%] md:h-[52%] lg:h-[54%]">
-                    <div className="absolute top-[12%] md:top-[14%] xl:top-[15%] -left-[6%] md:-left-[12%] w-[65%] aspect-[288/357]">
+                    <div className="absolute top-[12%] md:top-[14%] xl:top-[15%] -left-[12%] w-[65%] aspect-[3/4]">
                       <div className="relative w-full h-full">
                         <Image src="/images/handbook/anhbia_inner_new.png" alt="Anime Character" fill className="w-full h-full object-contain" />
                       </div>
                     </div>
-                    <div className="absolute top-[4%] left-[30%] md:left-[34%] w-[18%] aspect-[51/55] pointer-events-none z-20 rotate-6">
+                    <div className="absolute top-[5%] left-[34%] w-[18%] aspect-square pointer-events-none z-20 rotate-6">
                       <Image src="/images/handbook/crown.png" alt="Crown" fill className="w-full h-full object-contain" />
                     </div>
-                    <div className="absolute -top-[6%] -left-[4%] md:-left-[18%] xl:-left-[24%] w-[26%] md:w-[30%] aspect-[114/163] pointer-events-none z-20">
+                    <div className="hidden md:block absolute -top-[7%] -left-[27%] w-[30%] aspect-[1/2] pointer-events-none z-20">
                       <Image src="/images/handbook/ghim.png" alt="Clip Star" fill className="w-full h-full object-contain drop-shadow-sm" />
                     </div>
-                    <div className="absolute bottom-[6%] -left-[4%] md:-left-[14%] xl:-left-[17%] w-[16%] md:w-[17%] aspect-square pointer-events-none z-20">
+                    <div className="absolute bottom-[8%] -left-[17%] w-[17%] aspect-square pointer-events-none z-20">
                       <Image src="/images/handbook/heart.png" alt="Heart sticker" fill className="w-full h-full object-contain drop-shadow-sm" />
                     </div>
-                    <div className="absolute top-[12%] -right-[12%] md:-right-[22%] xl:-right-[29%] w-[20%] md:w-[22%] aspect-square pointer-events-none z-20 rotate-12 drop-shadow-sm">
+                    <div className="absolute top-[15%] right-[-29%] w-[22%] aspect-square pointer-events-none z-20 rotate-12 drop-shadow-sm">
                       <Image src="/images/handbook/vientrang.png" alt="Star White Border" fill className="w-full h-full object-contain" />
                     </div>
                     
-                    <div className="absolute top-[32%] -right-[4%] md:-right-[7%] w-[65%] flex flex-col items-start gap-[2%] z-10">
+                    <div className="absolute top-[34%] right-[-7%] w-[65%] flex flex-col items-start gap-[2%] z-10">
                       <div className="relative w-full aspect-[260/100]">
                         <Image src="/images/handbook/smalltitle.png" alt="KERIA" fill className="w-full h-full object-contain" />
                       </div>
@@ -586,7 +586,7 @@ export default function SoTayHanhTrinhPage() {
                   </div>
 
                   {/* THÔNG TIN USER */}
-                  <div className="absolute left-[12%] bottom-[8%] sm:bottom-[8%] md:bottom-[7%] lg:bottom-[9%] xl:bottom-[12%] w-[76%] flex flex-col gap-1 sm:gap-1.5 md:gap-2 lg:gap-2.5 xl:gap-[6%] px-[2%] pb-[1%]">
+                  <div className="absolute left-[13%] bottom-[8%] sm:bottom-[8%] md:bottom-[7%] lg:bottom-[9%] xl:bottom-[12%] w-[75%] flex flex-col gap-1 sm:gap-1.5 md:gap-2 lg:gap-2.5 xl:gap-[6%] px-[2%] pb-[1%]">
                     <div className="flex flex-col">
                       <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1 font-medium">Tên/Nickname</span>
                       <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[18px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
@@ -617,7 +617,7 @@ export default function SoTayHanhTrinhPage() {
             {turnIndex > 0 && (
               <>
                 {/* TRANG TRÁI */}
-                <div className="absolute top-[8%] left-[13%] w-[35.5%] md:w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] left-[13%] w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page3.png" alt="Left Page Pink" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative z-10 text-center border-b border-pink-300/60 pb-[2%] mt-[12%] md:mt-[14%] xl:mt-[15%]">
@@ -671,7 +671,7 @@ export default function SoTayHanhTrinhPage() {
                 </div>
 
                 {/* TRANG PHẢI */}
-                <div className="absolute top-[8%] right-[13.3%] w-[35.5%] md:w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
+                <div className="absolute top-[8%] right-[13.3%] w-[35%] h-[85%] sm:h-[86%] md:h-[88%] rounded-[14px] drop-shadow-sm z-10 overflow-visible p-[4%] pb-[5%] md:p-[5%] xl:p-[6%] flex flex-col justify-between">
                   <Image src="/images/handbook/page4.png" alt="Right Page Blue" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative z-10 text-center border-b border-blue-300/60 pb-[2%] mt-[12%] md:mt-[14%] xl:mt-[15%]">
