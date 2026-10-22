@@ -246,6 +246,39 @@ function getMilestoneTextPosition(m: Milestone) {
   return { x: 155, y: 998, anchor: "start" as const, badge: "T1 (Hiện tại)" };
 }
 
+// Helper tính toán toạ độ và căn chỉnh Tooltip hover thông minh, không bị tràn viền màn hình hay che nhãn năm
+function getTooltipStyle(m: Milestone) {
+  if (m.year === 2017) {
+    // Năm 2017 nằm sát mép trên, mở tooltip xuống dưới để không che chữ "2017" và không vượt khung trên
+    return {
+      left: `${(m.x / 1000) * 100}%`,
+      top: `${(m.y / 1200) * 100}%`,
+      transform: "translate(-50%, 25px)",
+    };
+  }
+  if (m.x <= 150) {
+    // Cung lượn bên trái (2018, 2022, 2026): né tràn lề trái
+    return {
+      left: `${(m.x / 1000) * 100}%`,
+      top: `${(m.y / 1200) * 100}%`,
+      transform: "translate(-10%, -115%)",
+    };
+  }
+  if (m.x >= 850) {
+    // Cung lượn bên phải (2020, 2024): né tràn lề phải
+    return {
+      left: `${(m.x / 1000) * 100}%`,
+      top: `${(m.y / 1200) * 100}%`,
+      transform: "translate(-90%, -115%)",
+    };
+  }
+  return {
+    left: `${(m.x / 1000) * 100}%`,
+    top: `${(m.y / 1200) * 100}%`,
+    transform: "translate(-50%, -115%)",
+  };
+}
+
 // Vệt sáng chạy dọc từ đầu đến cuối
 const RUN_DURATION = 12;
 
@@ -470,7 +503,7 @@ export default function TimelineAchievements() {
                     fill="white"
                     stroke={m.color}
                     strokeWidth={isHovered ? 7 : 5}
-                    className="transition-all duration-200 drop-shadow-sm group-hover:scale-110"
+                    className="transition-all duration-200 drop-shadow-sm"
                   />
 
                   {/* Tâm điểm tròn */}
@@ -522,19 +555,49 @@ export default function TimelineAchievements() {
 
           {/* Tooltip Hover cho Desktop (chỉ hiện khi rê chuột trên máy tính) */}
           <AnimatePresence>
-            {hoveredMilestone && (hoveredMilestone.achievements.length > 0 || hoveredMilestone.awards.length > 0 || hoveredMilestone.personal.length > 0) && (
+            {hoveredMilestone && (
               <motion.div
+                key={hoveredMilestone.year}
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
                 className="hidden md:block absolute bg-white rounded-2xl shadow-[0_12px_45px_rgba(0,0,0,0.18)] p-5 w-[290px] lg:w-[330px] border border-gray-100 z-50 pointer-events-none"
-                style={{
-                  left: `${(hoveredMilestone.x / 1000) * 100}%`,
-                  top: `${(hoveredMilestone.y / 1200) * 100}%`,
-                  transform: "translate(-50%, -115%)",
-                }}
+                style={getTooltipStyle(hoveredMilestone)}
               >
+                {/* Header năm & badge trong tooltip */}
+                <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-gray-100">
+                  <span className="font-black text-sm text-[#102652]">
+                    NĂM {hoveredMilestone.year}
+                  </span>
+                  <span
+                    className="text-xs font-bold px-2 py-0.5 rounded-full"
+                    style={{
+                      backgroundColor: `${hoveredMilestone.color}15`,
+                      color: hoveredMilestone.color,
+                    }}
+                  >
+                    {getMilestoneTextPosition(hoveredMilestone).badge}
+                  </span>
+                </div>
+
+                {/* Subtitles & Title (dành cho năm 2017, 2018, 2019, 2020) */}
+                {(hoveredMilestone.title || (hoveredMilestone.subtitles && hoveredMilestone.subtitles.length > 0)) && (
+                  <div className="mb-2.5">
+                    {hoveredMilestone.title && (
+                      <div className="font-bold text-pink-500 text-xs mb-1">
+                        <TeamName text={hoveredMilestone.title} />
+                      </div>
+                    )}
+                    {hoveredMilestone.subtitles?.map((s, idx) => (
+                      <div key={idx} className="text-gray-600 text-xs leading-relaxed">
+                        <TeamName text={s} />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* 👑 THÀNH TÍCH */}
                 {hoveredMilestone.achievements.length > 0 && (
                   <div className="mb-2.5">
                     <div className="flex items-center gap-1.5 text-[#0084FF] font-black text-xs uppercase mb-1">
@@ -551,8 +614,9 @@ export default function TimelineAchievements() {
                   </div>
                 )}
 
+                {/* 🏆 GIẢI THƯỞNG */}
                 {hoveredMilestone.awards.length > 0 && (
-                  <div>
+                  <div className="mb-2">
                     <div className="flex items-center gap-1.5 text-[#F59E0B] font-black text-xs uppercase mb-1">
                       <span>🏆</span> GIẢI THƯỞNG
                     </div>
@@ -566,6 +630,34 @@ export default function TimelineAchievements() {
                     </ul>
                   </div>
                 )}
+
+                {/* 🚩 CỘT MỐC CÁ NHÂN (chỉ hiện khi không có giải thưởng để tránh tooltip quá dài) */}
+                {hoveredMilestone.awards.length === 0 && hoveredMilestone.personal.length > 0 && (
+                  <div className="mb-2">
+                    <div className="flex items-center gap-1.5 text-[#FF61B6] font-black text-xs uppercase mb-1">
+                      <span>🚩</span> CỘT MỐC CÁ NHÂN
+                    </div>
+                    <ul className="text-gray-700 text-xs leading-relaxed space-y-0.5">
+                      {hoveredMilestone.personal.slice(0, 2).map((item, idx) => (
+                        <li key={idx} className="truncate">• <TeamName text={item} /></li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Giai đoạn khởi đầu nếu không có thành tích / giải thưởng (2017, 2018, 2019) */}
+                {hoveredMilestone.achievements.length === 0 &&
+                  hoveredMilestone.awards.length === 0 &&
+                  hoveredMilestone.personal.length === 0 && (
+                    <p className="text-gray-400 text-[11px] italic leading-snug mt-1">
+                      Giai đoạn khởi đầu sự nghiệp thi đấu của Ryu Minseok trước LCK.
+                    </p>
+                  )}
+
+                <div className="mt-2.5 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400 font-medium">
+                  <span>Xem chi tiết</span>
+                  <span className="text-[#0084FF] font-semibold">Nhấn để mở ↗</span>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
