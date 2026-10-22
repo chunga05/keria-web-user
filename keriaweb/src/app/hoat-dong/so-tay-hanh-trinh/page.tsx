@@ -443,12 +443,13 @@ export default function SoTayHanhTrinhPage() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           className={`
-            relative z-20 aspect-[720/1024] md:aspect-[792/1070] [perspective:3000px]
-            w-[86vw] max-w-[410px] md:w-[44vw] lg:w-[36vw] xl:w-[35%]
+            relative z-20 aspect-[792/1070] [perspective:3000px]
+            w-[84vw] max-w-[360px] md:w-[44vw] lg:w-[36vw] xl:w-[35%] md:max-w-none
             transition-all duration-[700ms] ease-[cubic-bezier(0.25,1,0.5,1)]
+            overflow-visible
             ${isOpen
-              ? 'overflow-hidden md:overflow-visible translate-x-0 md:translate-x-[50%] scale-100 md:scale-100 lg:scale-100 xl:scale-[1.02]'
-              : 'overflow-visible translate-x-0 scale-100 md:scale-[1.55] lg:scale-[1.28] xl:scale-100'
+              ? 'translate-x-0 md:translate-x-[50%] scale-100 md:scale-100 lg:scale-100 xl:scale-[1.02]'
+              : 'translate-x-0 scale-100 md:scale-[1.55] lg:scale-[1.28] xl:scale-100'
             }
           `}
         >
@@ -478,17 +479,17 @@ export default function SoTayHanhTrinhPage() {
                 ? 'opacity-100 delay-100 pointer-events-auto [transform:scale(1)]'
                 : 'opacity-0 pointer-events-none [transform:scale(0.95)]'
               }
-              w-[200%] left-0
-              ${mobileSide === 'right' ? '-translate-x-1/2' : 'translate-x-0'}
-              md:left-[-100%] md:w-[200%] md:translate-x-0
-              md:drop-shadow-[0_15px_35px_rgba(0,0,0,0.35)]
+              w-[190%]
+              ${mobileSide === 'right' ? '-left-[80%]' : '-left-[5%]'}
+              md:left-[-100%] md:w-[200%]
+              drop-shadow-[0_15px_35px_rgba(0,0,0,0.35)]
             `}
           >
             <Image
               src="/images/handbook/openbook.png"
               alt="Open Book Inside"
               fill
-              className="w-full h-full object-fill md:object-contain pointer-events-none"
+              className="w-full h-full object-contain pointer-events-none"
             />
 
             {/* NÚT ĐÓNG SỔ (DESKTOP) */}
