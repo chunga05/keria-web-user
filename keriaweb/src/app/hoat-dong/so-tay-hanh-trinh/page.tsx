@@ -664,7 +664,7 @@ export default function SoTayHanhTrinhPage() {
                       </div>
                     )}
                   </div>
-                  <div className="relative z-10 w-full text-center pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
+                  <div className="relative z-10 w-full text-center pt-[1%] pb-[8%] sm:pb-[9%] md:pb-[10%] lg:pb-[11%] xl:pb-[12%]">
                     <span className="text-[7.5px] sm:text-[8.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-pink-400 uppercase tracking-wider inline-block leading-normal">All for one, one for keria</span>
                   </div>
                 </div>
@@ -725,7 +725,7 @@ export default function SoTayHanhTrinhPage() {
                       </div>
                     )}
                   </div>
-                  <div className="relative z-10 w-full text-center pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
+                  <div className="relative z-10 w-full text-center pt-[1%] pb-[8%] sm:pb-[9%] md:pb-[10%] lg:pb-[11%] xl:pb-[12%]">
                     <span className="text-[7.5px] sm:text-[8.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-blue-400 uppercase tracking-wider inline-block leading-normal">All for one, one for keria</span>
                   </div>
                 </div>
