@@ -553,25 +553,35 @@ export default function SoTayHanhTrinhPage() {
                   <Image src="/images/handbook/page2.png" alt="Page 2" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative w-full h-[50%] md:h-[52%] lg:h-[54%]">
-                    <div className="absolute top-[12%] md:top-[14%] xl:top-[15%] -left-[12%] w-[65%] aspect-[3/4]">
+                    {/* KHUNG ẢNH IDOL & STICKERS (Ghim, Vương miện, Trái tim) */}
+                    <div className="absolute top-[10%] md:top-[14%] xl:top-[15%] left-[2%] md:-left-[12%] w-[58%] md:w-[65%] aspect-[288/357] md:aspect-[3/4]">
                       <div className="relative w-full h-full">
                         <Image src="/images/handbook/anhbia_inner_new.png" alt="Anime Character" fill className="w-full h-full object-contain" />
                       </div>
+
+                      {/* Ghim clip (kẹp vào góc trên bên trái khung ảnh) */}
+                      <div className="absolute -top-[14%] -left-[6%] md:-top-[7%] md:-left-[27%] w-[28%] md:w-[30%] aspect-[114/163] md:aspect-[1/2] pointer-events-none z-20">
+                        <Image src="/images/handbook/ghim.png" alt="Clip Star" fill className="w-full h-full object-contain drop-shadow-sm" />
+                      </div>
+
+                      {/* Vương miện (đặt trên đỉnh mũ sinh nhật) */}
+                      <div className="absolute -top-[11%] left-[34%] w-[25%] md:w-[18%] aspect-[51/55] md:aspect-square pointer-events-none z-20 rotate-6">
+                        <Image src="/images/handbook/crown.png" alt="Crown" fill className="w-full h-full object-contain" />
+                      </div>
+
+                      {/* Trái tim hồng (đặt ở góc dưới bên trái khung ảnh) */}
+                      <div className="absolute -bottom-[4%] -left-[3%] md:bottom-[8%] md:-left-[17%] w-[18%] md:w-[17%] aspect-square pointer-events-none z-20">
+                        <Image src="/images/handbook/heart.png" alt="Heart sticker" fill className="w-full h-full object-contain drop-shadow-sm" />
+                      </div>
                     </div>
-                    <div className="absolute top-[5%] left-[34%] w-[18%] aspect-square pointer-events-none z-20 rotate-6">
-                      <Image src="/images/handbook/crown.png" alt="Crown" fill className="w-full h-full object-contain" />
-                    </div>
-                    <div className="hidden md:block absolute -top-[7%] -left-[27%] w-[30%] aspect-[1/2] pointer-events-none z-20">
-                      <Image src="/images/handbook/ghim.png" alt="Clip Star" fill className="w-full h-full object-contain drop-shadow-sm" />
-                    </div>
-                    <div className="absolute bottom-[8%] -left-[17%] w-[17%] aspect-square pointer-events-none z-20">
-                      <Image src="/images/handbook/heart.png" alt="Heart sticker" fill className="w-full h-full object-contain drop-shadow-sm" />
-                    </div>
-                    <div className="absolute top-[15%] right-[-29%] w-[22%] aspect-square pointer-events-none z-20 rotate-12 drop-shadow-sm">
+
+                    {/* Ngôi sao viền trắng góc trên bên phải */}
+                    <div className="absolute top-[6%] md:top-[15%] right-[0%] md:right-[-29%] w-[18%] md:w-[22%] aspect-[84/87] md:aspect-square pointer-events-none z-20 rotate-12 drop-shadow-sm">
                       <Image src="/images/handbook/vientrang.png" alt="Star White Border" fill className="w-full h-full object-contain" />
                     </div>
                     
-                    <div className="absolute top-[34%] right-[-7%] w-[65%] flex flex-col items-start gap-[2%] z-10">
+                    {/* Cụm chữ KERIA PAWPORT */}
+                    <div className="absolute top-[28%] md:top-[34%] right-[0%] md:right-[-7%] w-[48%] md:w-[65%] flex flex-col items-start gap-[2%] z-10">
                       <div className="relative w-full aspect-[260/100]">
                         <Image src="/images/handbook/smalltitle.png" alt="KERIA" fill className="w-full h-full object-contain" />
                       </div>
@@ -580,33 +590,34 @@ export default function SoTayHanhTrinhPage() {
                       </div>
                     </div>
 
-                    <div className="absolute bottom-[2%] md:bottom-[0%] lg:bottom-[-2%] xl:bottom-[-5%] right-[1%] w-[40%] md:w-[42%] lg:w-[45%] aspect-square pointer-events-none z-20">
+                    {/* Mũi tên cong trỏ xuống thông tin */}
+                    <div className="absolute top-[44%] md:top-auto md:bottom-[2%] xl:bottom-[-5%] right-[10%] md:right-[1%] w-[26%] md:w-[42%] lg:w-[45%] aspect-square pointer-events-none z-20">
                       <Image src="/images/handbook/arrow.png" alt="Arrow" fill className="w-full h-full object-contain drop-shadow-sm" />
                     </div>
                   </div>
 
                   {/* THÔNG TIN USER */}
-                  <div className="absolute left-[13%] bottom-[8%] sm:bottom-[8%] md:bottom-[7%] lg:bottom-[9%] xl:bottom-[12%] w-[75%] flex flex-col gap-1 sm:gap-1.5 md:gap-2 lg:gap-2.5 xl:gap-[6%] px-[2%] pb-[1%]">
+                  <div className="absolute left-[8%] md:left-[13%] bottom-[5%] sm:bottom-[6%] md:bottom-[7%] lg:bottom-[9%] xl:bottom-[12%] w-[84%] md:w-[75%] flex flex-col gap-1 sm:gap-1.5 md:gap-2 lg:gap-2.5 xl:gap-[6%] px-[2%] pb-[1%]">
                     <div className="flex flex-col">
                       <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1 font-medium">Tên/Nickname</span>
-                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[18px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <div className="w-full bg-white/80 rounded-[4px] md:rounded-md px-2 md:px-2.5 text-[10.5px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[20px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.nickname}
                       </div>
                     </div>
                     <div className="flex flex-col">
                       <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1 font-medium">Ngày khởi hành</span>
-                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[18px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <div className="w-full bg-white/80 rounded-[4px] md:rounded-md px-2 md:px-2.5 text-[10.5px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[20px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.departureDate}
                       </div>
                     </div>
                     <div className="flex flex-col">
                       <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1 font-medium">Địa bàn hoạt động</span>
-                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[18px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <div className="w-full bg-white/80 rounded-[4px] md:rounded-md px-2 md:px-2.5 text-[10.5px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[20px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.location}
                       </div>
                     </div>
-                    <div className="w-full text-center mt-0.5 md:mt-1 xl:mt-[2%]">
-                      <span className="text-[7px] sm:text-[8px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-medium text-gray-400">Passport by: DearKeriaVN</span>
+                    <div className="w-full text-center mt-1 md:mt-1 xl:mt-[2%]">
+                      <span className="text-[7.5px] sm:text-[8px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-medium text-gray-400">Passport by DearKeriaVN</span>
                     </div>
                   </div>
                 </div>
