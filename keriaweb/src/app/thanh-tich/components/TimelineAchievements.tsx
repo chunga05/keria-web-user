@@ -654,10 +654,6 @@ export default function TimelineAchievements() {
                     </p>
                   )}
 
-                <div className="mt-2.5 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400 font-medium">
-                  <span>Xem chi tiết</span>
-                  <span className="text-[#0084FF] font-semibold">Nhấn để mở ↗</span>
-                </div>
               </motion.div>
             )}
           </AnimatePresence>
