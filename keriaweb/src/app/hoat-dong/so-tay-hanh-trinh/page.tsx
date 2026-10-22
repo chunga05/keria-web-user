@@ -23,6 +23,19 @@ export default function SoTayHanhTrinhPage() {
   const [isInstructionOpen, setIsInstructionOpen] = useState(false);
   const [isNhanDauOpen, setIsNhanDauOpen] = useState(false);
 
+  // Phân trang hiển thị từng bên trên Mobile
+  const [mobileSide, setMobileSide] = useState<'left' | 'right'>('left');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Touch swipe support cho mobile
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
@@ -35,19 +48,11 @@ export default function SoTayHanhTrinhPage() {
     const touchEndX = e.changedTouches[0].clientX;
     const diff = touchStartX - touchEndX;
     if (diff > 45) {
-      if (!isOpen) {
-        setIsOpen(true);
-      } else if (turnIndex < maxTurnIndex) {
-        setTurnIndex((prev) => prev + 1);
-      }
+      if (isMobile) handleMobileNext();
+      else handleDesktopNext();
     } else if (diff < -45) {
-      if (isOpen) {
-        if (turnIndex > 0) {
-          setTurnIndex((prev) => prev - 1);
-        } else {
-          setIsOpen(false);
-        }
-      }
+      if (isMobile) handleMobilePrev();
+      else handleDesktopPrev();
     }
     setTouchStartX(null);
   };
@@ -186,27 +191,85 @@ export default function SoTayHanhTrinhPage() {
   ]);
 
   // ============================================================
-  // NÚT PREV
+  // ĐIỀU HƯỚNG PREV / NEXT (Hỗ trợ cả Mobile từng trang & Laptop 2 trang)
   // ============================================================
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const isMobileFirstPage = isMobile && isOpen && turnIndex === 0 && mobileSide === 'left';
+  const isMobileLastPage = isMobile && isOpen && turnIndex >= maxTurnIndex && mobileSide === 'right';
 
-    if (turnIndex > 0) {
+  const handleMobilePrev = () => {
+    if (!isOpen) return;
+    if (mobileSide === 'right') {
+      setMobileSide('left');
+    } else {
+      if (turnIndex > 0) {
+        setTurnIndex((prev) => prev - 1);
+        setMobileSide('right');
+      } else {
+        setIsOpen(false);
+      }
+    }
+  };
+
+  const handleMobileNext = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+      setTurnIndex(0);
+      setMobileSide('left');
+      return;
+    }
+    if (mobileSide === 'left') {
+      setMobileSide('right');
+    } else {
+      if (turnIndex < maxTurnIndex) {
+        setTurnIndex((prev) => prev + 1);
+        setMobileSide('left');
+      }
+    }
+  };
+
+  const handleDesktopPrev = () => {
+    if (!isOpen) return;
+    if (turnIndex === 0) {
+      setIsOpen(false);
+    } else {
       setTurnIndex((prev) => prev - 1);
     }
   };
 
-  // ============================================================
-  // NÚT NEXT
-  // ============================================================
-
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (turnIndex < maxTurnIndex) {
+  const handleDesktopNext = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+      setTurnIndex(0);
+    } else if (turnIndex < maxTurnIndex) {
       setTurnIndex((prev) => prev + 1);
     }
+  };
+
+  const handlePrevAction = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (isMobile) {
+      handleMobilePrev();
+    } else {
+      handleDesktopPrev();
+    }
+  };
+
+  const handleNextAction = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (isMobile) {
+      handleMobileNext();
+    } else {
+      handleDesktopNext();
+    }
+  };
+
+  const handlePrev = (e: React.MouseEvent) => {
+    handlePrevAction(e);
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    handleNextAction(e);
   };
 
   // ============================================================
@@ -352,85 +415,89 @@ export default function SoTayHanhTrinhPage() {
             NÚT ĐIỀU HƯỚNG MÀN HÌNH (TRÁI & PHẢI)
             ===================================================== */}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!isOpen) return;
-            if (turnIndex === 0) {
-              setIsOpen(false);
-            } else {
-              setTurnIndex((prev) => prev - 1);
-            }
-          }}
+          onClick={handlePrevAction}
           disabled={!isOpen}
           aria-label="Trang trước / Đóng sổ"
-          className={`absolute left-1 sm:left-3 md:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-11 lg:h-11 rounded-[4px] sm:rounded-md bg-[#0091FF] text-white flex items-center justify-center shadow-md transition-all duration-200 active:scale-90 hover:brightness-110 ${
-            !isOpen ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'
+          className={`absolute left-1 sm:left-3 md:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-11 lg:h-11 rounded-[4px] sm:rounded-md bg-[#0091FF] text-white items-center justify-center shadow-md transition-all duration-200 active:scale-90 hover:brightness-110 ${
+            !isOpen || isMobileFirstPage ? 'hidden md:flex opacity-50 cursor-not-allowed' : 'flex opacity-100 cursor-pointer'
           }`}
         >
           <ArrowLeft className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 stroke-[2.5]" />
         </button>
 
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!isOpen) {
-              setIsOpen(true);
-            } else if (turnIndex < maxTurnIndex) {
-              setTurnIndex((prev) => prev + 1);
-            }
-          }}
-          disabled={isOpen && turnIndex >= maxTurnIndex}
+          onClick={handleNextAction}
+          disabled={isMobile ? isMobileLastPage : (isOpen && turnIndex >= maxTurnIndex)}
           aria-label="Trang sau / Mở sổ"
           className={`absolute right-1 sm:right-3 md:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-11 lg:h-11 rounded-[4px] sm:rounded-md bg-[#FF69B4] text-white flex items-center justify-center shadow-md transition-all duration-200 active:scale-90 hover:brightness-110 ${
-            isOpen && turnIndex >= maxTurnIndex ? 'opacity-40 cursor-not-allowed' : 'opacity-100 cursor-pointer'
+            (isMobile ? isMobileLastPage : (isOpen && turnIndex >= maxTurnIndex)) ? 'opacity-40 cursor-not-allowed' : 'opacity-100 cursor-pointer'
           }`}
         >
           <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 stroke-[2.5]" />
         </button>
 
         {/* =====================================================
-            CONTAINER CUỐN SỔ (Responsive Mobile, iPad, Desktop)
+            CONTAINER CUỐN SỔ (Responsive Mobile hiển thị từng bên, Desktop 2 trang)
             ===================================================== */}
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           className={`
-            relative z-20 aspect-[792/1070] [perspective:3000px]
-            w-[46.5vw] md:w-[44vw] lg:w-[36vw] xl:w-[35%]
-            transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]
+            relative z-20 aspect-[720/1024] md:aspect-[792/1070] [perspective:3000px]
+            w-[86vw] max-w-[410px] md:w-[44vw] lg:w-[36vw] xl:w-[35%]
+            transition-all duration-[700ms] ease-[cubic-bezier(0.25,1,0.5,1)]
             ${isOpen
-              ? 'translate-x-[50%] scale-100 md:scale-100 lg:scale-100 xl:scale-[1.02]'
-              : 'translate-x-0 scale-[2.05] md:scale-[1.55] lg:scale-[1.28] xl:scale-100'
+              ? 'overflow-hidden md:overflow-visible translate-x-0 md:translate-x-[50%] scale-100 md:scale-100 lg:scale-100 xl:scale-[1.02]'
+              : 'overflow-visible translate-x-0 scale-100 md:scale-[1.55] lg:scale-[1.28] xl:scale-100'
             }
           `}
         >
+          {/* NÚT ĐÓNG SỔ (MOBILE) */}
+          {isOpen && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+                setTurnIndex(0);
+                setMobileSide('left');
+              }}
+              className="md:hidden absolute top-[2%] left-[3%] z-50 px-2.5 py-0.5 rounded-full bg-white/90 hover:bg-white text-[9px] font-bold text-gray-700 shadow-md backdrop-blur-xs transition-all active:scale-95"
+            >
+              Đóng sổ ✕
+            </button>
+          )}
+
           {/* ===================================================
-              A. RUỘT SỔ MỞ (Cải tiến hiệu ứng Blooming)
+              A. RUỘT SỔ MỞ (Mobile trượt từng bên, Desktop mở cả 2 trang)
               =================================================== */}
           <div
             className={`
-              absolute top-0 left-[-100%] w-[200%] h-full select-none
-              transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]
+              absolute top-0 h-full select-none
+              transition-all duration-[600ms] ease-[cubic-bezier(0.25,1,0.5,1)]
               ${isOpen
-                ? 'opacity-100 delay-100 pointer-events-auto drop-shadow-[0_15px_35px_rgba(0,0,0,0.35)] [transform:scale(1)]'
-                : 'opacity-0 pointer-events-none drop-shadow-none [transform:scale(0.95)]'
+                ? 'opacity-100 delay-100 pointer-events-auto [transform:scale(1)]'
+                : 'opacity-0 pointer-events-none [transform:scale(0.95)]'
               }
+              w-[200%] left-0
+              ${mobileSide === 'right' ? '-translate-x-1/2' : 'translate-x-0'}
+              md:left-[-100%] md:w-[200%] md:translate-x-0
+              md:drop-shadow-[0_15px_35px_rgba(0,0,0,0.35)]
             `}
           >
             <Image
               src="/images/handbook/openbook.png"
               alt="Open Book Inside"
               fill
-              className="w-full h-full object-contain pointer-events-none"
+              className="w-full h-full object-fill md:object-contain pointer-events-none"
             />
 
-            {/* NÚT ĐÓNG SỔ */}
+            {/* NÚT ĐÓNG SỔ (DESKTOP) */}
             <button
               onClick={() => {
                 setIsOpen(false);
                 setTurnIndex(0);
               }}
-              className="absolute top-[4%] left-[10%] z-40 px-2 py-0.5 md:px-3 md:py-1 xl:px-[1%] xl:py-[0.5%] rounded-full bg-white/80 hover:bg-white text-[8px] sm:text-[9px] md:text-[11px] lg:text-[12px] xl:text-[0.8vw] font-bold text-gray-700 shadow-sm transition-all"
+              className="hidden md:block absolute top-[4%] left-[10%] z-40 px-2 py-0.5 md:px-3 md:py-1 xl:px-[1%] xl:py-[0.5%] rounded-full bg-white/80 hover:bg-white text-[8px] sm:text-[9px] md:text-[11px] lg:text-[12px] xl:text-[0.8vw] font-bold text-gray-700 shadow-sm transition-all"
             >
               Đóng sổ ✕
             </button>
@@ -456,7 +523,7 @@ export default function SoTayHanhTrinhPage() {
             )}
 
             {/* SỐ TRANG GÓC DƯỚI */}
-            <div className="absolute bottom-[3%] left-1/2 -translate-x-1/2 z-30 px-2.5 py-0.5 md:px-3.5 md:py-1 xl:px-[2%] xl:py-[0.5%] rounded-full bg-black/40 text-white text-[7.5px] sm:text-[8.5px] md:text-[10px] lg:text-[11px] xl:text-[0.7vw] font-bold backdrop-blur-xs whitespace-nowrap">
+            <div className="hidden md:block absolute bottom-[3%] left-1/2 -translate-x-1/2 z-30 px-2.5 py-0.5 md:px-3.5 md:py-1 xl:px-[2%] xl:py-[0.5%] rounded-full bg-black/40 text-white text-[10px] lg:text-[11px] xl:text-[0.7vw] font-bold backdrop-blur-xs whitespace-nowrap">
               {turnIndex === 0
                 ? 'Trang bìa & Passport'
                 : `Lượt trang ${turnIndex} / ${maxTurnIndex}`}
@@ -518,27 +585,27 @@ export default function SoTayHanhTrinhPage() {
                   </div>
 
                   {/* THÔNG TIN USER */}
-                  <div className="absolute left-[13%] bottom-[2%] sm:bottom-[4%] md:bottom-[7%] lg:bottom-[9%] xl:bottom-[12%] w-[75%] flex flex-col gap-[2px] sm:gap-1 md:gap-2 lg:gap-2.5 xl:gap-[6%] px-[2%] pb-[1%]">
+                  <div className="absolute left-[13%] bottom-[3%] sm:bottom-[4%] md:bottom-[7%] lg:bottom-[9%] xl:bottom-[12%] w-[75%] flex flex-col gap-1 sm:gap-1.5 md:gap-2 lg:gap-2.5 xl:gap-[6%] px-[2%] pb-[1%]">
                     <div className="flex flex-col">
-                      <span className="text-[4px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-[1px] md:mb-1">Tên/Nickname</span>
-                      <div className="w-full bg-white/80 rounded-[2px] md:rounded-md px-1 md:px-2.5 text-[5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[9px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1 font-medium">Tên/Nickname</span>
+                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[18px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.nickname}
                       </div>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[4px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-[1px] md:mb-1">Ngày khởi hành</span>
-                      <div className="w-full bg-white/80 rounded-[2px] md:rounded-md px-1 md:px-2.5 text-[5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[9px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1 font-medium">Ngày khởi hành</span>
+                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[18px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.departureDate}
                       </div>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[4px] sm:text-[6.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-[1px] md:mb-1">Địa bàn hoạt động</span>
-                      <div className="w-full bg-white/80 rounded-[2px] md:rounded-md px-1 md:px-2.5 text-[5px] sm:text-[8px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[9px] sm:h-[15px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
+                      <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] lg:text-[11px] xl:text-[0.8vw] text-gray-700 tracking-tight leading-none mb-0.5 md:mb-1 font-medium">Địa bàn hoạt động</span>
+                      <div className="w-full bg-white/80 rounded-[3px] md:rounded-md px-1.5 md:px-2.5 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[1vw] font-semibold text-gray-800 shadow-sm border border-black/5 font-['SVN-BeCool'] antialiased h-[18px] sm:h-[20px] md:h-[22px] lg:h-[26px] xl:h-auto xl:min-h-[2.2vw] flex items-center overflow-hidden text-ellipsis whitespace-nowrap">
                         {passportInfo.location}
                       </div>
                     </div>
                     <div className="w-full text-center mt-0.5 md:mt-1 xl:mt-[2%]">
-                      <span className="text-[3px] sm:text-[5.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-medium text-gray-400">Passport by: DearKeriaVN</span>
+                      <span className="text-[7px] sm:text-[8px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-medium text-gray-400">Passport by: DearKeriaVN</span>
                     </div>
                   </div>
                 </div>
@@ -553,10 +620,10 @@ export default function SoTayHanhTrinhPage() {
                   <Image src="/images/handbook/page3.png" alt="Left Page Pink" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative z-10 text-center border-b border-pink-300/60 pb-[2%] mt-[12%] md:mt-[14%] xl:mt-[15%]">
-                    <span className="text-[7px] sm:text-[8px] md:text-[11px] lg:text-[12px] xl:text-[0.8vw] font-black uppercase tracking-wider text-[#ff5596]">
+                    <span className="text-[9.5px] sm:text-[10.5px] md:text-[11px] lg:text-[12px] xl:text-[0.8vw] font-black uppercase tracking-wider text-[#ff5596]">
                       {leftProject ? `DỰ ÁN: ${leftProject.title}` : 'TRANG CÒN TRỐNG'}
                     </span>
-                    <p className="text-[5.5px] sm:text-[6.5px] md:text-[9px] lg:text-[10px] xl:text-[0.65vw] text-gray-400 font-semibold mt-0.5 md:mt-1 xl:mt-[2%]">
+                    <p className="text-[7.5px] sm:text-[8.5px] md:text-[9px] lg:text-[10px] xl:text-[0.65vw] text-gray-400 font-semibold mt-0.5 md:mt-1 xl:mt-[2%]">
                       Trang {leftIdx + 1}
                     </p>
                   </div>
@@ -597,8 +664,8 @@ export default function SoTayHanhTrinhPage() {
                       </div>
                     )}
                   </div>
-                  <div className="relative z-10 w-full text-center border-t border-pink-200 pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
-                    <span className="text-[4px] sm:text-[5.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-pink-400 uppercase tracking-wider sm:tracking-widest inline-block leading-normal">★ Pawport Collection ★</span>
+                  <div className="relative z-10 w-full text-center pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
+                    <span className="text-[7.5px] sm:text-[8.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-pink-400 uppercase tracking-wider inline-block leading-normal">All for one, one for keria</span>
                   </div>
                 </div>
 
@@ -607,10 +674,10 @@ export default function SoTayHanhTrinhPage() {
                   <Image src="/images/handbook/page4.png" alt="Right Page Blue" fill className="w-full h-full object-contain pointer-events-none -z-10" />
                   
                   <div className="relative z-10 text-center border-b border-blue-300/60 pb-[2%] mt-[12%] md:mt-[14%] xl:mt-[15%]">
-                    <span className="text-[7px] sm:text-[8px] md:text-[11px] lg:text-[12px] xl:text-[0.8vw] font-black uppercase tracking-wider text-[#0086ff]">
+                    <span className="text-[9.5px] sm:text-[10.5px] md:text-[11px] lg:text-[12px] xl:text-[0.8vw] font-black uppercase tracking-wider text-[#0086ff]">
                       {rightProject ? `DỰ ÁN: ${rightProject.title}` : rightProject === null ? 'TRANG CÒN TRỐNG' : 'HOÀN THÀNH SỔ'}
                     </span>
-                    <p className="text-[5.5px] sm:text-[6.5px] md:text-[9px] lg:text-[10px] xl:text-[0.65vw] text-gray-400 font-semibold mt-0.5 md:mt-1 xl:mt-[2%]">
+                    <p className="text-[7.5px] sm:text-[8.5px] md:text-[9px] lg:text-[10px] xl:text-[0.65vw] text-gray-400 font-semibold mt-0.5 md:mt-1 xl:mt-[2%]">
                       {rightProject === undefined ? 'KẾT THÚC' : `Trang ${rightIdx + 1}`}
                     </p>
                   </div>
@@ -658,8 +725,8 @@ export default function SoTayHanhTrinhPage() {
                       </div>
                     )}
                   </div>
-                  <div className="relative z-10 w-full text-center border-t border-blue-200 pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
-                    <span className="text-[4px] sm:text-[5.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-blue-400 uppercase tracking-wider sm:tracking-widest inline-block leading-normal">★ Pawport Collection ★</span>
+                  <div className="relative z-10 w-full text-center pt-[2%] md:pt-[1.8%] xl:pt-[2%] mb-1.5 sm:mb-2 md:mb-1 xl:mb-[2%]">
+                    <span className="text-[7.5px] sm:text-[8.5px] md:text-[8px] lg:text-[9px] xl:text-[0.55vw] font-semibold text-blue-400 uppercase tracking-wider inline-block leading-normal">All for one, one for keria</span>
                   </div>
                 </div>
               </>
@@ -675,7 +742,11 @@ export default function SoTayHanhTrinhPage() {
               B. CÁNH BÌA TRƯỚC (Cải tiến Hover Hint & Lật Bìa)
               ===================================================== */}
           <div
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              setIsOpen(true);
+              setTurnIndex(0);
+              setMobileSide('left');
+            }}
             className={`
               relative z-10 w-full h-full origin-left
               transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]
@@ -709,6 +780,14 @@ export default function SoTayHanhTrinhPage() {
 
         </div>
 
+        {/* SỐ TRANG GÓC DƯỚI (MOBILE) */}
+        {isOpen && (
+          <div className="md:hidden absolute bottom-3 left-1/2 -translate-x-1/2 z-30 px-3 py-1 rounded-full bg-black/40 text-white text-[10px] font-bold backdrop-blur-xs whitespace-nowrap">
+            {turnIndex === 0
+              ? (mobileSide === 'left' ? 'Trang mở đầu' : 'Passport')
+              : `Trang ${(turnIndex - 1) * 2 + (mobileSide === 'left' ? 1 : 2)}`}
+          </div>
+        )}
       </section>
 
       {/* =======================================================
